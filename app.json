@@ -15,8 +15,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.jia011.expensetrackernative"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -37,14 +36,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "388f9c8f-85c3-4316-b90f-11fdc871a9c0"
-      }
     }
   }
 }

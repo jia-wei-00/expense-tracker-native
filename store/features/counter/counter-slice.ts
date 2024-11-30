@@ -1,6 +1,5 @@
-//DUCK Pattern
+// DUCKS PATTERN
 import { createSlice } from "@reduxjs/toolkit";
-
 interface CounterState {
   value: number;
 }
@@ -13,15 +12,11 @@ const counterSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    incremented: (state, action) => {
-      state.value += action.payload;
-    },
-    decremented: (state, action) => {
-      state.value -= action.payload;
+    increment: (state) => {
+      state.value += 1;
     },
   },
 });
 
-export const { incremented, decremented } = counterSlice.actions;
-
+export const { increment } = counterSlice.actions;
 export default counterSlice.reducer;
