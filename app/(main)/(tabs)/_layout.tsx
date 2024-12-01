@@ -1,33 +1,47 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeScreen, SettingsScreen } from "@/app/(main)/(tabs)";
-import { Icon } from "@react-native-vector-icons/fontawesome6";
+import { HomeScreen, SettingsScreen, SignIn } from "@/app/(main)/(tabs)";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Appbar } from "react-native-paper";
 
-const Tab = createBottomTabNavigator({
-  screens: {
-    home: HomeScreen,
-    settings: SettingsScreen,
-  },
-});
+const Tab = createBottomTabNavigator();
 
 export default function TabLayout() {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        header: ({ route, navigation }) => (
+          <Appbar.Header>
+            <Appbar.Content title={route.name} />
+          </Appbar.Header>
+        ),
+      }}
+    >
       <Tab.Screen
-        name="home"
-        component={HomeScreen}
+        name="Signin"
+        component={SignIn}
         options={{
-          title: "Home",
           tabBarIcon: ({ color, size }) => (
-            <Icon name="rocket" size={30} color="#900" iconStyle="solid" />
+            <Ionicons name="home" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="settings"
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
         component={SettingsScreen}
         options={{
-          title: "Settings",
-          tabBarIcon: () => null,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="cog" color={color} size={size} />
+          ),
         }}
       />
     </Tab.Navigator>
