@@ -1,12 +1,8 @@
-import { Tabs } from "expo-router";
-import React from "react";
-import { Platform } from "react-native";
-
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeScreen, SettingsScreen } from "@/app-example/app/(tabs)";
+import { HomeScreen, SettingsScreen } from "@/app/(main)/(tabs)";
+import { Icon } from "@react-native-vector-icons/fontawesome6";
 
-const Tabs = createBottomTabNavigator({
+const Tab = createBottomTabNavigator({
   screens: {
     home: HomeScreen,
     settings: SettingsScreen,
@@ -14,33 +10,26 @@ const Tabs = createBottomTabNavigator({
 });
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
-      }}
-    >
-      <Tabs.Screen
+    <Tab.Navigator initialRouteName="Home">
+      <Tab.Screen
         name="home"
+        component={HomeScreen}
         options={{
           title: "Home",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="rocket" size={30} color="#900" iconStyle="solid" />
+          ),
         }}
       />
-      <Tabs.Screen
+      <Tab.Screen
         name="settings"
+        component={SettingsScreen}
         options={{
           title: "Settings",
+          tabBarIcon: () => null,
         }}
       />
-    </Tabs>
+    </Tab.Navigator>
   );
 }

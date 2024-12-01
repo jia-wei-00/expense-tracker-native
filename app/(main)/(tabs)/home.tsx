@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { Button } from "react-native-paper";
 import { increment } from "@/store/features/counter/counter-slice";
 
