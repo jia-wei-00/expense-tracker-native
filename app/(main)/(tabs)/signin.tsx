@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { TextInput } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 
 interface UserLogin {
   email: string;
@@ -29,6 +29,9 @@ const SignIn = () => {
         onChangeText={(text) => setUserLogin({ ...userLogin, password: text })}
         secureTextEntry
       />
+      <Button mode="contained" onPress={() => {}}>
+        Login
+      </Button>
     </View>
   );
 };
