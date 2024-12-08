@@ -2,22 +2,14 @@ import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Button, Input } from "@rneui/themed";
+import { useSignInMutation } from "../store/features/authentication/supabase-auth-slice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-  }
+  const [signIn, { isLoading }] = useSignInMutation();
 
   async function signUpWithEmail() {
     setLoading(true);
@@ -62,13 +54,13 @@ export default function Login() {
         <Button
           title="Sign in"
           disabled={loading}
-          onPress={() => signInWithEmail()}
+          onPress={() => signIn({ email, password })}
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Button
           title="Sign up"
-          disabled={loading}
+          disabled={isLoading}
           onPress={() => signUpWithEmail()}
         />
       </View>

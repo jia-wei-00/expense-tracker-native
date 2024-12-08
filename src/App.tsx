@@ -1,6 +1,6 @@
 import "react-native-url-polyfill/auto";
 import { View } from "react-native";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import { store } from "./store";
 import { Home } from "./pages";
 import { SafeAreaProvider } from "react-native-safe-area-context";

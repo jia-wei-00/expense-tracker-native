@@ -3,10 +3,13 @@ import { Text } from "react-native";
 import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 import { Button } from "react-native-paper";
 import { increment } from "../store/features/counter/counter-slice";
-import { TopBar, BottomBar } from "../components";
+import { TopBar } from "../components";
+import { useSignOutMutation } from "../store/features/authentication/supabase-auth-slice";
+
 const Home = () => {
   const count = useAppSelector((state) => state.counter.value);
   const dispatch = useAppDispatch();
+  const [signOut] = useSignOutMutation();
 
   return (
     <>
@@ -14,7 +17,8 @@ const Home = () => {
       <Text>home</Text>
       <Text>{count}</Text>
       <Button onPress={() => dispatch(increment())}>Increment</Button>
-      <BottomBar />
+      <Button onPress={() => signOut(true)}>Logout</Button>
+      {/* <BottomBar /> */}
     </>
   );
 };
