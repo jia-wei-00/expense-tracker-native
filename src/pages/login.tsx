@@ -1,38 +1,20 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import { supabase } from "../lib/supabase";
-import { Button, Input } from "@rneui/themed";
-import { useSignInMutation } from "../store/features/authentication/supabase-auth-slice";
+import { StyleSheet, View } from "react-native";
+import { Button, TextInput } from "react-native-paper";
+import { useSignInMutation, useSignUpMutation } from "../store/features";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const [signIn, { isLoading }] = useSignInMutation();
-
-  async function signUpWithEmail() {
-    setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
-    setLoading(false);
-  }
+  const [signIn, { isLoading: isSignInLoading }] = useSignInMutation();
+  const [signUp, { isLoading: isSignUpLoading }] = useSignUpMutation();
 
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input
+        <TextInput
           label="Email"
-          leftIcon={{ type: "font-awesome", name: "envelope" }}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
@@ -40,9 +22,8 @@ export default function Login() {
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
+        <TextInput
           label="Password"
-          leftIcon={{ type: "font-awesome", name: "lock" }}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
@@ -52,17 +33,21 @@ export default function Login() {
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
-          title="Sign in"
-          disabled={loading}
+          mode="contained"
+          disabled={isSignInLoading}
           onPress={() => signIn({ email, password })}
-        />
+        >
+          Sign in
+        </Button>
       </View>
       <View style={styles.verticallySpaced}>
         <Button
-          title="Sign up"
-          disabled={isLoading}
-          onPress={() => signUpWithEmail()}
-        />
+          mode="contained"
+          disabled={isSignUpLoading}
+          onPress={() => signUp({ email, password })}
+        >
+          Sign up
+        </Button>
       </View>
     </View>
   );

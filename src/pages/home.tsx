@@ -3,8 +3,8 @@ import { Text } from "react-native";
 import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 import { Button } from "react-native-paper";
 import { increment } from "../store/features/counter/counter-slice";
+import { useSignOutMutation } from "../store/features";
 import { TopBar } from "../components";
-import { useSignOutMutation } from "../store/features/authentication/supabase-auth-slice";
 
 const Home = () => {
   const count = useAppSelector((state) => state.counter.value);

@@ -22,9 +22,21 @@ export const supabaseAuthSlice = createApi({
         return { data: "success" };
       },
     }),
+    signUp: build.mutation({
+      queryFn: async ({ email, password }, { dispatch }) => {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+
+        if (error) throw error;
+        dispatch(setSession(data.session));
+        dispatch(setLoading(false));
+
+        return { data: "Check your email for verification" };
+      },
+    }),
     signOut: build.mutation({
       queryFn: async (_, { dispatch }) => {
         const { error } = await supabase.auth.signOut();
+
         if (error) throw error;
         dispatch(setSession(null));
         return { data: "success" };
@@ -33,4 +45,5 @@ export const supabaseAuthSlice = createApi({
   }),
 });
 
-export const { useSignInMutation, useSignOutMutation } = supabaseAuthSlice;
+export const { useSignInMutation, useSignUpMutation, useSignOutMutation } =
+  supabaseAuthSlice;
