@@ -4,22 +4,22 @@ import { useAppDispatch, useAppSelector } from "../hooks/useRedux";
 import { Button } from "react-native-paper";
 import { increment } from "../store/features/counter/counter-slice";
 import { useSignOutMutation } from "../store/features";
-import { TopBar } from "../components";
+import { Background } from "../components";
 
 const Home = () => {
   const count = useAppSelector((state) => state.counter.value);
   const dispatch = useAppDispatch();
-  const [signOut] = useSignOutMutation();
+  const [signOut, { isLoading }] = useSignOutMutation();
 
   return (
-    <>
-      <TopBar />
-      <Text>home</Text>
-      <Text>{count}</Text>
+    <Background>
+      <Text style={{ color: "white" }}>home</Text>
+      <Text style={{ color: "white" }}>{count}</Text>
       <Button onPress={() => dispatch(increment())}>Increment</Button>
-      <Button onPress={() => signOut(true)}>Logout</Button>
-      {/* <BottomBar /> */}
-    </>
+      <Button onPress={() => signOut("")} loading={isLoading}>
+        {isLoading ? "Logging out..." : "Logout"}
+      </Button>
+    </Background>
   );
 };
 

@@ -1,41 +1,52 @@
-import * as React from "react";
-import { StyleSheet } from "react-native";
-import { Appbar, FAB, useTheme } from "react-native-paper";
+import React from "react";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { CommonActions } from "@react-navigation/native";
+import { StyleSheet, View } from "react-native";
+import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import TabButton from "./tab-button";
 
-const BOTTOM_APPBAR_HEIGHT = 80;
-const MEDIUM_FAB_HEIGHT = 56;
+interface BottomBarProps extends BottomTabBarProps {}
 
-const BottomBar = () => {
-  const { bottom } = useSafeAreaInsets();
-  const theme = useTheme();
-
+const BottomBar = ({ state, descriptors, navigation }: BottomBarProps) => {
   return (
-    <Appbar
-      style={[
-        styles.bottom,
-        {
-          height: BOTTOM_APPBAR_HEIGHT + bottom,
-          backgroundColor: theme.colors.elevation.level2,
-        },
-      ]}
-      safeAreaInsets={{ bottom }}
-    >
-      <Appbar.Action icon="archive" onPress={() => {}} />
-      <Appbar.Action icon="email" onPress={() => {}} />
-      <Appbar.Action icon="label" onPress={() => {}} />
-      <Appbar.Action icon="delete" onPress={() => {}} />
-      <FAB
-        mode="flat"
-        size="medium"
-        icon="plus"
-        onPress={() => {}}
-        style={[
-          styles.fab,
-          { top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2 },
-        ]}
-      />
-    </Appbar>
+    <View style={{ backgroundColor: "black" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          backgroundColor: "white",
+          padding: 10,
+          margin: 5,
+          borderRadius: 100,
+        }}
+      >
+        {state?.routes.map((route, index) => (
+          <TabButton
+            key={route.key}
+            onPress={() => {
+              navigation.dispatch({
+                ...CommonActions.navigate(route.name, route.params),
+                target: state.key,
+              });
+            }}
+            active={state.index === index}
+            icon={() => {
+              const { options } = descriptors[route.key];
+              if (options.tabBarIcon) {
+                return options.tabBarIcon({
+                  focused: true,
+                  color: "black",
+                  size: 24,
+                });
+              }
+            }}
+          >
+            {route.name}
+          </TabButton>
+        ))}
+      </View>
+    </View>
   );
 };
 

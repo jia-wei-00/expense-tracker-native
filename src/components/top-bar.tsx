@@ -1,12 +1,26 @@
 import * as React from "react";
 import { Appbar } from "react-native-paper";
 
-const TopBar = () => (
+interface IconProps {
+  icon: string;
+  onPress: () => void;
+}
+
+export interface HeaderProps {
+  title: string;
+  leftIcon?: IconProps;
+  rightIcon?: IconProps;
+}
+
+const TopBar = ({ title, leftIcon, rightIcon }: HeaderProps) => (
   <Appbar.Header>
-    <Appbar.BackAction onPress={() => {}} />
-    <Appbar.Content title="Title" />
-    <Appbar.Action icon="calendar" onPress={() => {}} />
-    <Appbar.Action icon="magnify" onPress={() => {}} />
+    {leftIcon && (
+      <Appbar.Action icon={leftIcon.icon} onPress={leftIcon.onPress} />
+    )}
+    <Appbar.Content title={title} />
+    {rightIcon && (
+      <Appbar.Action icon={rightIcon.icon} onPress={rightIcon.onPress} />
+    )}
   </Appbar.Header>
 );
 

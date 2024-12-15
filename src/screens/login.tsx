@@ -11,7 +11,7 @@ export default function Login() {
   const [signUp, { isLoading: isSignUpLoading }] = useSignUpMutation();
 
   return (
-    <View style={styles.container}>
+    <>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput
           label="Email"
@@ -34,27 +34,28 @@ export default function Login() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           mode="contained"
-          disabled={isSignInLoading}
+          loading={isSignInLoading}
           onPress={() => signIn({ email, password })}
         >
-          Sign in
+          {isSignInLoading ? "Signing in..." : "Sign in"}
         </Button>
       </View>
       <View style={styles.verticallySpaced}>
         <Button
           mode="contained"
-          disabled={isSignUpLoading}
+          loading={isSignUpLoading}
           onPress={() => signUp({ email, password })}
         >
-          Sign up
+          {isSignUpLoading ? "Signing up..." : "Sign up"}
         </Button>
       </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "black",
     marginTop: 40,
     padding: 12,
   },
