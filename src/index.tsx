@@ -35,6 +35,8 @@ const TabNavigator = () => {
             rightIcon={{ icon: "account-details", onPress: () => {} }}
           />
         ),
+        tabBarActiveTintColor: "blue",
+        tabBarInactiveTintColor: "gray",
       }}
     >
       <Tab.Screen
@@ -42,9 +44,9 @@ const TabNavigator = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => {
-            return <Icon source="home" size={size} color={color} />;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon source="home" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -52,9 +54,9 @@ const TabNavigator = () => {
         component={SettingsScreen}
         options={{
           tabBarLabel: "Settings",
-          tabBarIcon: ({ color, size }) => {
-            return <Icon source="cog" size={size} color={color} />;
-          },
+          tabBarIcon: ({ color, size }) => (
+            <Icon source="cog" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>
