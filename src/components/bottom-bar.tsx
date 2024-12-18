@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   spacer: {
     position: "absolute",
     backgroundColor: "blue",
-    marginHorizontal: 10,
+    marginHorizontal: 10,3
   },
 });
 
