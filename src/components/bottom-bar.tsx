@@ -1,7 +1,7 @@
 import React from "react";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { CommonActions } from "@react-navigation/native";
-import { LayoutChangeEvent, StyleSheet, View } from "react-native";
+import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
 import TabButton from "./tab-button";
 import Animated, {
   useAnimatedStyle,
@@ -13,8 +13,8 @@ interface BottomBarProps extends BottomTabBarProps {}
 
 const BottomBar = ({ state, descriptors, navigation }: BottomBarProps) => {
   const [dimensions, setDimensions] = React.useState({
-    height: 20,
-    width: 100,
+    height: 0,
+    width: 0,
   });
 
   const buttonWidth = dimensions.width / state.routes.length;
@@ -32,62 +32,71 @@ const BottomBar = ({ state, descriptors, navigation }: BottomBarProps) => {
   });
 
   return (
-    <View style={{ backgroundColor: "black" }}>
-      <View onLayout={onTabbarLayout} style={styles.container}>
-        <Animated.View
-          style={[
-            styles.spacer,
-            animatedSpacerStyle,
-            { height: dimensions.height - 15, width: dimensions.width - 15 },
-          ]}
-        />
-        {state?.routes.map((route, index) => (
-          <TabButton
-            key={route.key}
-            onPress={() => {
-              tabPositionX.value = withSpring(index * buttonWidth, {
-                duration: 1500,
-              });
+    <View onLayout={onTabbarLayout} style={styles.container}>
+      <Animated.View
+        style={[
+          styles.spacer,
+          animatedSpacerStyle,
+          { height: dimensions.height - 15, width: buttonWidth - 15 },
+        ]}
+      />
+      {state?.routes.map((route, index) => (
+        <TabButton
+          key={route.name}
+          width={buttonWidth}
+          onPress={() => {
+            tabPositionX.value = withSpring(index * buttonWidth, {
+              duration: 1000,
+            });
 
-              navigation.dispatch({
-                ...CommonActions.navigate(route.name, route.params),
-                target: state.key,
+            navigation.dispatch({
+              ...CommonActions.navigate(route.name, route.params),
+              target: state.key,
+            });
+          }}
+          active={state.index === index}
+          icon={({ ...props }) => {
+            const { options } = descriptors[route.key];
+            if (options.tabBarIcon) {
+              return options.tabBarIcon({
+                focused: state.index === index,
+                ...props,
               });
-            }}
-            active={state.index === index}
-            icon={({ ...props }) => {
-              const { options } = descriptors[route.key];
-              if (options.tabBarIcon) {
-                return options.tabBarIcon({
-                  focused: state.index === index,
-                  ...props,
-                });
-              }
-            }}
-          >
-            {route.name}
-          </TabButton>
-        ))}
-      </View>
+            }
+          }}
+        >
+          {route.name}
+        </TabButton>
+      ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
+    position: "absolute",
+    bottom: 30,
     flexDirection: "row",
-    gap: 10,
-    justifyContent: "space-between",
-    backgroundColor: "#333",
-    padding: 10,
-    margin: 5,
-    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "darkgray",
+    marginLeft: "auto",
+    marginRight: "auto",
+    paddingVertical: 15,
+    borderRadius: 35,
+    shadowColor: "white",
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 10,
+    left: 20,
+    right: 20,
+    shadowOpacity: 0.1,
   },
   spacer: {
     position: "absolute",
-    backgroundColor: "blue",
-    marginHorizontal: 10,3
+    backgroundColor: "purple",
+    borderRadius: 100,
+    left: 7.5,
+    right: 7.5,
   },
 });
 

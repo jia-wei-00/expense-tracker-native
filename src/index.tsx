@@ -1,11 +1,23 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen, SettingsScreen, LoginScreen } from "./screens";
+import {
+  HomeScreen,
+  SettingsScreen,
+  LoginScreen,
+  HistoryScreen,
+} from "./screens";
 import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { useAppSelector } from "./hooks/useRedux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon, Text } from "react-native-paper";
 import { BottomBar, TabButton, TopBar } from "./components";
 import { Animated, View } from "react-native";
+import {
+  CardIcon,
+  CashIcon,
+  HistoryIcon,
+  HomeIcon,
+  SettingsIcon,
+} from "./assets/icons";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,7 +57,17 @@ const TabNavigator = () => {
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
-            <Icon source="home" size={size} color={color} />
+            <HomeIcon width={size} height={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryScreen}
+        options={{
+          tabBarLabel: "History",
+          tabBarIcon: ({ color, size }) => (
+            <HistoryIcon width={size} height={size} color={color} />
           ),
         }}
       />
@@ -55,7 +77,7 @@ const TabNavigator = () => {
         options={{
           tabBarLabel: "Settings",
           tabBarIcon: ({ color, size }) => (
-            <Icon source="cog" size={size} color={color} />
+            <CardIcon width={size} height={size} color={color} />
           ),
         }}
       />

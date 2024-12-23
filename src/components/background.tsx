@@ -28,13 +28,10 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   container: {
-    flex: 1,
     padding: 20,
-    width: "100%",
-    maxWidth: 340,
     alignSelf: "center",
-    alignItems: "center",
     justifyContent: "center",
+    gap: 10,
   },
 });
 

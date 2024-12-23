@@ -1,0 +1,5 @@
+export { default as HomeIcon } from "./home";
+export { default as SettingsIcon } from "./setting";
+export { default as CardIcon } from "./card";
+export { default as CashIcon } from "./cash";
+export { default as HistoryIcon } from "./history";

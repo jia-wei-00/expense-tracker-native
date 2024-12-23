@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useSignInMutation, useSignUpMutation } from "../store/features";
+import { Background } from "../components";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ export default function Login() {
   const [signUp, { isLoading: isSignUpLoading }] = useSignUpMutation();
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput
           label="Email"
@@ -49,15 +50,17 @@ export default function Login() {
           {isSignUpLoading ? "Signing up..." : "Sign up"}
         </Button>
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
-    marginTop: 40,
-    padding: 12,
+    minHeight: "100%",
+    padding: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
   verticallySpaced: {
     paddingTop: 4,
