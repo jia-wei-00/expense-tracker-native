@@ -48,6 +48,7 @@ const Home = () => {
         /> */}
       </View>
       <Divider />
+      <Text>{count}</Text>
       <Button onPress={() => dispatch(increment())}>
         <ButtonText>Increment</ButtonText>
       </Button>

@@ -42,8 +42,34 @@ export const supabaseAuthSlice = createApi({
         return { data: "success" };
       },
     }),
+    getSession: build.mutation({
+      queryFn: async (_, { dispatch }) => {
+        const { data, error } = await supabase.auth.getSession();
+
+        if (error) throw error;
+        dispatch(setSession(data.session));
+        return { data: "success" };
+      },
+    }),
+    onAuthStateChange: build.mutation({
+      queryFn: (_, { dispatch }) => {
+        try {
+          supabase.auth.onAuthStateChange((_event, session) => {
+            dispatch(setSession(session));
+          });
+          return { data: "success" };
+        } catch (error) {
+          throw error;
+        }
+      },
+    }),
   }),
 });
 
-export const { useSignInMutation, useSignUpMutation, useSignOutMutation } =
-  supabaseAuthSlice;
+export const {
+  useSignInMutation,
+  useSignUpMutation,
+  useSignOutMutation,
+  useGetSessionMutation,
+  useOnAuthStateChangeMutation,
+} = supabaseAuthSlice;
