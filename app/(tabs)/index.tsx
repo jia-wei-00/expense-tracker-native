@@ -1,70 +1,82 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { increment } from "@/store/features/counter/counter-slice";
+import { Text } from "@/components/ui/text";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const Home = () => {
+  const [searchQuery, setSearchQuery] = React.useState("");
 
-export default function HomeScreen() {
+  const count = useAppSelector((state) => state.counter.value);
+  const dispatch = useAppDispatch();
+
+  const date = new Date().toLocaleDateString("en-MY", {
+    month: "long",
+  });
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <>
+      {/* <View style={styles.container}> */}
+      <Text>{date}</Text>
+      <View style={styles.topContainer}>
+        <View style={styles.overall}>
+          <Text>Expense</Text>
+          <Text>RM1000</Text>
+        </View>
+        <View style={styles.overall}>
+          <Text>Income</Text>
+          <Text>RM1000</Text>
+        </View>
+      </View>
+      <View style={{ display: "flex", flexDirection: "row" }}>
+        <Text>Records</Text>
+        {/* <Searchbar
+          placeholder="Search"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={{
+            height: 30,
+          }}
+          inputStyle={{
+            minHeight: 0,
+            padding: 0,
+            fontSize: 12,
+            margin: 0,
+          }}
+        /> */}
+      </View>
+      <Divider />
+      <Text>{count}</Text>
+      <Button onPress={() => dispatch(increment())}>
+        <ButtonText>Increment</ButtonText>
+      </Button>
+      {/* </View> */}
+    </>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  // container: {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   gap: 10,
+  // },
+  topContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 5,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  overall: {
+    flexGrow: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: "white",
   },
 });
+
+export default Home;
