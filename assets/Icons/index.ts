@@ -3,3 +3,4 @@ export { default as SettingsIcon } from "./setting";
 export { default as CardIcon } from "./card";
 export { default as CashIcon } from "./cash";
 export { default as HistoryIcon } from "./history";
+export { default as MenuIcon } from "./Menu";
