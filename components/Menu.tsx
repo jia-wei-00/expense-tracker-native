@@ -10,6 +10,7 @@ const Menu = () => {
     <>
       <Button
         variant="outline"
+        
         size="md"
         className="rounded-full p-3 border-0"
         onPress={() => setIsOpen(!isOpen)}

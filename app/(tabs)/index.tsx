@@ -5,6 +5,9 @@ import { increment } from "@/store/features/counter/counter-slice";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
+import { Input, InputField } from "@/components/ui/input";
+import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -17,66 +20,38 @@ const Home = () => {
   });
 
   return (
-    <>
-      {/* <View style={styles.container}> */}
+    <VStack>
       <Text>{date}</Text>
-      <View style={styles.topContainer}>
-        <View style={styles.overall}>
+      <HStack>
+        <VStack>
           <Text>Expense</Text>
           <Text>RM1000</Text>
-        </View>
-        <View style={styles.overall}>
+        </VStack>
+        <VStack>
           <Text>Income</Text>
           <Text>RM1000</Text>
-        </View>
-      </View>
-      <View style={{ display: "flex", flexDirection: "row" }}>
+        </VStack>
+      </HStack>
+      <HStack>
         <Text>Records</Text>
-        {/* <Searchbar
-          placeholder="Search"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          style={{
-            height: 30,
-          }}
-          inputStyle={{
-            minHeight: 0,
-            padding: 0,
-            fontSize: 12,
-            margin: 0,
-          }}
-        /> */}
-      </View>
+        <Input
+          variant="underlined"
+          size="sm"
+          isDisabled={false}
+          isInvalid={false}
+          isReadOnly={false}
+        >
+          <InputField placeholder="Enter Text here..." />
+        </Input>
+      </HStack>
       <Divider />
       <Text>{count}</Text>
       <Button onPress={() => dispatch(increment())}>
         <ButtonText>Increment</ButtonText>
       </Button>
       {/* </View> */}
-    </>
+    </VStack>
   );
 };
-
-const styles = StyleSheet.create({
-  // container: {
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   gap: 10,
-  // },
-  topContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 5,
-  },
-  overall: {
-    flexGrow: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "white",
-  },
-});
 
 export default Home;
