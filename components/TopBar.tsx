@@ -42,4 +42,14 @@ const TopBar = ({ title, leftIcon, rightIcon }: HeaderProps) => {
     // </Appbar.Header>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+  },
+});
+
 export default TopBar;

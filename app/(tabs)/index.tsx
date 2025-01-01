@@ -8,6 +8,7 @@ import { Divider } from "@/components/ui/divider";
 import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { BigBox } from "../screen-component";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -20,17 +21,11 @@ const Home = () => {
   });
 
   return (
-    <VStack>
+    <VStack className="flex gap-3">
       <Text>{date}</Text>
-      <HStack>
-        <VStack>
-          <Text>Expense</Text>
-          <Text>RM1000</Text>
-        </VStack>
-        <VStack>
-          <Text>Income</Text>
-          <Text>RM1000</Text>
-        </VStack>
+      <HStack className="flex gap-1">
+        <BigBox title="Expense" value="RM1000" />
+        <BigBox title="Income" value="RM1000" />
       </HStack>
       <HStack>
         <Text>Records</Text>
