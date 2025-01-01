@@ -1,5 +1,4 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { increment } from "@/store/features/counter/counter-slice";
 import { Text } from "@/components/ui/text";
@@ -11,8 +10,6 @@ import { HStack } from "@/components/ui/hstack";
 import { BigBox } from "../screen-component";
 
 const Home = () => {
-  const [searchQuery, setSearchQuery] = React.useState("");
-
   const count = useAppSelector((state) => state.counter.value);
   const dispatch = useAppDispatch();
 
@@ -21,9 +18,9 @@ const Home = () => {
   });
 
   return (
-    <VStack className="flex gap-3">
+    <VStack space="md" className="p-4">
       <Text>{date}</Text>
-      <HStack className="flex gap-1">
+      <HStack space="sm">
         <BigBox title="Expense" value="RM1000" />
         <BigBox title="Income" value="RM1000" />
       </HStack>

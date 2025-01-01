@@ -43,13 +43,4 @@ const TopBar = ({ title, leftIcon, rightIcon }: HeaderProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 5,
-  },
-});
-
 export default TopBar;

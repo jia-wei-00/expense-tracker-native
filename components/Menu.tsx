@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { MenuIcon } from "@/assets/Icons";
-import Dropdown from "./Dropdown";
+import DropdownBox from "./DropdownBox";
 
-const Menu = () => {
+const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      <Button
-        variant="outline"
-        
-        size="md"
-        className="rounded-full p-3 border-0"
-        onPress={() => setIsOpen(!isOpen)}
-      >
-        <ButtonIcon as={MenuIcon} />
-        {isOpen && <Dropdown />}
-      </Button>
-    </>
+    <Button
+      variant="outline"
+      size="md"
+      className="rounded-full p-3 border-0"
+      onPress={() => setIsOpen(!isOpen)}
+    >
+      <ButtonIcon as={MenuIcon} />
+      {isOpen && <DropdownBox />}
+    </Button>
   );
 };
 
-export default Menu;
+Dropdown.displayName = "Dropdown";
+
+export default Dropdown;

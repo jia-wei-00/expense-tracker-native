@@ -2,7 +2,7 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { Menu } from "@/components";
+import { Dropdown } from "@/components";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -15,7 +15,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerRight: () => <Menu />,
+        headerRight: () => <Dropdown />,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),

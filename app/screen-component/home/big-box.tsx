@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components";
 import { VStack } from "@/components/ui/vstack";
 
 interface BigBoxProps {
@@ -9,9 +9,9 @@ interface BigBoxProps {
 
 const BigBox = ({ title, value }: BigBoxProps) => {
   return (
-    <VStack className="flex-1 items-center dark:bg-white rounded-lg p-3">
-      <Text className="text-lg font-bold dark:text-slate-800">{title}</Text>
-      <Text className="text-lg font-semibold dark:text-slate-800">{value}</Text>
+    <VStack className="flex-1 items-center dark:bg-white bg-slate-700 rounded-lg p-3">
+      <Text.Title reverse>{title}</Text.Title>
+      <Text.Bold reverse>{value}</Text.Bold>
     </VStack>
   );
 };
