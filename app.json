@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expense-tracker-native",
-    "slug": "expense-tracker-native",
+    "name": "expo-router-with-nativewind",
+    "slug": "expo-router-with-nativewind",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

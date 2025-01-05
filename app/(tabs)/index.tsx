@@ -1,70 +1,126 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from "react";
+import { Text } from "@/components";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { BigBox } from "../screen-component";
+import { ChevronDownIcon, SearchIcon } from "@/assets/Icons";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionContentText,
+  AccordionHeader,
+  AccordionIcon,
+  AccordionItem,
+  AccordionTitleText,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ScrollView } from "react-native";
+import { supabase } from "@/supabase";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const Home = () => {
+  const date = new Date().toLocaleDateString("en-MY", {
+    month: "long",
+  });
 
-export default function HomeScreen() {
+  const [data, setData] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    const getTodos = async () => {
+      try {
+        const { data, error } = await supabase.from("expense").select();
+
+        if (error) {
+          console.error("Error fetching expense:", error.message);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          console.log(data);
+          setData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching todos:", error.message);
+      }
+    };
+
+    getTodos();
+  }, []);
+
+  console.log(data);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <VStack space="md" className="p-4 flex-1">
+      <Text.Title>{date}</Text.Title>
+      <HStack space="sm">
+        <BigBox title="Expense" value="RM1000" />
+        <BigBox title="Income" value="RM1000" />
+      </HStack>
+      <HStack className="justify-between items-end">
+        <Text.Subtitle>Records</Text.Subtitle>
+        <Input variant="underlined" size="sm" className="w-2/4 gap-2">
+          <InputSlot className="pl-3">
+            <InputIcon as={SearchIcon} />
+          </InputSlot>
+          <InputField placeholder="Search..." />
+        </Input>
+      </HStack>
+      <Divider />
+      <ScrollView>
+        <Accordion
+          size="md"
+          variant="filled"
+          type="single"
+          isCollapsible={true}
+          isDisabled={false}
+          className="bg-transparent gap-1"
+        >
+          {data?.map((data: any, index: number) => (
+            <AccordionItem
+              value={`item-${index}`}
+              className="rounded-lg"
+              key={index}
+            >
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }) => {
+                    return (
+                      <>
+                        <AccordionTitleText>{data.name}</AccordionTitleText>
+                        <AccordionIcon
+                          as={ChevronDownIcon}
+                          className={isExpanded ? "rotate-180" : "rotate-0"}
+                        />
+                      </>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent>
+                <HStack space="sm">
+                  <Button variant="outline" size="sm">
+                    <ButtonText>View</ButtonText>
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <ButtonText>Edit</ButtonText>
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <ButtonText>Delete</ButtonText>
+                  </Button>
+                </HStack>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </ScrollView>
+      <Divider />
+      <Button>
+        <ButtonText>Add</ButtonText>
+      </Button>
+    </VStack>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+export default Home;
