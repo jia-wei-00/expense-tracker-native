@@ -5,55 +5,17 @@ import { Divider } from "@/components/ui/divider";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { BigBox } from "../screen-component";
-import { ChevronDownIcon, SearchIcon } from "@/assets/Icons";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionContentText,
-  AccordionHeader,
-  AccordionIcon,
-  AccordionItem,
-  AccordionTitleText,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { ScrollView } from "react-native";
-import { supabase } from "@/supabase";
+import { BigBox, Records } from "../screen-component";
+import { SearchIcon } from "@/assets/Icons";
 
 const Home = () => {
-  const date = new Date().toLocaleDateString("en-MY", {
-    month: "long",
-  });
-
-  const [data, setData] = React.useState<any[]>([]);
-
-  React.useEffect(() => {
-    const getTodos = async () => {
-      try {
-        const { data, error } = await supabase.from("expense").select();
-
-        if (error) {
-          console.error("Error fetching expense:", error.message);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          console.log(data);
-          setData(data);
-        }
-      } catch (error) {
-        console.error("Error fetching todos:", error.message);
-      }
-    };
-
-    getTodos();
-  }, []);
-
-  console.log(data);
+  // const date = new Date().toLocaleDateString("en-MY", {
+  //   month: "long",
+  // });
 
   return (
     <VStack space="md" className="p-4 flex-1">
-      <Text.Title>{date}</Text.Title>
+      <Text.Title>123</Text.Title>
       <HStack space="sm">
         <BigBox title="Expense" value="RM1000" />
         <BigBox title="Income" value="RM1000" />
@@ -68,53 +30,7 @@ const Home = () => {
         </Input>
       </HStack>
       <Divider />
-      <ScrollView>
-        <Accordion
-          size="md"
-          variant="filled"
-          type="single"
-          isCollapsible={true}
-          isDisabled={false}
-          className="bg-transparent gap-1"
-        >
-          {data?.map((data: any, index: number) => (
-            <AccordionItem
-              value={`item-${index}`}
-              className="rounded-lg"
-              key={index}
-            >
-              <AccordionHeader>
-                <AccordionTrigger>
-                  {({ isExpanded }) => {
-                    return (
-                      <>
-                        <AccordionTitleText>{data.name}</AccordionTitleText>
-                        <AccordionIcon
-                          as={ChevronDownIcon}
-                          className={isExpanded ? "rotate-180" : "rotate-0"}
-                        />
-                      </>
-                    );
-                  }}
-                </AccordionTrigger>
-              </AccordionHeader>
-              <AccordionContent>
-                <HStack space="sm">
-                  <Button variant="outline" size="sm">
-                    <ButtonText>View</ButtonText>
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <ButtonText>Edit</ButtonText>
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <ButtonText>Delete</ButtonText>
-                  </Button>
-                </HStack>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </ScrollView>
+      <Records />
       <Divider />
       <Button>
         <ButtonText>Add</ButtonText>
