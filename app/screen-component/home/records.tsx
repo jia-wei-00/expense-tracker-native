@@ -10,39 +10,34 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollView } from "react-native";
-import { supabase } from "@/supabase";
-import { Database } from "@/database.types";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
+import { VStack } from "@/components/ui/vstack";
+import { fetchExpense } from "@/store/features";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { Text } from "@/components";
+import { RecordType } from "./types";
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
+import { twMerge } from "tailwind-merge";
 
-const Records = () => {
-  const [data, setData] = React.useState<
-    Database["public"]["Tables"]["expense"]["Row"][]
-  >([]);
+interface RecordsProps {
+  search: string;
+  recordType: RecordType;
+}
+
+const Records = ({ search, recordType }: RecordsProps) => {
+  const dispatch = useAppDispatch();
+  const expenseData = useAppSelector((state) => state.expense);
+  const { expense, loading } = expenseData;
 
   React.useEffect(() => {
-    const getData = async () => {
-      try {
-        let { data, error } = await supabase.from("expense").select("*");
-
-        if (error) {
-          console.error("Error fetching expense:", error.message);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          console.log(data);
-          setData(data);
-        } else {
-          console.log("No data found");
-        }
-      } catch (error) {
-        console.error("Error fetching todos:", error);
-      }
-    };
-
-    getData();
+    !expense.length && dispatch(fetchExpense());
   }, []);
+
+  const filteredExpenses = React.useMemo(() => {
+    const isExpense = recordType === "expense";
+    return expense.filter((data) => data.is_expense === isExpense);
+  }, [expense, recordType]);
 
   return (
     <ScrollView>
@@ -54,42 +49,54 @@ const Records = () => {
         isDisabled={false}
         className="bg-transparent gap-1"
       >
-        {data?.map((data: any, index: number) => (
-          <AccordionItem
-            value={`item-${index}`}
-            className="rounded-lg"
-            key={index}
-          >
-            <AccordionHeader>
-              <AccordionTrigger>
-                {({ isExpanded }) => {
-                  return (
-                    <>
-                      <AccordionTitleText>{data.name}</AccordionTitleText>
-                      <AccordionIcon
-                        as={ChevronDownIcon}
-                        className={isExpanded ? "rotate-180" : "rotate-0"}
-                      />
-                    </>
-                  );
-                }}
-              </AccordionTrigger>
-            </AccordionHeader>
-            <AccordionContent>
-              <HStack space="sm">
-                <Button variant="outline" size="sm">
-                  <ButtonText>View</ButtonText>
-                </Button>
-                <Button variant="outline" size="sm">
-                  <ButtonText>Edit</ButtonText>
-                </Button>
-                <Button variant="outline" size="sm">
-                  <ButtonText>Delete</ButtonText>
-                </Button>
-              </HStack>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+        <SkeletonText isLoaded={!loading} className="h-10" _lines={5} />
+        {filteredExpenses
+          ?.filter(
+            (data) =>
+              data.name?.includes(search) ||
+              data.amount?.toString().includes(search)
+          )
+          .map((data, index: number) => (
+            <AccordionItem
+              value={`item-${index}`}
+              className="rounded-lg"
+              key={index}
+            >
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }) => {
+                    return (
+                      <>
+                        <VStack>
+                          <AccordionTitleText>{data.name}</AccordionTitleText>
+                          <AccordionTitleText>
+                            RM{data.amount}
+                          </AccordionTitleText>
+                        </VStack>
+                        <AccordionIcon
+                          as={ChevronDownIcon}
+                          className={isExpanded ? "rotate-180" : "rotate-0"}
+                        />
+                      </>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent>
+                <HStack space="sm">
+                  <Button variant="outline" size="sm">
+                    <ButtonText>View</ButtonText>
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <ButtonText>Edit</ButtonText>
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <ButtonText>Delete</ButtonText>
+                  </Button>
+                </HStack>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
       </Accordion>
     </ScrollView>
   );
