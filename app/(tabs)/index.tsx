@@ -38,7 +38,7 @@ const Home = () => {
         </Input>
       </HStack>
       <Divider />
-      <RecordTypeBlock setRecordType={setRecordType} />
+      <RecordTypeBlock recordType={recordType} setRecordType={setRecordType} />
       <Records search={search} recordType={recordType} />
       <Divider />
       <Button>
