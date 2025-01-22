@@ -13,12 +13,10 @@ import { ScrollView } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { fetchExpense } from "@/store/features";
+import { deleteExpense, fetchExpense } from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { Text } from "@/components";
 import { RecordType } from "./types";
-import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
-import { twMerge } from "tailwind-merge";
+import { SkeletonText } from "@/components/ui/skeleton";
 
 interface RecordsProps {
   search: string;
@@ -26,13 +24,9 @@ interface RecordsProps {
 }
 
 const Records = ({ search, recordType }: RecordsProps) => {
-  const dispatch = useAppDispatch();
   const expenseData = useAppSelector((state) => state.expense);
-  const { expense, loading } = expenseData;
-
-  React.useEffect(() => {
-    !expense.length && dispatch(fetchExpense());
-  }, []);
+  const dispatch = useAppDispatch();
+  const { expense, isFetching, isDeleting } = expenseData;
 
   const filteredExpenses = React.useMemo(() => {
     const isExpense = recordType === "expense";
@@ -49,7 +43,7 @@ const Records = ({ search, recordType }: RecordsProps) => {
         isDisabled={false}
         className="bg-transparent gap-1"
       >
-        <SkeletonText isLoaded={!loading} className="h-10" _lines={5} />
+        <SkeletonText isLoaded={!isFetching} className="h-10" _lines={5} />
         {filteredExpenses
           ?.filter(
             (data) =>
@@ -84,14 +78,23 @@ const Records = ({ search, recordType }: RecordsProps) => {
               </AccordionHeader>
               <AccordionContent>
                 <HStack space="sm">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onPress={() => {}}>
                     <ButtonText>View</ButtonText>
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onPress={() => {}}>
                     <ButtonText>Edit</ButtonText>
                   </Button>
-                  <Button variant="outline" size="sm">
-                    <ButtonText>Delete</ButtonText>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onPress={() => {
+                      dispatch(deleteExpense(data.id));
+                    }}
+                    disabled={isDeleting}
+                  >
+                    <ButtonText>
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </ButtonText>
                   </Button>
                 </HStack>
               </AccordionContent>

@@ -1,12 +1,12 @@
-import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import React from "react";
-import { LayoutChangeEvent, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { Text } from "@/components";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
 interface RecordTypeProps {
@@ -15,26 +15,42 @@ interface RecordTypeProps {
 }
 
 const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
-  const translateX = useSharedValue<number>(0);
   const containerWidth = useSharedValue<number>(0);
+  const color = useSharedValue<string>(
+    recordType === "expense" ? "red" : "green"
+  );
+  const translateX = useSharedValue<number>(
+    recordType === "expense" ? 0 : containerWidth.value
+  );
 
   const handlePress = (type: "expense" | "income") => {
     setRecordType(type);
-    translateX.value = withSpring(
-      type === "expense" ? 0 : containerWidth.value
-    );
+    translateX.value = type === "expense" ? 0 : containerWidth.value;
+    color.value = type === "expense" ? "red" : "green";
   };
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ translateX: translateX.value }],
+      transform: [
+        {
+          translateX: withSpring(translateX.value, {
+            duration: 1000,
+            dampingRatio: 0.7,
+            stiffness: 50,
+            overshootClamping: false,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 2,
+          }),
+        },
+      ],
+      backgroundColor: withTiming(color.value),
     };
   });
 
   return (
     <HStack className="relative">
       <Animated.View
-        style={[style.underline, animatedStyle]}
+        style={[style.animatedView, animatedStyle]}
         onLayout={(event) => {
           const { width } = event.nativeEvent.layout;
           containerWidth.value = width;
@@ -57,12 +73,11 @@ const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
 };
 
 const style = StyleSheet.create({
-  underline: {
+  animatedView: {
     position: "absolute",
-    borderBottomWidth: 2,
-    borderBottomColor: "blue",
+    height: "100%",
     width: "50%",
-    bottom: 0,
+    borderRadius: 5,
   },
 });
 
