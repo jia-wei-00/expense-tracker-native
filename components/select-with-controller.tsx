@@ -15,7 +15,7 @@ import {
 import FormWithController, {
   FormWithControllerProps,
 } from "./form-with-controller";
-import { Text } from "@/components";
+import { Text } from "@/components/Text/index";
 import { Box } from "@/components/ui/box";
 import { ScrollView } from "react-native";
 import Animated, {
@@ -23,7 +23,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-
+import { twMerge } from "tailwind-merge";
 interface SelectWithControllerProps
   extends FormWithControllerProps,
     React.ComponentProps<typeof Select> {
@@ -44,6 +44,7 @@ const SelectWithController = ({
   ...rest
 }: SelectWithControllerProps) => {
   const rotate = useSharedValue<number>(0);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -70,18 +71,25 @@ const SelectWithController = ({
             options.find((option) => option.value === value)?.label
           }
           onOpen={() => {
+            setIsOpen(true);
             rotate.value = 180;
           }}
           onClose={() => {
+            setIsOpen(false);
             rotate.value = 0;
           }}
           {...rest}
         >
           <SelectTrigger size={size}>
-            <SelectInput placeholder={placeholder} className="flex-1" />
-            <Animated.View style={[animatedStyle]} className="w-4 mr-3">
-              <SelectIcon className="mr-3" as={ChevronDownIcon} />
-            </Animated.View>
+            <SelectInput
+              placeholder={placeholder}
+              value={options.find((option) => option.value === value)?.label}
+              className="flex-1 py-0"
+            />
+            <SelectIcon
+              className={twMerge("mr-3", isOpen ? "rotate-180" : "rotate-0")}
+              as={ChevronDownIcon}
+            />
           </SelectTrigger>
           <SelectPortal>
             <SelectBackdrop className="bg-black/50" />

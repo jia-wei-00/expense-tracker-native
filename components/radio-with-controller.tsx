@@ -50,6 +50,7 @@ const RadioWithController = ({
         ) : (
           <RadioGroup
             onChange={(value) => handleChange(onChange, value)}
+            value={value}
             {...rest}
           >
             <HStack space="sm">

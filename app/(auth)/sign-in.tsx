@@ -26,7 +26,7 @@ export default function Login() {
         <Input variant="outline" size="md">
           <InputField
             onChangeText={(text) => setPassword(text)}
-            placeholder="Password"
+            placeholder="password"
             value={password}
             secureTextEntry={true}
           />

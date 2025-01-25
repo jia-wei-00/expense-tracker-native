@@ -5,8 +5,10 @@ import { fetchExpense } from "./fetch-expense";
 import { addExpense } from "./add-expense";
 import { deleteExpense } from "./delete-expense";
 
+export type Expense = Database["public"]["Tables"]["expense"]["Row"];
+
 interface ExpenseState {
-  expense: Database["public"]["Tables"]["expense"]["Row"][];
+  expense: Expense[];
   isFetching: boolean;
   isSubmitting: boolean;
   isDeleting: boolean;

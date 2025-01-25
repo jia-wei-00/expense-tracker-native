@@ -4,7 +4,7 @@ export type AddRecordSchema = yup.InferType<typeof addRecordSchema>;
 
 export const addRecordSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
-  is_expense: yup.boolean().required("Transaction type is required"),
+  is_expense: yup.string().required("Transaction type is required"),
   amount: yup
     .number()
     .required("Amount is required")

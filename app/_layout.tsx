@@ -1,17 +1,17 @@
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import { useProtectedRoute } from "@/features/authentication/auth.guard";
+import * as SplashScreen from "expo-splash-screen";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { useColorScheme } from "@/components/useColorScheme";
+import { Stack } from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import "../global.css";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import * as SplashScreen from "expo-splash-screen";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { useColorScheme } from "@/components/useColorScheme";
-import { Stack } from "expo-router";
-
-import "../global.css";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,15 +42,17 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
-      <Provider store={store}>
+    <SafeAreaProvider>
+      <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <App />
+          <Provider store={store}>
+            <App />
+          </Provider>
         </ThemeProvider>
-      </Provider>
-    </GluestackUIProvider>
+      </GluestackUIProvider>
+    </SafeAreaProvider>
   );
 }
 

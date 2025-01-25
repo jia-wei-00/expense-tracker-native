@@ -12,15 +12,26 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Icon } from "@/components/ui/icon";
 import { CloseIcon } from "@/assets/Icons";
-import { Control, FieldValues, Resolver, useForm } from "react-hook-form";
+import { DefaultValues, Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addRecordSchema, AddRecordSchema } from "./schemes";
 import AddRecordForm from "./add-record-form";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addExpense, fetchCategory } from "@/store/features";
+import dayjs from "dayjs";
 
-const AddRecord = () => {
-  const [showModal, setShowModal] = React.useState(false);
+interface RecordDetailsModalProps {
+  showModal: boolean;
+  defaultValues?: DefaultValues<AddRecordSchema>;
+  onClose?: () => void;
+  setShowModal: (value: boolean) => void;
+}
+
+const RecordDetailsModal = ({
+  showModal,
+  defaultValues,
+  onClose,
+}: RecordDetailsModalProps) => {
   const { category, loading } = useAppSelector((state) => state.category);
   const { session } = useAppSelector((state) => state.auth);
   const { isSubmitting } = useAppSelector((state) => state.expense);
@@ -28,91 +39,102 @@ const AddRecord = () => {
 
   React.useEffect(() => {
     session && !category.length && dispatch(fetchCategory(session.user.id));
+
+    if (defaultValues) {
+      reset({
+        name: defaultValues.name,
+        amount: defaultValues.amount,
+        is_expense: defaultValues.is_expense,
+        category: defaultValues.category,
+        spend_date: dayjs(defaultValues.spend_date).valueOf(),
+      });
+    }
   }, [session]);
 
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState,
-    watch,
-    resetField,
-    reset,
-  } = useForm<AddRecordSchema>({
+  const formMethods = useForm<AddRecordSchema>({
     resolver: yupResolver(addRecordSchema) as Resolver<AddRecordSchema>,
     defaultValues: {
-      spend_date: Date.now(),
+      spend_date: dayjs().valueOf(),
     },
   });
+  const { reset, handleSubmit, setValue } = formMethods;
+
+  React.useEffect(() => {
+    if (defaultValues) {
+      setValue("name", defaultValues?.name ?? "");
+      setValue("amount", defaultValues.amount ?? 0);
+      setValue("is_expense", defaultValues.is_expense ?? "");
+      setValue("category", defaultValues.category ?? "");
+      setValue("spend_date", defaultValues.spend_date ?? dayjs().valueOf());
+    }
+  }, [defaultValues]);
+
+  const handleCloseModal = () => {
+    if (defaultValues) {
+      reset({ is_expense: "", amount: 0 });
+    }
+    onClose && onClose();
+  };
 
   const onSubmit = (data: AddRecordSchema) => {
     session?.user.id &&
       dispatch(
         addExpense({
           ...data,
+          is_expense: data.is_expense === "true",
           user_id: session.user.id,
           created_at: new Date().toISOString(),
           category: Number(data.category),
           spend_date: new Date(data.spend_date).toISOString(),
         })
       ).then(() => {
-        reset();
-        setShowModal(false);
+        reset({ is_expense: "", amount: 0 });
+        handleCloseModal();
       });
   };
 
   return (
-    <>
-      <Button onPress={() => setShowModal(true)}>
-        <ButtonText>Add</ButtonText>
-      </Button>
-      <Modal
-        isOpen={showModal}
-        onClose={() => {
-          setShowModal(false);
-        }}
-        size="md"
-      >
-        <ModalBackdrop />
-        <ModalContent>
-          <ModalHeader>
-            <Heading size="lg" className="text-typography-950">
-              Add Record
-            </Heading>
-            <ModalCloseButton>
-              <Icon
-                as={CloseIcon}
-                size="md"
-                className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
-              />
-            </ModalCloseButton>
-          </ModalHeader>
-          <ModalBody>
-            <AddRecordForm
-              control={control as unknown as Control<FieldValues>}
-              getValues={getValues}
-              formState={formState}
-              category={category}
-              loading={loading}
-              resetField={resetField}
-              watch={watch}
+    <Modal isOpen={showModal} onClose={handleCloseModal} size="md">
+      <ModalBackdrop />
+      <ModalContent>
+        <ModalHeader>
+          <Heading size="lg" className="text-typography-950">
+            {defaultValues ? "Edit" : "Add"} Record
+          </Heading>
+          <ModalCloseButton>
+            <Icon
+              as={CloseIcon}
+              size="md"
+              className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
             />
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              className="w-fit self-end mt-4"
-              size="sm"
-              onPress={handleSubmit(onSubmit)}
-            >
-              <ButtonText>
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </ButtonText>
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+          </ModalCloseButton>
+        </ModalHeader>
+        <ModalBody>
+          <AddRecordForm
+            allFormMethods={formMethods}
+            category={category}
+            loading={loading}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            className="w-fit self-end mt-4"
+            size="sm"
+            onPress={() => reset({ is_expense: "", amount: 0 })}
+          >
+            <ButtonText>Clear</ButtonText>
+          </Button>
+          <Button
+            className="w-fit self-end mt-4"
+            size="sm"
+            onPress={handleSubmit(onSubmit)}
+          >
+            <ButtonText>{isSubmitting ? "Submitting..." : "Submit"}</ButtonText>
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 
-export default AddRecord;
+export default RecordDetailsModal;

@@ -1,10 +1,10 @@
-import { Database } from "@/database.types";
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { Expense } from "./expense-slice";
 
 export const addExpense = createAsyncThunk(
   "expense/addExpense",
-  async (expense: Database["public"]["Tables"]["expense"]["Row"]) => {
+  async (expense: Expense) => {
     try {
       const { data, error } = await supabase.from("expense").insert(expense);
       if (error) {

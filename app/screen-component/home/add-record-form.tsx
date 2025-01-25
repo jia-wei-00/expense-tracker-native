@@ -1,42 +1,36 @@
 import React from "react";
-import {
-  Control,
-  FieldValues,
-  FormState,
-  UseFormGetValues,
-  UseFormResetField,
-  UseFormWatch,
-} from "react-hook-form";
+import { Control, FieldValues, UseFormReturn } from "react-hook-form";
 import {
   DatePickerWithController,
   InputWithController,
   RadioWithController,
   SelectWithController,
 } from "@/components";
-import { AddRecordSchema } from "./schemes";
 import { VStack } from "@/components/ui/vstack";
 import { Database } from "@/database.types";
 import { Divider } from "@/components/ui/divider";
+import { AddRecordSchema } from "./schemes";
 
-interface AddRecordFormProps {
-  control: Control<FieldValues>;
-  getValues: UseFormGetValues<AddRecordSchema>;
-  formState: FormState<AddRecordSchema>;
-  watch: UseFormWatch<AddRecordSchema>;
+export interface AddRecordFormProps {
   category: Database["public"]["Tables"]["expense_category"]["Row"][];
   loading: boolean;
-  resetField: UseFormResetField<AddRecordSchema>;
+  allFormMethods: UseFormReturn<AddRecordSchema>;
 }
 
 const AddRecordForm = ({
-  control,
-  formState,
+  allFormMethods,
   category,
   loading,
-  watch,
-  resetField,
 }: AddRecordFormProps) => {
+  const {
+    control: controlWithController,
+    formState,
+    watch,
+    resetField,
+  } = allFormMethods;
   const { errors } = formState;
+
+  const control = controlWithController as unknown as Control<FieldValues>;
   const isExpense = watch("is_expense") as unknown as string;
 
   const filteredCategory = React.useMemo(() => {
@@ -68,7 +62,6 @@ const AddRecordForm = ({
         keyboardType="numeric"
         inputMode="decimal"
       />
-
       <DatePickerWithController
         control={control}
         errors={errors.spend_date?.message}

@@ -57,7 +57,7 @@ export function useProtectedRoute() {
       router.push("/sign-in");
     } else if (userSession && inAuthGroup) {
       // Redirect away from the sign-in page.
-      router.push("/(tabs)/");
+      router.push("/(tabs)");
     }
   }, [userSession, segments]);
 }

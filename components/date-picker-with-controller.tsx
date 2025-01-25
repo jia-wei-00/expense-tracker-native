@@ -58,7 +58,7 @@ const SelectWithController = ({
             <InputField
               type="text"
               onBlur={onBlur}
-              value={dayjs(value).format("MM/DD/YYYY")}
+              value={dayjs(value).format("DD/MM/YYYY")}
               editable={false}
               {...inputProps}
             />

@@ -1,5 +1,5 @@
 import React from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import { Controller, ControllerProps, FieldValues } from "react-hook-form";
 import { AlertIcon } from "@/assets/Icons";
 import {
   FormControl,
@@ -15,11 +15,12 @@ export type FormWithControllerProps = Omit<
   "children"
 >;
 
-interface BaseFormWithControllerProps {
-  control: Control<FieldValues>;
+type BaseFormWithControllerProps = Pick<
+  ControllerProps<FieldValues, string>,
+  "name" | "control"
+> & {
   errors?: string;
   required?: boolean;
-  name: string;
   label?: string;
   size?: React.ComponentProps<typeof FormControl>["size"];
   children: (props: {
@@ -27,7 +28,7 @@ interface BaseFormWithControllerProps {
     onChange: (value: string) => void;
     onBlur: () => void;
   }) => React.ReactNode;
-}
+};
 
 const SelectWithController = ({
   control,

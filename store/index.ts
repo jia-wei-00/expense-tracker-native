@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { counterReducer } from "./features/counter/counter-slice";
 import { authReducer } from "./features/authentication/auth-slice";
+import { scrollReducer } from "./features/scroll/scroll-slice";
 import { supabaseAuthSlice } from "./features/authentication/supabase-auth-slice";
 import { expenseReducer, categoryReducer } from "./features/database-store";
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     expense: expenseReducer,
     category: categoryReducer,
+    scroll: scrollReducer,
     [supabaseAuthSlice.reducerPath]: supabaseAuthSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

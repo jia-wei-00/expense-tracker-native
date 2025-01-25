@@ -7,21 +7,28 @@ import {
   OverallBlock,
   Records,
   RecordTypeBlock,
-  AddRecord,
 } from "../screen-component/home";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
 import { RecordType } from "../screen-component/home/types";
-import { RefreshControl, ScrollView } from "react-native";
+import {
+  Dimensions,
+  RefreshControl,
+  ScrollView,
+  StatusBar,
+} from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { fetchExpense, subscribeToExpenseChanges } from "@/store/features";
+import { Button, ButtonText } from "@/components/ui/button";
 
 const Home = () => {
   const [search, setSearch] = React.useState<string>("");
+  const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
   const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
   const expenseData = useAppSelector((state) => state.expense);
+  const scrollEnabled = useAppSelector((state) => state.scroll.scrollEnabled);
   const { expense, isFetching } = expenseData;
 
   const date = new Date().toLocaleDateString("en-MY", {
@@ -51,12 +58,15 @@ const Home = () => {
 
   return (
     <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={isFetching} onRefresh={fetchExpenseData} />
-      }
-      contentContainerStyle={{ flexGrow: 1 }}
+    // refreshControl={
+    //   <RefreshControl
+    //     refreshing={scrollEnabled && isFetching}
+    //     onRefresh={scrollEnabled ? fetchExpenseData : undefined}
+    //   />
+    // }
+    // scrollEnabled={false}
     >
-      <VStack space="md" className="p-4 h-full">
+      <VStack space="md" className="p-2">
         <Text.Title className="uppercase">{date}</Text.Title>
         <OverallBlock />
         <HStack className="justify-between items-end">
@@ -77,9 +87,16 @@ const Home = () => {
           recordType={recordType}
           setRecordType={setRecordType}
         />
-        <Records search={search} recordType={recordType} />
+        <Records
+          search={search}
+          recordType={recordType}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
         <Divider />
-        <AddRecord />
+        <Button onPress={() => setShowModal(true)}>
+          <ButtonText>Add</ButtonText>
+        </Button>
       </VStack>
     </ScrollView>
   );

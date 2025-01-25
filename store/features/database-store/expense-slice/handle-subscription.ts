@@ -1,12 +1,10 @@
 import { supabase } from "@/supabase";
+import { AppDispatch } from "@/store";
 import {
   addExpenseSubscription,
   deleteExpenseSubscription,
   updateExpenseSubscription,
-} from "../..";
-import { useAppDispatch } from "@/hooks/useRedux";
-import { AppDispatch } from "@/store";
-
+} from "./expense-slice";
 export const subscribeToExpenseChanges = ({
   userId,
   dispatch,
