@@ -11,3 +11,7 @@ export { default as AlertIcon } from "./alert";
 export { default as CircleIcon } from "./circle";
 export { default as CheckedIcon } from "./checked";
 export { default as CalendarIcon } from "./calendar";
+export { default as PlusIcon } from "./plus";
+export { default as UserIcon } from "./user";
+export { default as EditIcon } from "./edit";
+export { default as TrashIcon } from "./trash";

@@ -23,6 +23,7 @@ type BaseFormWithControllerProps = Pick<
   required?: boolean;
   label?: string;
   size?: React.ComponentProps<typeof FormControl>["size"];
+  isReadOnly?: boolean;
   children: (props: {
     value: string;
     onChange: (value: string) => void;
@@ -38,16 +39,24 @@ const SelectWithController = ({
   label,
   size = "sm",
   children,
+  isReadOnly = false,
 }: BaseFormWithControllerProps) => {
   return (
     <Controller
       control={control}
       rules={{ required }}
       render={({ field: { onChange, onBlur, value } }) => (
-        <FormControl isRequired={required} isInvalid={!!errors} size={size}>
+        <FormControl
+          isRequired={required}
+          isInvalid={!!errors}
+          size={size}
+          isReadOnly={isReadOnly}
+        >
           {label && (
             <FormControlLabel>
-              <FormControlLabelText>{label}</FormControlLabelText>
+              <FormControlLabelText className="dark:text-zinc-400">
+                {label}
+              </FormControlLabelText>
             </FormControlLabel>
           )}
           {children({ onChange, onBlur, value })}

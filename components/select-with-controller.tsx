@@ -10,6 +10,7 @@ import {
   SelectInput,
   SelectItem,
   SelectPortal,
+  SelectScrollView,
   SelectTrigger,
 } from "./ui/select";
 import FormWithController, {
@@ -17,7 +18,6 @@ import FormWithController, {
 } from "./form-with-controller";
 import { Text } from "@/components/Text/index";
 import { Box } from "@/components/ui/box";
-import { ScrollView } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -41,6 +41,10 @@ const SelectWithController = ({
   size = "sm",
   options,
   loading = false,
+  isReadOnly = false,
+  children,
+  onOpen,
+  onClose,
   ...rest
 }: SelectWithControllerProps) => {
   const rotate = useSharedValue<number>(0);
@@ -63,6 +67,7 @@ const SelectWithController = ({
       name={name}
       label={label}
       size={size}
+      isReadOnly={isReadOnly}
     >
       {({ value, onChange }) => (
         <Select
@@ -73,10 +78,12 @@ const SelectWithController = ({
           onOpen={() => {
             setIsOpen(true);
             rotate.value = 180;
+            onOpen?.();
           }}
           onClose={() => {
             setIsOpen(false);
             rotate.value = 0;
+            onClose?.();
           }}
           {...rest}
         >
@@ -97,7 +104,7 @@ const SelectWithController = ({
               <SelectDragIndicatorWrapper>
                 <SelectDragIndicator />
               </SelectDragIndicatorWrapper>
-              <ScrollView className="w-full max-h-5/6">
+              <SelectScrollView className="w-full max-h-5/6">
                 {loading ? (
                   <Box className="p-4">
                     <Text.Normal>Loading...</Text.Normal>
@@ -116,7 +123,8 @@ const SelectWithController = ({
                     <Text.Normal>No options</Text.Normal>
                   </Box>
                 )}
-              </ScrollView>
+                {children}
+              </SelectScrollView>
             </SelectContent>
           </SelectPortal>
         </Select>

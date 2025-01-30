@@ -9,16 +9,11 @@ import {
   AccordionTitleText,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FlatList, RefreshControl, ScrollView, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import {
-  deleteExpense,
-  Expense,
-  fetchExpense,
-  setScrollEnabled,
-} from "@/store/features";
+import { Expense } from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { RecordType } from "./types";
 import { SkeletonText } from "@/components/ui/skeleton";
@@ -26,6 +21,12 @@ import RecordDetailsModal from "./add-record";
 import { AddRecordSchema } from "./schemes";
 import { DefaultValues } from "react-hook-form";
 import dayjs from "dayjs";
+import ConfirmDeleteModal from "./confirm-delete-modal";
+
+export interface ModalDefaultValues extends DefaultValues<AddRecordSchema> {
+  id: string;
+  created_at?: string;
+}
 
 interface RecordsProps {
   search: string;
@@ -41,21 +42,35 @@ const Records = ({
   setShowModal,
 }: RecordsProps) => {
   const expenseData = useAppSelector((state) => state.expense);
-  const dispatch = useAppDispatch();
   const { expense, isFetching, isDeleting } = expenseData;
   const [defaultValues, setDefaultValues] =
-    React.useState<DefaultValues<AddRecordSchema>>();
+    React.useState<ModalDefaultValues>();
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] =
+    React.useState(false);
+  const [deleteData, setDeleteData] = React.useState<{
+    id: string;
+    name: string;
+    amount: number;
+  }>();
 
   const filteredExpenses = React.useMemo(() => {
     const isExpense = recordType === "expense";
     return expense.filter((data) => data.is_expense === isExpense);
   }, [expense, recordType]);
 
-  const { session } = useAppSelector((state) => state.auth);
-  const scrollEnabled = useAppSelector((state) => state.scroll.scrollEnabled);
+  const handleEdit = (data: Expense, hasCreatedDate = false) => {
+    handleSetDefaultValue(data, hasCreatedDate);
+    setShowModal(true);
+  };
 
-  const handleEdit = (data: Expense) => {
+  const handleDelete = (data: { id: string; name: string; amount: number }) => {
+    setDeleteData(data);
+    setShowConfirmDeleteModal(true);
+  };
+
+  const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
     setDefaultValues({
+      id: data.id!.toString(),
       name: data.name ?? "",
       amount: data.amount ?? 0,
       is_expense: data.is_expense ? "true" : "false",
@@ -63,19 +78,14 @@ const Records = ({
       spend_date: data.spend_date
         ? dayjs(data.spend_date).valueOf()
         : dayjs().valueOf(),
+      ...(hasCreatedDate ? { created_at: data.created_at } : {}),
     });
-
-    setShowModal(true);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
     defaultValues && setDefaultValues(undefined);
+    setShowModal(false);
   };
-
-  const fetchExpenseData = React.useCallback(() => {
-    session && dispatch(fetchExpense(session?.user.id));
-  }, [session]);
 
   return (
     <>
@@ -85,16 +95,20 @@ const Records = ({
         type="single"
         isCollapsible={true}
         isDisabled={false}
-        className="bg-transparent gap-1 flex-grow"
+        className="bg-transparent"
       >
         <SkeletonText isLoaded={!isFetching} className="h-10" _lines={5} />
         <FlatList
           data={filteredExpenses?.filter(
             (data) =>
-              data.name?.includes(search) ||
-              data.amount?.toString().includes(search)
+              data.name?.toLowerCase().includes(search.toLowerCase()) ||
+              data.amount
+                ?.toString()
+                .toLowerCase()
+                .includes(search.toLowerCase())
           )}
-          nestedScrollEnabled={true}
+          nestedScrollEnabled={false}
+          scrollEnabled={false}
           ItemSeparatorComponent={() => <View className="pt-2" />}
           renderItem={({ item }) => (
             <AccordionItem
@@ -124,7 +138,11 @@ const Records = ({
               </AccordionHeader>
               <AccordionContent>
                 <HStack space="sm">
-                  <Button variant="outline" size="sm" onPress={() => {}}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onPress={() => handleEdit(item, true)}
+                  >
                     <ButtonText>View</ButtonText>
                   </Button>
                   <Button
@@ -137,14 +155,16 @@ const Records = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    onPress={() => {
-                      item.id && dispatch(deleteExpense(item.id));
-                    }}
+                    onPress={() =>
+                      handleDelete({
+                        id: item.id!.toString(),
+                        name: item.name ?? "",
+                        amount: item.amount ?? 0,
+                      })
+                    }
                     disabled={isDeleting}
                   >
-                    <ButtonText>
-                      {isDeleting ? "Deleting..." : "Delete"}
-                    </ButtonText>
+                    <ButtonText>Delete</ButtonText>
                   </Button>
                 </HStack>
               </AccordionContent>
@@ -158,6 +178,14 @@ const Records = ({
         setShowModal={setShowModal}
         defaultValues={defaultValues}
         onClose={handleCloseModal}
+      />
+      <ConfirmDeleteModal
+        showModal={showConfirmDeleteModal}
+        setShowModal={setShowConfirmDeleteModal}
+        onClose={() => {
+          setDeleteData(undefined);
+        }}
+        data={deleteData}
       />
     </>
   );

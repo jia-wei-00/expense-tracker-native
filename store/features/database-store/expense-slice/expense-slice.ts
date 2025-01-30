@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchExpense } from "./fetch-expense";
 import { addExpense } from "./add-expense";
 import { deleteExpense } from "./delete-expense";
+import { updateExpense } from "./update-expense";
 
 export type Expense = Database["public"]["Tables"]["expense"]["Row"];
 
@@ -12,6 +13,8 @@ interface ExpenseState {
   isFetching: boolean;
   isSubmitting: boolean;
   isDeleting: boolean;
+  isUpdating: boolean;
+  balance: number;
 }
 
 const initialState: ExpenseState = {
@@ -19,6 +22,8 @@ const initialState: ExpenseState = {
   isFetching: false,
   isSubmitting: false,
   isDeleting: false,
+  isUpdating: false,
+  balance: 0,
 };
 
 const expenseSlice = createSlice({
@@ -27,6 +32,9 @@ const expenseSlice = createSlice({
   reducers: {
     setExpense: (state, action) => {
       state.expense = action.payload;
+    },
+    setBalance: (state, action) => {
+      state.balance = action.payload;
     },
     addExpenseSubscription: (state, action) => {
       state.expense.push(action.payload);
@@ -73,6 +81,15 @@ const expenseSlice = createSlice({
     });
     builder.addCase(deleteExpense.rejected, (state) => {
       state.isDeleting = false;
+    });
+    builder.addCase(updateExpense.fulfilled, (state) => {
+      state.isUpdating = false;
+    });
+    builder.addCase(updateExpense.pending, (state) => {
+      state.isUpdating = true;
+    });
+    builder.addCase(updateExpense.rejected, (state) => {
+      state.isUpdating = false;
     });
   },
 });

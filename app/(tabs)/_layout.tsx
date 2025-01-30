@@ -3,6 +3,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Menu } from "@/components";
+import { HistoryIcon, HomeIcon, UserIcon } from "@/assets/Icons";
+import TabBar from "@/components/tab-bar";
+import { Icon } from "@/components/ui/icon";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -18,28 +21,31 @@ export default function TabLayout() {
         headerRight: () => <Menu />,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        headerShown: useClientOnlyValue(false, false),
       }}
+      tabBar={(props) => <TabBar {...props} />}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => {
+            return <Icon as={HomeIcon} color={color} />;
+          },
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: "History",
-          tabBarIcon: ({ color }) => <TabBarIcon name="star-o" color={color} />,
+          tabBarIcon: ({ color }) => <Icon as={HistoryIcon} color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => <TabBarIcon name="star-o" color={color} />,
+          tabBarIcon: ({ color }) => <Icon as={UserIcon} color={color} />,
         }}
       />
     </Tabs>

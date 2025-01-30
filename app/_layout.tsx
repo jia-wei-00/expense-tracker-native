@@ -12,6 +12,8 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import React from "react";
+import { KeyboardAvoidingView } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.

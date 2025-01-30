@@ -33,8 +33,7 @@ const InputWithController = ({
       {({ value, onChange, onBlur }) => (
         <Input className="text-center" size="sm" isReadOnly={isReadOnly}>
           <InputField
-            type="text"
-            value={value}
+            value={value?.toString()}
             onChangeText={onChange}
             onBlur={onBlur}
             placeholder={placeholder}

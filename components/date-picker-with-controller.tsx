@@ -28,6 +28,7 @@ interface BaseFormWithControllerProps {
   size?: React.ComponentProps<typeof FormControl>["size"];
   inputProps?: React.ComponentProps<typeof InputField>;
   datePickerProps?: React.ComponentProps<typeof RNDateTimePicker>;
+  isReadOnly?: boolean;
 }
 
 const SelectWithController = ({
@@ -39,6 +40,7 @@ const SelectWithController = ({
   size = "sm",
   datePickerProps,
   inputProps,
+  isReadOnly = false,
 }: BaseFormWithControllerProps) => {
   const [openDatePicker, setOpenDatePicker] = React.useState(false);
 
@@ -47,10 +49,17 @@ const SelectWithController = ({
       control={control}
       rules={{ required }}
       render={({ field: { onChange, onBlur, value } }) => (
-        <FormControl isRequired={required} isInvalid={!!errors} size={size}>
+        <FormControl
+          isRequired={required}
+          isInvalid={!!errors}
+          size={size}
+          isReadOnly={isReadOnly}
+        >
           {label && (
             <FormControlLabel>
-              <FormControlLabelText>{label}</FormControlLabelText>
+              <FormControlLabelText className="dark:text-zinc-400">
+                {label}
+              </FormControlLabelText>
             </FormControlLabel>
           )}
 

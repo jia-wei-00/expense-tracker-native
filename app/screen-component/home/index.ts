@@ -4,3 +4,5 @@ export { default as OverallBlock } from "./overall-block";
 export { default as RecordTypeBlock } from "./record-type";
 export { default as RecordDetailsModal } from "./add-record";
 export { default as AddRecordForm } from "./add-record-form";
+export { default as AddRecordButton } from "./add-record-button";
+export { default as ConfirmDeleteModal } from "./confirm-delete-modal";
