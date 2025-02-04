@@ -15,18 +15,17 @@ import { Text } from "@/components";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { deleteExpense } from "@/store/features";
-import { ModalDefaultValues } from "./records";
 import colors from "tailwindcss/colors";
 
 interface ConfirmDeleteModalProps {
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
   data?: {
-    id: string;
+    id: number;
     name: string;
-    amount: number;
   };
   onClose?: () => void;
+  type: "expense" | "category";
 }
 
 const ConfirmDeleteModal = ({
@@ -34,6 +33,7 @@ const ConfirmDeleteModal = ({
   setShowModal,
   data,
   onClose,
+  type,
 }: ConfirmDeleteModalProps) => {
   const dispatch = useAppDispatch();
   const expenseData = useAppSelector((state) => state.expense);

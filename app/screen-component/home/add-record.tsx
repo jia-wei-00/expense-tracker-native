@@ -14,7 +14,12 @@ import { Icon } from "@/components/ui/icon";
 import { CalendarIcon, CloseIcon } from "@/assets/Icons";
 import { Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addRecordSchema, AddRecordSchema } from "./schemes";
+import {
+  addRecordSchema,
+  AddRecordSchema,
+  categorySchema,
+  CategorySchema,
+} from "./schemes";
 import AddRecordForm from "./add-record-form";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addExpense, fetchCategory, updateExpense } from "@/store/features";
@@ -27,20 +32,24 @@ import {
   FormControlLabelText,
 } from "@/components/ui/form-control";
 import { ModalDefaultValues } from "./records";
+import { CategoryForm } from "../category";
 
 interface RecordDetailsModalProps {
   showModal: boolean;
   defaultValues?: ModalDefaultValues;
   onClose?: () => void;
+  type: "expense" | "category";
   setShowModal: (value: boolean) => void;
 }
 
 const RecordDetailsModal = ({
   showModal,
+  setShowModal,
   defaultValues,
   onClose,
+  type,
 }: RecordDetailsModalProps) => {
-  const { category, loading } = useAppSelector((state) => state.category);
+  const { category, isFetching } = useAppSelector((state) => state.category);
   const { session } = useAppSelector((state) => state.auth);
   const { isSubmitting, isUpdating } = useAppSelector((state) => state.expense);
   const dispatch = useAppDispatch();
@@ -49,28 +58,46 @@ const RecordDetailsModal = ({
     session && !category.length && dispatch(fetchCategory(session.user.id));
   }, [session]);
 
-  const formMethods = useForm<AddRecordSchema>({
+  const recordFormMethods = useForm<AddRecordSchema>({
     resolver: yupResolver(addRecordSchema) as Resolver<AddRecordSchema>,
     defaultValues: {
       spend_date: dayjs().valueOf(),
     },
   });
-  const { reset, handleSubmit, setValue } = formMethods;
+  const { reset, handleSubmit, setValue } = recordFormMethods;
+
+  const categoryFormMethods = useForm<CategorySchema>({
+    resolver: yupResolver(categorySchema) as Resolver<CategorySchema>,
+  });
+  const {
+    reset: resetCategory,
+    handleSubmit: handleSubmitCategory,
+    setValue: setValueCategory,
+  } = categoryFormMethods;
 
   React.useEffect(() => {
     if (defaultValues) {
-      reset({
-        name: "",
-        is_expense: "",
-        amount: 0,
-        category: "",
-        spend_date: dayjs().valueOf(),
-      });
-      setValue("name", defaultValues?.name ?? "");
-      setValue("amount", defaultValues?.amount ?? 0);
-      setValue("is_expense", defaultValues.is_expense ?? "");
-      setValue("category", defaultValues.category ?? "");
-      setValue("spend_date", defaultValues.spend_date ?? dayjs().valueOf());
+      if (type === "expense") {
+        reset({
+          name: "",
+          is_expense: "",
+          amount: 0,
+          category: "",
+          spend_date: dayjs().valueOf(),
+        });
+        setValue("name", defaultValues?.name ?? "");
+        setValue("is_expense", defaultValues.is_expense ?? "");
+        setValue("amount", defaultValues?.amount ?? 0);
+        setValue("category", defaultValues.category ?? "");
+        setValue("spend_date", defaultValues.spend_date ?? dayjs().valueOf());
+      } else {
+        resetCategory({
+          name: "",
+          is_expense: "",
+        });
+        setValueCategory("name", defaultValues?.name ?? "");
+        setValueCategory("is_expense", defaultValues.is_expense ?? "");
+      }
     }
   }, [defaultValues]);
 
@@ -82,13 +109,20 @@ const RecordDetailsModal = ({
   };
 
   const resetForm = () => {
-    reset({
-      name: "",
-      is_expense: "",
-      amount: 0,
-      category: "",
-      spend_date: dayjs().valueOf(),
-    });
+    if (type === "expense") {
+      reset({
+        name: "",
+        is_expense: "",
+        amount: 0,
+        category: "",
+        spend_date: dayjs().valueOf(),
+      });
+    } else {
+      resetCategory({
+        name: "",
+        is_expense: "",
+      });
+    }
   };
 
   const handleDisableSubmit = (data: AddRecordSchema) => {
@@ -168,12 +202,25 @@ const RecordDetailsModal = ({
           </ModalCloseButton>
         </ModalHeader>
         <ModalBody>
-          <AddRecordForm
-            allFormMethods={formMethods}
-            category={category}
-            loading={loading}
-            isReadOnly={!!defaultValues?.created_at}
-          />
+          {type === "expense" ? (
+            <AddRecordForm
+              allFormMethods={recordFormMethods}
+              category={category}
+              loading={isFetching}
+              isReadOnly={!!defaultValues?.created_at}
+              setShowModal={setShowModal}
+              onClose={handleCloseModal}
+            />
+          ) : (
+            <CategoryForm
+              allFormMethods={categoryFormMethods}
+              category={category}
+              loading={isFetching}
+              isReadOnly={!!defaultValues?.created_at}
+              setShowModal={setShowModal}
+              onClose={handleCloseModal}
+            />
+          )}
           {defaultValues?.created_at && (
             <FormControl isRequired={true} size="sm">
               <FormControlLabel>
@@ -215,7 +262,7 @@ const RecordDetailsModal = ({
               className="mt-4"
               size="sm"
               onPress={handleSubmit(onSubmit)}
-              disabled={handleDisableSubmit(formMethods.watch())}
+              disabled={handleDisableSubmit(recordFormMethods.watch())}
             >
               {(isSubmitting || isUpdating) && (
                 <ButtonSpinner color={colors.gray[700]} />

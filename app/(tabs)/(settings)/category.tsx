@@ -5,45 +5,33 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import {
   AddRecordButton,
-  OverallBlock,
   Records,
   RecordTypeBlock,
-} from "../screen-component/home";
+} from "../../screen-component/home";
+import { RecordType } from "../../screen-component/home/types";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
-import { RecordType } from "../screen-component/home/types";
 import { RefreshControl, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import {
-  Expense,
-  fetchExpense,
-  subscribeToExpenseChanges,
-} from "@/store/features";
-import { ModalDefaultValues } from "../screen-component/home/records";
-import dayjs from "dayjs";
+import { fetchCategory, subscribeToExpenseChanges } from "@/store/features";
+import { ModalDefaultValues } from "@/app/screen-component/home/records";
+import { Category as CategorySchema } from "@/store/features";
 
-const History = () => {
+const Category = () => {
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
-  const [recordType, setRecordType] = React.useState<RecordType>("expense");
+  const [categoryType, setCategoryType] = React.useState<RecordType>("expense");
   const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
-  const expenseData = useAppSelector((state) => state.expense);
-  const { expense, isFetching } = expenseData;
+  const categoryData = useAppSelector((state) => state.category);
+  const { category, isFetching } = categoryData;
 
-  const [defaultValues, setDefaultValues] =
-    React.useState<ModalDefaultValues>();
-
-  const date = new Date().toLocaleDateString("en-MY", {
-    month: "long",
-  });
-
-  const fetchExpenseData = React.useCallback(() => {
-    session && dispatch(fetchExpense(session?.user.id));
+  const fetchCategoryData = React.useCallback(() => {
+    session && dispatch(fetchCategory(session?.user.id));
   }, [session]);
 
   React.useEffect(() => {
-    !expense.length && fetchExpenseData();
+    !category.length && fetchCategoryData();
   }, [session]);
 
   React.useEffect(() => {
@@ -59,42 +47,35 @@ const History = () => {
     }
   }, [session]);
 
-  const balance = React.useMemo(() => {
-    return expense.reduce((acc, { amount, is_expense }) => {
-      return acc + (is_expense ? -(amount ?? 0) : amount ?? 0);
-    }, 0);
-  }, [expense]);
-
-  const handleEdit = (data: Expense, hasCreatedDate = false) => {
-    handleSetDefaultValue(data, hasCreatedDate);
-    setShowModal(true);
-  };
-
   const filteredRecordsByCategory = React.useMemo(() => {
-    const isExpense = recordType === "expense";
-    return expense.filter((record) => record.is_expense === isExpense);
-  }, [expense, recordType]);
+    const isExpense = categoryType === "expense";
+    return category.filter((record) => record.is_expense === isExpense);
+  }, [category, categoryType]);
 
   const filteredRecordsBySearch = React.useMemo(() => {
-    return filteredRecordsByCategory?.filter(
-      (record) =>
-        record.name?.toLowerCase().includes(search.toLowerCase()) ||
-        record.amount?.toString().toLowerCase().includes(search.toLowerCase())
+    return filteredRecordsByCategory?.filter((record) =>
+      record.name?.toLowerCase().includes(search.toLowerCase())
     );
   }, [filteredRecordsByCategory, search]);
 
-  const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
+  const [defaultValues, setDefaultValues] =
+    React.useState<ModalDefaultValues>();
+
+  const handleSetDefaultValue = (
+    data: CategorySchema,
+    hasCreatedDate = false
+  ) => {
     setDefaultValues({
       id: data.id!.toString(),
       name: data.name ?? "",
-      amount: data.amount ?? 0,
       is_expense: data.is_expense ? "true" : "false",
-      category: data.category?.toString() ?? "",
-      spend_date: data.spend_date
-        ? dayjs(data.spend_date).valueOf()
-        : dayjs().valueOf(),
       ...(hasCreatedDate ? { created_at: data.created_at } : {}),
     });
+  };
+
+  const handleEdit = (data: CategorySchema, hasCreatedDate = false) => {
+    handleSetDefaultValue(data, hasCreatedDate);
+    setShowModal(true);
   };
 
   const handleCloseModal = () => {
@@ -108,20 +89,15 @@ const History = () => {
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
-            onRefresh={fetchExpenseData}
+            onRefresh={fetchCategoryData}
           />
         }
         stickyHeaderIndices={[0]}
         className="p-2"
       >
         <VStack space="md" className="py-2 bg-black">
-          <Text.Title className="uppercase">History - ({date})</Text.Title>
-          <Text.Subtitle>
-            Balance: {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
-          </Text.Subtitle>
-          <OverallBlock />
           <HStack className="justify-between items-end">
-            <Text.Subtitle>Records</Text.Subtitle>
+            <Text.Subtitle>Categories</Text.Subtitle>
             <Input variant="underlined" size="sm" className="w-2/4 gap-2">
               <InputSlot className="pl-3">
                 <InputIcon as={SearchIcon} />
@@ -135,21 +111,22 @@ const History = () => {
           </HStack>
           <Divider />
           <RecordTypeBlock
-            recordType={recordType}
-            setRecordType={setRecordType}
+            recordType={categoryType}
+            setRecordType={setCategoryType}
           />
         </VStack>
         <Records
           search={search}
-          recordType={recordType}
+          recordType={categoryType}
           showModal={showModal}
           setShowModal={setShowModal}
           data={filteredRecordsBySearch}
           handleEdit={(data, hasCreatedDate) =>
-            handleEdit(data as Expense, hasCreatedDate)
+            handleEdit(data as CategorySchema, hasCreatedDate)
           }
           defaultValues={defaultValues}
           onClose={handleCloseModal}
+          type="category"
         />
       </ScrollView>
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
@@ -157,4 +134,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default Category;

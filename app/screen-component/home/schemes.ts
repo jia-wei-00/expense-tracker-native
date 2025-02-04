@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
 export type AddRecordSchema = yup.InferType<typeof addRecordSchema>;
+export type CategorySchema = yup.InferType<typeof categorySchema>;
 
 export const addRecordSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -23,4 +24,9 @@ export const addRecordSchema = yup.object().shape({
       if (!value) return false;
       return !isNaN(new Date(value).getTime());
     }),
+});
+
+export const categorySchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  is_expense: yup.string().required("Transaction type is required"),
 });

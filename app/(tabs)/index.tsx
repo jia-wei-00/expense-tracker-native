@@ -14,7 +14,13 @@ import { SearchIcon } from "@/assets/Icons";
 import { RecordType } from "../screen-component/home/types";
 import { RefreshControl, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { fetchExpense, subscribeToExpenseChanges } from "@/store/features";
+import {
+  Expense,
+  fetchExpense,
+  subscribeToExpenseChanges,
+} from "@/store/features";
+import { ModalDefaultValues } from "../screen-component/home/records";
+import dayjs from "dayjs";
 
 const Home = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -24,6 +30,9 @@ const Home = () => {
   const { session } = useAppSelector((state) => state.auth);
   const expenseData = useAppSelector((state) => state.expense);
   const { expense, isFetching } = expenseData;
+
+  const [defaultValues, setDefaultValues] =
+    React.useState<ModalDefaultValues>();
 
   const date = new Date().toLocaleDateString("en-MY", {
     month: "long",
@@ -55,6 +64,43 @@ const Home = () => {
       return acc + (is_expense ? -(amount ?? 0) : amount ?? 0);
     }, 0);
   }, [expense]);
+
+  const handleEdit = (data: Expense, hasCreatedDate = false) => {
+    handleSetDefaultValue(data, hasCreatedDate);
+    setShowModal(true);
+  };
+
+  const filteredRecordsByCategory = React.useMemo(() => {
+    const isExpense = recordType === "expense";
+    return expense.filter((record) => record.is_expense === isExpense);
+  }, [expense, recordType]);
+
+  const filteredRecordsBySearch = React.useMemo(() => {
+    return filteredRecordsByCategory?.filter(
+      (record) =>
+        record.name?.toLowerCase().includes(search.toLowerCase()) ||
+        record.amount?.toString().toLowerCase().includes(search.toLowerCase())
+    );
+  }, [filteredRecordsByCategory, search]);
+
+  const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
+    setDefaultValues({
+      id: data.id!.toString(),
+      name: data.name ?? "",
+      amount: data.amount ?? 0,
+      is_expense: data.is_expense ? "true" : "false",
+      category: data.category?.toString() ?? "",
+      spend_date: data.spend_date
+        ? dayjs(data.spend_date).valueOf()
+        : dayjs().valueOf(),
+      ...(hasCreatedDate ? { created_at: data.created_at } : {}),
+    });
+  };
+
+  const handleCloseModal = () => {
+    defaultValues && setDefaultValues(undefined);
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -98,6 +144,12 @@ const Home = () => {
           recordType={recordType}
           showModal={showModal}
           setShowModal={setShowModal}
+          data={filteredRecordsBySearch}
+          handleEdit={(data, hasCreatedDate) =>
+            handleEdit(data as Expense, hasCreatedDate)
+          }
+          defaultValues={defaultValues}
+          onClose={handleCloseModal}
         />
       </ScrollView>
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />

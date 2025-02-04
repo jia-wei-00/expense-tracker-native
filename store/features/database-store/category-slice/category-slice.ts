@@ -2,16 +2,18 @@ import { Database } from "@/database.types";
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchCategory } from "./fetch-category";
 
+export type Category = Database["public"]["Tables"]["expense_category"]["Row"];
+
 interface CategoryState {
-  category: Database["public"]["Tables"]["expense_category"]["Row"][];
+  category: Category[];
   isExpense: boolean;
-  loading: boolean;
+  isFetching: boolean;
 }
 
 const initialState: CategoryState = {
   category: [],
   isExpense: true,
-  loading: false,
+  isFetching: false,
 };
 
 const categorySlice = createSlice({
@@ -25,13 +27,13 @@ const categorySlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchCategory.fulfilled, (state, action) => {
       state.category = action.payload;
-      state.loading = false;
+      state.isFetching = false;
     });
     builder.addCase(fetchCategory.pending, (state) => {
-      state.loading = true;
+      state.isFetching = true;
     });
     builder.addCase(fetchCategory.rejected, (state) => {
-      state.loading = false;
+      state.isFetching = false;
     });
   },
 });

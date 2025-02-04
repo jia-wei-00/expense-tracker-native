@@ -13,14 +13,13 @@ import { FlatList, View } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { Expense } from "@/store/features";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { Category, Expense } from "@/store/features";
+import { useAppSelector } from "@/hooks/useRedux";
 import { RecordType } from "./types";
 import { SkeletonText } from "@/components/ui/skeleton";
 import RecordDetailsModal from "./add-record";
 import { AddRecordSchema } from "./schemes";
 import { DefaultValues } from "react-hook-form";
-import dayjs from "dayjs";
 import ConfirmDeleteModal from "./confirm-delete-modal";
 
 export interface ModalDefaultValues extends DefaultValues<AddRecordSchema> {
@@ -33,58 +32,37 @@ interface RecordsProps {
   recordType: RecordType;
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
+  data: Array<Expense | Category>;
+  disabled?: boolean;
+  handleEdit: (data: Expense | Category, hasCreatedDate?: boolean) => void;
+  defaultValues?: ModalDefaultValues;
+  onClose?: () => void;
+  type?: "expense" | "category";
 }
 
 const Records = ({
-  search,
-  recordType,
   showModal,
   setShowModal,
+  data,
+  disabled = false,
+  handleEdit,
+  defaultValues,
+  onClose,
+  type = "expense",
 }: RecordsProps) => {
   const expenseData = useAppSelector((state) => state.expense);
-  const { expense, isFetching, isDeleting } = expenseData;
-  const [defaultValues, setDefaultValues] =
-    React.useState<ModalDefaultValues>();
+  const { isFetching } = expenseData;
+
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] =
     React.useState(false);
   const [deleteData, setDeleteData] = React.useState<{
-    id: string;
+    id: number;
     name: string;
-    amount: number;
   }>();
 
-  const filteredExpenses = React.useMemo(() => {
-    const isExpense = recordType === "expense";
-    return expense.filter((data) => data.is_expense === isExpense);
-  }, [expense, recordType]);
-
-  const handleEdit = (data: Expense, hasCreatedDate = false) => {
-    handleSetDefaultValue(data, hasCreatedDate);
-    setShowModal(true);
-  };
-
-  const handleDelete = (data: { id: string; name: string; amount: number }) => {
+  const handleDelete = (data: { id: number; name: string }) => {
     setDeleteData(data);
     setShowConfirmDeleteModal(true);
-  };
-
-  const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
-    setDefaultValues({
-      id: data.id!.toString(),
-      name: data.name ?? "",
-      amount: data.amount ?? 0,
-      is_expense: data.is_expense ? "true" : "false",
-      category: data.category?.toString() ?? "",
-      spend_date: data.spend_date
-        ? dayjs(data.spend_date).valueOf()
-        : dayjs().valueOf(),
-      ...(hasCreatedDate ? { created_at: data.created_at } : {}),
-    });
-  };
-
-  const handleCloseModal = () => {
-    defaultValues && setDefaultValues(undefined);
-    setShowModal(false);
   };
 
   return (
@@ -99,14 +77,7 @@ const Records = ({
       >
         <SkeletonText isLoaded={!isFetching} className="h-10" _lines={5} />
         <FlatList
-          data={filteredExpenses?.filter(
-            (data) =>
-              data.name?.toLowerCase().includes(search.toLowerCase()) ||
-              data.amount
-                ?.toString()
-                .toLowerCase()
-                .includes(search.toLowerCase())
-          )}
+          data={data}
           nestedScrollEnabled={false}
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View className="pt-2" />}
@@ -123,9 +94,11 @@ const Records = ({
                       <>
                         <VStack>
                           <AccordionTitleText>{item.name}</AccordionTitleText>
-                          <AccordionTitleText>
-                            RM{item.amount}
-                          </AccordionTitleText>
+                          {"amount" in item && (
+                            <AccordionTitleText>
+                              RM{item.amount}
+                            </AccordionTitleText>
+                          )}
                         </VStack>
                         <AccordionIcon
                           as={ChevronDownIcon}
@@ -155,14 +128,12 @@ const Records = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    onPress={() =>
-                      handleDelete({
-                        id: item.id!.toString(),
-                        name: item.name ?? "",
-                        amount: item.amount ?? 0,
-                      })
-                    }
-                    disabled={isDeleting}
+                    onPress={() => {
+                      if (item.id !== undefined) {
+                        handleDelete({ id: item.id, name: item.name! });
+                      }
+                    }}
+                    disabled={disabled}
                   >
                     <ButtonText>Delete</ButtonText>
                   </Button>
@@ -177,7 +148,8 @@ const Records = ({
         showModal={showModal}
         setShowModal={setShowModal}
         defaultValues={defaultValues}
-        onClose={handleCloseModal}
+        onClose={onClose}
+        type={type}
       />
       <ConfirmDeleteModal
         showModal={showConfirmDeleteModal}
@@ -186,6 +158,7 @@ const Records = ({
           setDeleteData(undefined);
         }}
         data={deleteData}
+        type={type}
       />
     </>
   );

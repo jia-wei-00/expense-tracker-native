@@ -31,6 +31,13 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           });
 
           if (!isFocused && !event.defaultPrevented) {
+            if (route.name === "(settings)") {
+              return navigation.reset({
+                index: 0,
+                routes: [{ name: route.name }],
+              });
+            }
+
             navigation.navigate(route.name, route.params);
           }
         };
