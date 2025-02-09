@@ -1,21 +1,18 @@
 import React from "react";
-import { Text } from "@/components";
+import { ScreenContainer, Text } from "@/components";
 import { Divider } from "@/components/ui/divider";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import {
-  AddRecordButton,
-  Records,
-  RecordTypeBlock,
-} from "../../screen-component/home";
+import { AddRecordButton, RecordTypeBlock } from "../../screen-component/home";
 import { RecordType } from "../../screen-component/home/types";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
 import { RefreshControl, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { fetchCategory, subscribeToExpenseChanges } from "@/store/features";
+import { fetchCategory, subscribeToCategoryChanges } from "@/store/features";
 import { ModalDefaultValues } from "@/app/screen-component/home/records";
 import { Category as CategorySchema } from "@/store/features";
+import { CategoryRecords } from "@/app/screen-component";
 
 const Category = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -36,7 +33,7 @@ const Category = () => {
 
   React.useEffect(() => {
     if (session) {
-      const subscription = subscribeToExpenseChanges({
+      const subscription = subscribeToCategoryChanges({
         userId: session.user.id,
         dispatch,
       }).subscribe();
@@ -85,37 +82,33 @@ const Category = () => {
 
   return (
     <>
-      <ScrollView
+      <ScreenContainer
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
             onRefresh={fetchCategoryData}
           />
         }
-        stickyHeaderIndices={[0]}
-        className="p-2"
       >
-        <VStack space="md" className="py-2 bg-black">
-          <HStack className="justify-between items-end">
-            <Text.Subtitle>Categories</Text.Subtitle>
-            <Input variant="underlined" size="sm" className="w-2/4 gap-2">
-              <InputSlot className="pl-3">
-                <InputIcon as={SearchIcon} />
-              </InputSlot>
-              <InputField
-                placeholder="Search..."
-                value={search}
-                onChangeText={setSearch}
-              />
-            </Input>
-          </HStack>
-          <Divider />
-          <RecordTypeBlock
-            recordType={categoryType}
-            setRecordType={setCategoryType}
-          />
-        </VStack>
-        <Records
+        <HStack className="justify-between items-end">
+          <Text.Subtitle>Categories</Text.Subtitle>
+          <Input variant="underlined" size="sm" className="w-2/4 gap-2">
+            <InputSlot className="pl-3">
+              <InputIcon as={SearchIcon} />
+            </InputSlot>
+            <InputField
+              placeholder="Search..."
+              value={search}
+              onChangeText={setSearch}
+            />
+          </Input>
+        </HStack>
+        <Divider />
+        <RecordTypeBlock
+          recordType={categoryType}
+          setRecordType={setCategoryType}
+        />
+        <CategoryRecords
           search={search}
           recordType={categoryType}
           showModal={showModal}
@@ -126,9 +119,8 @@ const Category = () => {
           }
           defaultValues={defaultValues}
           onClose={handleCloseModal}
-          type="category"
         />
-      </ScrollView>
+      </ScreenContainer>
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
     </>
   );

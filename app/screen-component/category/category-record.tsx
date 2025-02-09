@@ -13,17 +13,17 @@ import { FlatList, View } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { Category, deleteExpense, Expense } from "@/store/features";
-import { useAppSelector } from "@/hooks/useRedux";
-import { RecordType } from "./types";
+import { Category, deleteCategory, Expense } from "@/store/features";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { SkeletonText } from "@/components/ui/skeleton";
-import RecordDetailsModal from "./add-record";
-import { AddRecordSchema } from "./schemes";
+import RecordDetailsModal from "../home/add-record";
+import { CategorySchema } from "../home/schemes";
 import { DefaultValues } from "react-hook-form";
-import ConfirmDeleteModal from "./confirm-delete-modal";
-import { useAppDispatch } from "@/hooks/useRedux";
+import ConfirmDeleteModal from "../home/confirm-delete-modal";
+import { RecordType } from "../home/types";
+import CategoryModal from "./category-modal";
 
-export interface ModalDefaultValues extends DefaultValues<AddRecordSchema> {
+export interface ModalDefaultValues extends DefaultValues<CategorySchema> {
   id: string;
   created_at?: string;
 }
@@ -38,10 +38,9 @@ interface RecordsProps {
   handleEdit: (data: Expense | Category, hasCreatedDate?: boolean) => void;
   defaultValues?: ModalDefaultValues;
   onClose?: () => void;
-  type?: "expense" | "category";
 }
 
-const Records = ({
+const CategoryRecords = ({
   showModal,
   setShowModal,
   data,
@@ -49,11 +48,11 @@ const Records = ({
   handleEdit,
   defaultValues,
   onClose,
-  type = "expense",
 }: RecordsProps) => {
-  const expenseData = useAppSelector((state) => state.expense);
-  const { isFetching, isDeleting } = expenseData;
+  const categoryData = useAppSelector((state) => state.category);
+  const { isFetching, isDeleting } = categoryData;
   const dispatch = useAppDispatch();
+
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] =
     React.useState(false);
   const [deleteData, setDeleteData] = React.useState<{
@@ -145,12 +144,12 @@ const Records = ({
           keyExtractor={(item) => item.id!.toString()}
         />
       </Accordion>
-      <RecordDetailsModal
+      <CategoryModal
         showModal={showModal}
         setShowModal={setShowModal}
         defaultValues={defaultValues}
         onClose={onClose}
-        type={type}
+        type="category"
       />
       <ConfirmDeleteModal
         showModal={showConfirmDeleteModal}
@@ -159,13 +158,13 @@ const Records = ({
           setDeleteData(undefined);
         }}
         name={deleteData?.name ?? ""}
-        onConfirmDelete={() => {
-          deleteData?.id && dispatch(deleteExpense(Number(deleteData.id)));
-        }}
         isDeleting={isDeleting}
+        onConfirmDelete={() => {
+          deleteData?.id && dispatch(deleteCategory(Number(deleteData.id)));
+        }}
       />
     </>
   );
 };
 
-export default Records;
+export default CategoryRecords;

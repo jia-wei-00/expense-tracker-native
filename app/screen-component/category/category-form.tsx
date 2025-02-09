@@ -62,7 +62,7 @@ const CategoryForm = ({
 
     return filteredTransactionType.map((item) => ({
       label: item.name ?? "",
-      value: item.id.toString(),
+      value: item.id?.toString() ?? "",
     }));
   }, [category, isExpense]);
 

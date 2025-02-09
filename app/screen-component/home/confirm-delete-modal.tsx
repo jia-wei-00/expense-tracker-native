@@ -13,35 +13,28 @@ import {
 import React from "react";
 import { Text } from "@/components";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { deleteExpense } from "@/store/features";
 import colors from "tailwindcss/colors";
 
 interface ConfirmDeleteModalProps {
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
-  data?: {
-    id: number;
-    name: string;
-  };
+  name: string;
   onClose?: () => void;
-  type: "expense" | "category";
+  onConfirmDelete?: () => void;
+  isDeleting: boolean;
 }
 
 const ConfirmDeleteModal = ({
   showModal,
   setShowModal,
-  data,
+  name,
   onClose,
-  type,
+  onConfirmDelete,
+  isDeleting,
 }: ConfirmDeleteModalProps) => {
-  const dispatch = useAppDispatch();
-  const expenseData = useAppSelector((state) => state.expense);
-  const { isDeleting } = expenseData;
-
   const handleDelete = () => {
-    data?.id && dispatch(deleteExpense(Number(data.id)));
     onClose?.();
+    onConfirmDelete?.();
     setShowModal(false);
   };
 
@@ -62,7 +55,7 @@ const ConfirmDeleteModal = ({
         </ModalHeader>
         <ModalBody className="mt-0 mb-4">
           <Heading size="md" className="text-typography-950 mb-2 text-center">
-            Delete {data?.name}
+            Delete {name}
           </Heading>
           <Text.Normal className="text-center">
             Are you sure you want to delete this record? This action cannot be

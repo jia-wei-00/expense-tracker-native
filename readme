@@ -1,0 +1,19 @@
+# Project File Structure
+
+This project follows a standard file structure. Here's a brief overview:
+
+- `app/`:
+  - `app/`: This directory contains all the source code for the project.
+    - `(auth)/`: This directory contains all the authentication related code for the project.
+      - `sign-in/`: This directory contains all the sign in screen components for the project.
+    - `(tabs)/`: This directory contains all the tab related components for the project.
+      - `_layout/`: This directory contains all the layout related components for the tabs.
+      - `home/`: This directory contains all the home tab components for the project.
+      - `(settings)/`: This directory contains all the settings tab components for the project.
+        - `_layout/`: This directory contains StackNavigator for the settings tab.
+        - `category/`: This directory contains category screen for the project.
+    - `screen-components/`: This directory contains all the screen components for the project.
+      - `home/`: This directory contains all the home screen components for the project.
+      - `category/`: This directory contains all the category screen components for the project.
+      - `settings/`: This directory contains all the settings screen components for the project.
+    - `layout/`: This directory contains all the layout related components for the project.

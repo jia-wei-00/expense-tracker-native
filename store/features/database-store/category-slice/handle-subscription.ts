@@ -1,36 +1,36 @@
 import { supabase } from "@/supabase";
 import { AppDispatch } from "@/store";
 import {
-  addExpenseSubscription,
-  deleteExpenseSubscription,
-  updateExpenseSubscription,
-} from "./expense-slice";
-export const subscribeToExpenseChanges = ({
+  addCategorySubscription,
+  deleteCategorySubscription,
+  updateCategorySubscription,
+} from "./category-slice";
+export const subscribeToCategoryChanges = ({
   userId,
   dispatch,
 }: {
   userId: string;
   dispatch: AppDispatch;
 }) => {
-  const subscription = supabase.channel(userId + "_expense").on(
+  const subscription = supabase.channel(userId + "_category").on(
     "postgres_changes",
     {
       event: "*",
       schema: "public",
-      table: "expense",
+      table: "expense_category",
     },
     (payload) => {
-      const { eventType, new: expense, old } = payload;
+      const { eventType, new: category, old } = payload;
 
       switch (eventType) {
         case "INSERT":
-          dispatch(addExpenseSubscription(expense));
+          dispatch(addCategorySubscription(category));
           break;
         case "UPDATE":
-          dispatch(updateExpenseSubscription(expense));
+          dispatch(updateCategorySubscription(category));
           break;
         case "DELETE":
-          dispatch(deleteExpenseSubscription(old));
+          dispatch(deleteCategorySubscription(old));
           break;
         default:
           console.log("Unknown event type");

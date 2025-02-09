@@ -7,7 +7,6 @@ import {
   SelectWithController,
 } from "@/components";
 import { VStack } from "@/components/ui/vstack";
-import { Database } from "@/database.types";
 import { Divider } from "@/components/ui/divider";
 import { AddRecordSchema } from "./schemes";
 import { Button, ButtonIcon } from "@/components/ui/button";
@@ -18,9 +17,10 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { Category } from "@/store/features";
 
 export interface AddRecordFormProps {
-  category: Database["public"]["Tables"]["expense_category"]["Row"][];
+  category: Category[];
   loading: boolean;
   allFormMethods: UseFormReturn<AddRecordSchema>;
   isReadOnly?: boolean;
@@ -74,7 +74,7 @@ const AddRecordForm = ({
 
     return filteredTransactionType.map((item) => ({
       label: item.name ?? "",
-      value: item.id.toString(),
+      value: item.id?.toString() ?? "",
     }));
   }, [category, isExpense]);
 

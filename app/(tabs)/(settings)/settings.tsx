@@ -1,8 +1,22 @@
+import { ScreenContainer } from "@/components";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
+import { supabase } from "@/supabase";
 import React from "react";
-import { Text } from "react-native";
 
 const Settings = () => {
-  return <Text style={{ color: "white" }}>Settings</Text>;
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  return (
+    <ScreenContainer>
+      <Divider />
+      <Button onPress={handleLogout}>
+        <ButtonText>Log Out</ButtonText>
+      </Button>
+    </ScreenContainer>
+  );
 };
 
 export default Settings;

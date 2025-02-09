@@ -1,7 +1,6 @@
 import React from "react";
-import { Text } from "@/components";
+import { ScreenContainer, Text } from "@/components";
 import { Divider } from "@/components/ui/divider";
-import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import {
   AddRecordButton,
@@ -12,7 +11,7 @@ import {
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
 import { RecordType } from "../screen-component/home/types";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   Expense,
@@ -104,41 +103,37 @@ const Home = () => {
 
   return (
     <>
-      <ScrollView
+      <ScreenContainer
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
             onRefresh={fetchExpenseData}
           />
         }
-        stickyHeaderIndices={[0]}
-        className="p-2"
       >
-        <VStack space="md" className="py-2 bg-black">
-          <Text.Title className="uppercase">{date}</Text.Title>
-          <Text.Subtitle>
-            Balance: {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
-          </Text.Subtitle>
-          <OverallBlock />
-          <HStack className="justify-between items-end">
-            <Text.Subtitle>Records</Text.Subtitle>
-            <Input variant="underlined" size="sm" className="w-2/4 gap-2">
-              <InputSlot className="pl-3">
-                <InputIcon as={SearchIcon} />
-              </InputSlot>
-              <InputField
-                placeholder="Search..."
-                value={search}
-                onChangeText={setSearch}
-              />
-            </Input>
-          </HStack>
-          <Divider />
-          <RecordTypeBlock
-            recordType={recordType}
-            setRecordType={setRecordType}
-          />
-        </VStack>
+        <Text.Title className="uppercase">{date}</Text.Title>
+        <Text.Subtitle>
+          Balance: {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
+        </Text.Subtitle>
+        <OverallBlock />
+        <HStack className="justify-between items-end">
+          <Text.Subtitle>Records</Text.Subtitle>
+          <Input variant="underlined" size="sm" className="w-2/4 gap-2">
+            <InputSlot className="pl-3">
+              <InputIcon as={SearchIcon} />
+            </InputSlot>
+            <InputField
+              placeholder="Search..."
+              value={search}
+              onChangeText={setSearch}
+            />
+          </Input>
+        </HStack>
+        <Divider />
+        <RecordTypeBlock
+          recordType={recordType}
+          setRecordType={setRecordType}
+        />
         <Records
           search={search}
           recordType={recordType}
@@ -151,7 +146,7 @@ const Home = () => {
           defaultValues={defaultValues}
           onClose={handleCloseModal}
         />
-      </ScrollView>
+      </ScreenContainer>
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
     </>
   );
