@@ -57,7 +57,7 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
             testID={options.tabBarButtonTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            className="flex flex-col items-center justify-center grow p-1 gap-1 bg-zinc-900 py-2"
+            className="flex flex-col items-center justify-center grow p-1 gap-1 border-t border-background-50 py-2"
             key={route.name}
           >
             {options.tabBarIcon &&

@@ -15,3 +15,5 @@ export { default as PlusIcon } from "./plus";
 export { default as UserIcon } from "./user";
 export { default as EditIcon } from "./edit";
 export { default as TrashIcon } from "./trash";
+export { default as LogOutIcon } from "./logout";
+export { default as ChevronRightIcon } from "./chevron-right";

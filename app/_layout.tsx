@@ -13,7 +13,6 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import React from "react";
-import { KeyboardAvoidingView } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,6 +41,11 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  // const theme = storage.getString("theme");
+  // if (!theme) {
+  //   storage.set("theme", "system");
+  // }
+  // const themeMode = theme === "system" ? colorScheme : theme;
 
   return (
     <SafeAreaProvider>

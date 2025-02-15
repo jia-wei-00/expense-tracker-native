@@ -7,10 +7,16 @@ export interface NormalProps extends React.ComponentProps<typeof Text> {
   reverse?: boolean;
 }
 
-const Normal = ({ className, reverse = false, ...rest }: NormalProps) => {
+const Normal = ({
+  className,
+  reverse = false,
+  size = "md",
+  ...rest
+}: NormalProps) => {
   return (
     <Text
-      className={twMerge("text-md font-semibold", color(reverse), className)}
+      className={twMerge("font-semibold", color(reverse), className)}
+      size={size}
       {...rest}
     />
   );
