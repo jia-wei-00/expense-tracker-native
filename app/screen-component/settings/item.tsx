@@ -35,7 +35,11 @@ const ItemWrapper = ({
       <HStack space="md" className="justify-between items-center py-2">
         <HStack space="md">{children}</HStack>
         <HStack space="xs">
-          {iconLabel && <Text.Caption>{iconLabel}</Text.Caption>}
+          {iconLabel && (
+            <Text.Caption className="capitalize tracking-normal">
+              {iconLabel}
+            </Text.Caption>
+          )}
           {hasChevron && <Icon as={ChevronRightIcon} size="md" />}
         </HStack>
       </HStack>

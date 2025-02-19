@@ -13,6 +13,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import React from "react";
+import { useAppSelector } from "@/hooks/useRedux";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,24 +42,26 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  // const theme = storage.getString("theme");
-  // if (!theme) {
-  //   storage.set("theme", "system");
-  // }
-  // const themeMode = theme === "system" ? colorScheme : theme;
 
   return (
     <SafeAreaProvider>
-      <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <Provider store={store}>
-            <App />
-          </Provider>
-        </ThemeProvider>
-      </GluestackUIProvider>
+      <Provider store={store}>
+        <Wrapper colorScheme={colorScheme} />
+      </Provider>
     </SafeAreaProvider>
+  );
+}
+
+function Wrapper({ colorScheme }: { colorScheme: string | null | undefined }) {
+  const { theme } = useAppSelector((state) => state.theme);
+  const currentTheme = theme === "system" ? colorScheme : theme;
+
+  return (
+    <GluestackUIProvider mode={currentTheme === "dark" ? "dark" : "light"}>
+      <ThemeProvider value={currentTheme === "dark" ? DarkTheme : DefaultTheme}>
+        <App />
+      </ThemeProvider>
+    </GluestackUIProvider>
   );
 }
 

@@ -1,5 +1,5 @@
 export * from "./authentication";
-export * from "./counter";
+export * from "./theme";
 export * from "./supabase";
 export * from "./database-store";
 export * from "./scroll";

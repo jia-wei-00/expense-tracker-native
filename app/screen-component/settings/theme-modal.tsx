@@ -12,22 +12,25 @@ import {
   RadioIndicator,
   RadioLabel,
 } from "@/components/ui/radio";
-import { CircleIcon } from "@/assets/Icons";
-// import { useMMKVString } from "react-native-mmkv";
-import { storage } from "@/store/mmkv";
+import { CheckedIcon, CircleIcon } from "@/assets/Icons";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { setTheme, ThemeState } from "@/store/features/theme/theme-slice";
+import { Icon } from "@/components/ui/icon";
 
-type ThemeModalProps = React.ComponentProps<typeof Modal>;
+interface ThemeModalProps extends React.ComponentProps<typeof Modal> {}
+
+const themeOptions = [
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
+  { label: "Follow System", value: "system" },
+];
 
 const ThemeModal = ({ ...rest }: ThemeModalProps) => {
-  const theme = storage.getString("theme");
+  const { theme } = useAppSelector((state) => state.theme);
+  const dispatch = useAppDispatch();
 
-  console.log(theme, "from mmkv");
-
-  !theme && storage.set("theme", "system");
-
-  const handleChangeTheme = (value: string) => {
-    storage.set("theme", value);
-    console.log(value);
+  const handleChangeTheme = (value: ThemeState["theme"]) => {
+    dispatch(setTheme(value));
   };
 
   return (
@@ -36,24 +39,18 @@ const ThemeModal = ({ ...rest }: ThemeModalProps) => {
       <ModalContent>
         <ModalBody>
           <RadioGroup onChange={handleChangeTheme} value={theme}>
-            <Radio value="light" className="flex">
-              <RadioLabel className="flex-1">Light</RadioLabel>
-              <RadioIndicator>
-                <RadioIcon as={CircleIcon} />
-              </RadioIndicator>
-            </Radio>
-            <Radio value="dark" className="flex">
-              <RadioLabel className="flex-1">Dark</RadioLabel>
-              <RadioIndicator>
-                <RadioIcon as={CircleIcon} />
-              </RadioIndicator>
-            </Radio>
-            <Radio value="system" className="flex">
-              <RadioLabel className="flex-1">Follow System</RadioLabel>
-              <RadioIndicator>
-                <RadioIcon as={CircleIcon} />
-              </RadioIndicator>
-            </Radio>
+            {themeOptions.map((option) => (
+              <Radio value={option.value} className="flex">
+                <RadioLabel className="flex-1">{option.label}</RadioLabel>
+                <RadioIndicator>
+                  {theme === option.value ? (
+                    <Icon as={CheckedIcon} />
+                  ) : (
+                    <Icon as={CircleIcon} />
+                  )}
+                </RadioIndicator>
+              </Radio>
+            ))}
           </RadioGroup>
         </ModalBody>
       </ModalContent>

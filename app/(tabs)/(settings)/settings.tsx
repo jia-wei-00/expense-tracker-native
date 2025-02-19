@@ -9,12 +9,14 @@ import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { Item, ThemeModal } from "@/app/screen-component/settings";
 import { useRouter } from "expo-router";
+import { storage } from "@/store/mmkv";
 
 const Settings = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { session, isLoggingOut } = useAppSelector((state) => state.auth);
-  const { user_metadata, email } = session!.user;
+  const { theme } = useAppSelector((state) => state.theme);
+  const { user_metadata, email } = session?.user || {};
   const [showThemeModal, setShowThemeModal] = React.useState(false);
 
   const handleLogout = () => {
@@ -38,7 +40,7 @@ const Settings = () => {
           { label: "Language", iconLabel: "English" },
           {
             label: "Theme",
-            iconLabel: "Dark",
+            iconLabel: theme,
             onPress: () => setShowThemeModal(true),
           },
         ]}
