@@ -14,6 +14,7 @@ import {
 } from "@react-navigation/native";
 import React from "react";
 import { useAppSelector } from "@/hooks/useRedux";
+import "@/i18n";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -53,7 +54,7 @@ function RootLayoutNav() {
 }
 
 function Wrapper({ colorScheme }: { colorScheme: string | null | undefined }) {
-  const { theme } = useAppSelector((state) => state.theme);
+  const { theme } = useAppSelector((state) => state.settings);
   const currentTheme = theme === "system" ? colorScheme : theme;
 
   return (

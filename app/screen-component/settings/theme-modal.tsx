@@ -1,23 +1,9 @@
-import {
-  Modal,
-  ModalBackdrop,
-  ModalBody,
-  ModalContent,
-} from "@/components/ui/modal";
-import React from "react";
-import {
-  Radio,
-  RadioGroup,
-  RadioIcon,
-  RadioIndicator,
-  RadioLabel,
-} from "@/components/ui/radio";
-import { CheckedIcon, CircleIcon } from "@/assets/Icons";
+import { SettingsModal } from "@/app/screen-component/settings";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { setTheme, ThemeState } from "@/store/features/theme/theme-slice";
-import { Icon } from "@/components/ui/icon";
+import { setTheme, Theme } from "@/store/features/settings";
+import { ModalProps, PropsWithSize } from "@/components/type";
 
-interface ThemeModalProps extends React.ComponentProps<typeof Modal> {}
+type ThemeModalProps = PropsWithSize & ModalProps;
 
 const themeOptions = [
   { label: "Light", value: "light" },
@@ -26,35 +12,21 @@ const themeOptions = [
 ];
 
 const ThemeModal = ({ ...rest }: ThemeModalProps) => {
-  const { theme } = useAppSelector((state) => state.theme);
+  const { theme } = useAppSelector((state) => state.settings);
   const dispatch = useAppDispatch();
 
-  const handleChangeTheme = (value: ThemeState["theme"]) => {
-    dispatch(setTheme(value));
+  const handleChangeTheme = (value: string) => {
+    dispatch(setTheme(value as Theme));
   };
 
   return (
-    <Modal {...rest}>
-      <ModalBackdrop />
-      <ModalContent>
-        <ModalBody>
-          <RadioGroup onChange={handleChangeTheme} value={theme}>
-            {themeOptions.map((option) => (
-              <Radio value={option.value} className="flex">
-                <RadioLabel className="flex-1">{option.label}</RadioLabel>
-                <RadioIndicator>
-                  {theme === option.value ? (
-                    <Icon as={CheckedIcon} />
-                  ) : (
-                    <Icon as={CircleIcon} />
-                  )}
-                </RadioIndicator>
-              </Radio>
-            ))}
-          </RadioGroup>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+    <SettingsModal
+      options={themeOptions}
+      title="Theme"
+      value={theme}
+      onChange={handleChangeTheme}
+      {...rest}
+    />
   );
 };
 

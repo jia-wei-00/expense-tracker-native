@@ -7,18 +7,33 @@ import { logout } from "@/store/features";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-import { Item, ThemeModal } from "@/app/screen-component/settings";
+import {
+  AuthenticationModal,
+  FontSizeModal,
+  Item,
+  LanguageModal,
+  ThemeModal,
+} from "@/app/screen-component/settings";
 import { useRouter } from "expo-router";
-import { storage } from "@/store/mmkv";
+import { languageOptions } from "@/app/screen-component/settings/language-modal";
+import { fontSizeOptions } from "@/app/screen-component/settings/font-size-modal";
+import { useAuthenticationOptions } from "@/app/screen-component/settings/authentication-modal";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { session, isLoggingOut } = useAppSelector((state) => state.auth);
-  const { theme } = useAppSelector((state) => state.theme);
+  const { theme, language, fontSize, authentication } = useAppSelector(
+    (state) => state.settings
+  );
   const { user_metadata, email } = session?.user || {};
   const [showThemeModal, setShowThemeModal] = React.useState(false);
-
+  const [showLanguageModal, setShowLanguageModal] = React.useState(false);
+  const [showFontSizeModal, setShowFontSizeModal] = React.useState(false);
+  const [showAuthenticationModal, setShowAuthenticationModal] =
+    React.useState(false);
+  const { t } = useTranslation();
   const handleLogout = () => {
     dispatch(logout());
   };
@@ -36,10 +51,22 @@ const Settings = () => {
       </Item>
       <Item
         items={[
-          { label: "Font Size", iconLabel: "Small" },
-          { label: "Language", iconLabel: "English" },
           {
-            label: "Theme",
+            label: t("Font Size"),
+            iconLabel: fontSizeOptions.find(
+              (option) => option.value === fontSize
+            )?.label,
+            onPress: () => setShowFontSizeModal(true),
+          },
+          {
+            label: t("Language"),
+            iconLabel: languageOptions.find(
+              (option) => option.value === language
+            )?.label,
+            onPress: () => setShowLanguageModal(true),
+          },
+          {
+            label: t("Theme"),
             iconLabel: theme,
             onPress: () => setShowThemeModal(true),
           },
@@ -47,31 +74,54 @@ const Settings = () => {
       />
       <Item
         items={[
-          { label: "Authentication With", iconLabel: "Fingerprint" },
-          { label: "Change Application Password" },
-          { label: "Change Login Password" },
+          {
+            label: t("Authentication With"),
+            iconLabel: useAuthenticationOptions().find(
+              (option) => option.value === authentication
+            )?.label,
+            onPress: () => setShowAuthenticationModal(true),
+          },
+          { label: t("Change Application Password") },
+          { label: t("Change Login Password") },
         ]}
       />
       <Item
         items={[
           {
-            label: "Manage Expense Category",
+            label: t("Manage Expense Category"),
             onPress: () => router.navigate("/category"),
           },
         ]}
       />
-      <Item items={[{ label: "Clean Cache" }]} />
+      <Item items={[{ label: t("Clean Cache") }]} />
       <VStack space="md"></VStack>
       <Button onPress={handleLogout} variant="outline" action="negative">
-        <ButtonText>{isLoggingOut ? "Logging Out..." : "Log Out"}</ButtonText>
+        <ButtonText>
+          {isLoggingOut ? t("Logging Out...") : t("Log Out")}
+        </ButtonText>
       </Button>
       <Text size="xs" className="text-center text-gray-500">
-        Version 1.0.0
+        {t("Version 1.0.0")}
       </Text>
       <ThemeModal
-        size="md"
+        size={fontSize}
         isOpen={showThemeModal}
         onClose={() => setShowThemeModal(false)}
+      />
+      <LanguageModal
+        size={fontSize}
+        isOpen={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
+      />
+      <FontSizeModal
+        size={fontSize}
+        isOpen={showFontSizeModal}
+        onClose={() => setShowFontSizeModal(false)}
+      />
+      <AuthenticationModal
+        size={fontSize}
+        isOpen={showAuthenticationModal}
+        onClose={() => setShowAuthenticationModal(false)}
       />
     </ScreenContainer>
   );

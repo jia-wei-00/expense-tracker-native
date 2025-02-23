@@ -1,0 +1,17 @@
+{
+  "Font Size": "字體大小",
+  "Language": "語言",
+  "Theme": "主題",
+  "Authentication With": "認證方式",
+  "Change Application Password": "更改應用密碼",
+  "Change Login Password": "更改登入密碼",
+  "Manage Expense Category": "管理費用類別",
+  "Clean Cache": "清除緩存",
+  "Logging Out...": "正在登出...",
+  "Log Out": "登出",
+  "Version 1.0.0": "版本 1.0.0",
+  "Fingerprint": "指紋",
+  "Face ID": "面部識別",
+  "Password": "密碼",
+  "None": "無"
+}
