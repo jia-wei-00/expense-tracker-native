@@ -15,6 +15,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { Category, deleteExpense, Expense } from "@/store/features";
 import { useAppSelector } from "@/hooks/useRedux";
+import { useTranslation } from "react-i18next"; // Added for i18n translation
 import { RecordType } from "./types";
 import { SkeletonText } from "@/components/ui/skeleton";
 import RecordDetailsModal from "./add-record";
@@ -51,6 +52,7 @@ const Records = ({
   onClose,
   type = "expense",
 }: RecordsProps) => {
+  const { t } = useTranslation(); // Using the hook for translation
   const expenseData = useAppSelector((state) => state.expense);
   const { isFetching, isDeleting } = expenseData;
   const dispatch = useAppDispatch();
@@ -117,14 +119,14 @@ const Records = ({
                     size="sm"
                     onPress={() => handleEdit(item, true)}
                   >
-                    <ButtonText>View</ButtonText>
+                    <ButtonText>{t("View")}</ButtonText>
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onPress={() => handleEdit(item)}
                   >
-                    <ButtonText>Edit</ButtonText>
+                    <ButtonText>{t("Edit")}</ButtonText>
                   </Button>
                   <Button
                     variant="outline"
@@ -136,7 +138,7 @@ const Records = ({
                     }}
                     disabled={disabled}
                   >
-                    <ButtonText>Delete</ButtonText>
+                    <ButtonText>{t("Delete")}</ButtonText>
                   </Button>
                 </HStack>
               </AccordionContent>

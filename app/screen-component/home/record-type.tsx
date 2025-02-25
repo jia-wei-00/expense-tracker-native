@@ -8,6 +8,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 interface RecordTypeProps {
   recordType: "expense" | "income";
@@ -15,6 +16,7 @@ interface RecordTypeProps {
 }
 
 const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
+  const { t } = useTranslation();
   const containerWidth = useSharedValue<number>(0);
   const color = useSharedValue<string>(
     recordType === "expense" ? "red" : "green"
@@ -60,13 +62,13 @@ const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
         className="flex-1 h-8 justify-center"
         onPress={() => handlePress("expense")}
       >
-        <Text.Bold className="text-center">Expenses</Text.Bold>
+        <Text.Bold className="text-center">{t("Expense")}</Text.Bold>
       </Pressable>
       <Pressable
         className="flex-1 h-8 justify-center"
         onPress={() => handlePress("income")}
       >
-        <Text.Bold className="text-center">Income</Text.Bold>
+        <Text.Bold className="text-center">{t("Income")}</Text.Bold>
       </Pressable>
     </HStack>
   );

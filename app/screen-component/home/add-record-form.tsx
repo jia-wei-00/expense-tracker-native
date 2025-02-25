@@ -18,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { Category } from "@/store/features";
+import { useTranslation } from "react-i18next";
 
 export interface AddRecordFormProps {
   category: Category[];
@@ -67,6 +68,8 @@ const AddRecordForm = ({
   const control = controlWithController as unknown as Control<FieldValues>;
   const isExpense = watch("is_expense") as unknown as string;
 
+  const { t } = useTranslation();
+
   const filteredCategory = React.useMemo(() => {
     const filteredTransactionType = category.filter((item) => {
       return item.is_expense === (isExpense === "true");
@@ -87,20 +90,20 @@ const AddRecordForm = ({
         errors={errors.name?.message}
         required={true}
         isReadOnly={isReadOnly}
-        placeholder="Name"
+        placeholder={t("Name")}
         name="name"
-        label="Name"
+        label={t("Name")}
       />
       <InputWithController
         control={control}
         errors={errors.amount?.message}
         required={true}
         isReadOnly={isReadOnly}
-        placeholder="Amount"
+        placeholder={t("Amount")}
         name="amount"
         keyboardType="numeric"
         inputMode="decimal"
-        label="Amount"
+        label={t("Amount")}
       />
       <DatePickerWithController
         control={control}
@@ -108,8 +111,8 @@ const AddRecordForm = ({
         required={true}
         isReadOnly={isReadOnly}
         name="spend_date"
-        inputProps={{ placeholder: "Date" }}
-        label="Date"
+        inputProps={{ placeholder: t("Date") }}
+        label={t("Date")}
       />
       <RadioWithController
         control={control}
@@ -120,13 +123,13 @@ const AddRecordForm = ({
         value="Expense"
         className="pt-1"
         options={[
-          { label: "Expense", value: "true" },
-          { label: "Income", value: "false" },
+          { label: t("Expense"), value: "true" },
+          { label: t("Income"), value: "false" },
         ]}
         onChange={() => {
           resetField("category");
         }}
-        label="Transaction Type"
+        label={t("Transaction Type")}
       />
       {isExpense && (
         <>
@@ -137,10 +140,10 @@ const AddRecordForm = ({
             errors={errors.category?.message}
             required={true}
             name="category"
-            placeholder="Category"
+            placeholder={t("Category")}
             options={filteredCategory}
             loading={loading}
-            label="Category"
+            label={t("Category")}
             onOpen={() => handleEditCategory("open")}
             onClose={() => handleEditCategory("close")}
           >

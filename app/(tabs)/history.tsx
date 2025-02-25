@@ -20,8 +20,10 @@ import {
 } from "@/store/features";
 import { ModalDefaultValues } from "../screen-component/home/records";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next"; // Added for i18n translation
 
 const History = () => {
+  const { t } = useTranslation(); // Using the translation hook
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
@@ -111,19 +113,22 @@ const History = () => {
           />
         }
       >
-        <Text.Title className="uppercase">History - ({date})</Text.Title>
+        <Text.Title className="uppercase">
+          {t("History")} - ({t(`month.${date}`)})
+        </Text.Title>
         <Text.Subtitle>
-          Balance: {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
+          {t("Balance")}:{" "}
+          {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
         </Text.Subtitle>
         <OverallBlock />
         <HStack className="justify-between items-end">
-          <Text.Subtitle>Records</Text.Subtitle>
+          <Text.Subtitle>{t("Records")}</Text.Subtitle>
           <Input variant="underlined" size="sm" className="w-2/4 gap-2">
             <InputSlot className="pl-3">
               <InputIcon as={SearchIcon} />
             </InputSlot>
             <InputField
-              placeholder="Search..."
+              placeholder={t("Search...")}
               value={search}
               onChangeText={setSearch}
             />

@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/form-control";
 import { ModalDefaultValues } from "./records";
 import { CategoryForm } from "../category";
+import { useTranslation } from "react-i18next";
 
 interface RecordDetailsModalProps {
   showModal: boolean;
@@ -53,6 +54,7 @@ const RecordDetailsModal = ({
   const { session } = useAppSelector((state) => state.auth);
   const { isSubmitting, isUpdating } = useAppSelector((state) => state.expense);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     session && !category.length && dispatch(fetchCategory(session.user.id));
@@ -205,10 +207,10 @@ const RecordDetailsModal = ({
           <Heading size="lg" className="text-typography-950">
             {defaultValues
               ? defaultValues.created_at
-                ? "View "
-                : "Edit "
-              : "Add "}
-            Record
+                ? t("View")
+                : t("Edit")
+              : t("Add")}
+            {t("Record")}
           </Heading>
           <ModalCloseButton>
             <Icon
@@ -242,13 +244,13 @@ const RecordDetailsModal = ({
             <FormControl isRequired={true} size="sm">
               <FormControlLabel>
                 <FormControlLabelText className="dark:text-zinc-400">
-                  Created At
+                  {t("Created At")}
                 </FormControlLabelText>
               </FormControlLabel>
               <Input className="text-center" size="sm" isReadOnly={true}>
                 <InputField
                   value={dayjs(defaultValues?.created_at).format("DD/MM/YYYY")}
-                  placeholder="Created At"
+                  placeholder={t("Created At")}
                 />
                 <InputSlot className="pr-3">
                   <InputIcon as={CalendarIcon} />
@@ -265,7 +267,7 @@ const RecordDetailsModal = ({
               onPress={handleClear}
               disabled={isSubmitting || isUpdating}
             >
-              <ButtonText>Clear</ButtonText>
+              <ButtonText>{t("Clear")}</ButtonText>
             </Button>
             <Button
               className="mt-4"
@@ -277,7 +279,7 @@ const RecordDetailsModal = ({
                 <ButtonSpinner color={colors.gray[700]} />
               )}
               <ButtonText>
-                {isSubmitting || isUpdating ? "Submitting..." : "Submit"}
+                {isSubmitting || isUpdating ? t("Submitting...") : t("Submit")}
               </ButtonText>
             </Button>
           </ModalFooter>

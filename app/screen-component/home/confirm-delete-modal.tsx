@@ -14,6 +14,7 @@ import React from "react";
 import { Text } from "@/components";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import colors from "tailwindcss/colors";
+import { useTranslation } from "react-i18next";
 
 interface ConfirmDeleteModalProps {
   showModal: boolean;
@@ -32,6 +33,8 @@ const ConfirmDeleteModal = ({
   onConfirmDelete,
   isDeleting,
 }: ConfirmDeleteModalProps) => {
+  const { t } = useTranslation();
+
   const handleDelete = () => {
     onClose?.();
     onConfirmDelete?.();
@@ -55,11 +58,12 @@ const ConfirmDeleteModal = ({
         </ModalHeader>
         <ModalBody className="mt-0 mb-4">
           <Heading size="md" className="text-typography-950 mb-2 text-center">
-            Delete {name}
+            {t("Delete")} {name}
           </Heading>
           <Text.Normal className="text-center">
-            Are you sure you want to delete this record? This action cannot be
-            undone.
+            {t(
+              "Are you sure you want to delete this record? This action cannot be undone."
+            )}
           </Text.Normal>
         </ModalBody>
         <ModalFooter className="w-full">
@@ -73,11 +77,13 @@ const ConfirmDeleteModal = ({
             }}
             className="flex-grow"
           >
-            <ButtonText>Cancel</ButtonText>
+            <ButtonText>{t("Cancel")}</ButtonText>
           </Button>
           <Button onPress={handleDelete} size="sm" className="flex-grow">
             {isDeleting && <ButtonSpinner color={colors.gray[700]} />}
-            <ButtonText>{isDeleting ? "Deleting..." : "Delete"}</ButtonText>
+            <ButtonText>
+              {isDeleting ? t("Deleting...") : t("Delete")}
+            </ButtonText>
           </Button>
         </ModalFooter>
       </ModalContent>

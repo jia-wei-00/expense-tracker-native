@@ -18,6 +18,7 @@ import Animated, {
 import { useRouter } from "expo-router";
 import { CategorySchema } from "../home/schemes";
 import { Category } from "@/store/features";
+import { useTranslation } from "react-i18next";
 
 export interface AddRecordFormProps {
   category: Category[];
@@ -55,6 +56,8 @@ const CategoryForm = ({
   const control = controlWithController as unknown as Control<FieldValues>;
   const isExpense = watch("is_expense") as unknown as string;
 
+  const { t } = useTranslation();
+
   const filteredCategory = React.useMemo(() => {
     const filteredTransactionType = category.filter((item) => {
       return item.is_expense;
@@ -73,9 +76,9 @@ const CategoryForm = ({
         errors={errors.name?.message}
         required={true}
         isReadOnly={isReadOnly}
-        placeholder="Name"
+        placeholder={t("Name")}
         name="name"
-        label="Name"
+        label={t("Name")}
       />
       <RadioWithController
         control={control}
@@ -86,10 +89,10 @@ const CategoryForm = ({
         value="Expense"
         className="pt-1"
         options={[
-          { label: "Expense", value: "true" },
-          { label: "Income", value: "false" },
+          { label: t("Expense"), value: "true" },
+          { label: t("Income"), value: "false" },
         ]}
-        label="Transaction Type"
+        label={t("Transaction Type")}
       />
     </VStack>
   );

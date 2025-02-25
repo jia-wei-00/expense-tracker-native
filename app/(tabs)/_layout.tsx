@@ -6,6 +6,7 @@ import { Menu } from "@/components";
 import { HistoryIcon, HomeIcon, UserIcon } from "@/assets/Icons";
 import TabBar from "@/components/tab-bar";
 import { Icon } from "@/components/ui/icon";
+import { useTranslation } from "react-i18next";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -15,6 +16,8 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       screenOptions={{
@@ -28,21 +31,21 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: t("Home"),
           tabBarIcon: ({ color }) => <Icon as={HomeIcon} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
-          title: "History",
+          title: t("History"),
           tabBarIcon: ({ color }) => <Icon as={HistoryIcon} color={color} />,
         }}
       />
       <Tabs.Screen
         name="(settings)"
         options={{
-          title: "Settings",
+          title: t("Settings"),
           tabBarIcon: ({ color }) => <Icon as={UserIcon} color={color} />,
         }}
       />

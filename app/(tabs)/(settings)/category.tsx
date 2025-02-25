@@ -1,20 +1,21 @@
 import React from "react";
 import { ScreenContainer, Text } from "@/components";
 import { Divider } from "@/components/ui/divider";
-import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { AddRecordButton, RecordTypeBlock } from "../../screen-component/home";
 import { RecordType } from "../../screen-component/home/types";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { fetchCategory, subscribeToCategoryChanges } from "@/store/features";
 import { ModalDefaultValues } from "@/app/screen-component/home/records";
 import { Category as CategorySchema } from "@/store/features";
 import { CategoryRecords } from "@/app/screen-component";
+import { useTranslation } from "react-i18next"; // Added for i18n translation
 
 const Category = () => {
+  const { t } = useTranslation(); // Using the translation hook
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [categoryType, setCategoryType] = React.useState<RecordType>("expense");
@@ -91,13 +92,13 @@ const Category = () => {
         }
       >
         <HStack className="justify-between items-end">
-          <Text.Subtitle>Categories</Text.Subtitle>
+          <Text.Subtitle>{t("Categories")}</Text.Subtitle>
           <Input variant="underlined" size="sm" className="w-2/4 gap-2">
             <InputSlot className="pl-3">
               <InputIcon as={SearchIcon} />
             </InputSlot>
             <InputField
-              placeholder="Search..."
+              placeholder={t("Search...")}
               value={search}
               onChangeText={setSearch}
             />

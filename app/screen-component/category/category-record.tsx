@@ -16,12 +16,12 @@ import { VStack } from "@/components/ui/vstack";
 import { Category, deleteCategory, Expense } from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { SkeletonText } from "@/components/ui/skeleton";
-import RecordDetailsModal from "../home/add-record";
 import { CategorySchema } from "../home/schemes";
 import { DefaultValues } from "react-hook-form";
 import ConfirmDeleteModal from "../home/confirm-delete-modal";
 import { RecordType } from "../home/types";
 import CategoryModal from "./category-modal";
+import { useTranslation } from "react-i18next";
 
 export interface ModalDefaultValues extends DefaultValues<CategorySchema> {
   id: string;
@@ -52,6 +52,7 @@ const CategoryRecords = ({
   const categoryData = useAppSelector((state) => state.category);
   const { isFetching, isDeleting } = categoryData;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] =
     React.useState(false);
@@ -116,14 +117,14 @@ const CategoryRecords = ({
                     size="sm"
                     onPress={() => handleEdit(item, true)}
                   >
-                    <ButtonText>View</ButtonText>
+                    <ButtonText>{t("View")}</ButtonText>
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onPress={() => handleEdit(item)}
                   >
-                    <ButtonText>Edit</ButtonText>
+                    <ButtonText>{t("Edit")}</ButtonText>
                   </Button>
                   <Button
                     variant="outline"
@@ -135,7 +136,7 @@ const CategoryRecords = ({
                     }}
                     disabled={disabled}
                   >
-                    <ButtonText>Delete</ButtonText>
+                    <ButtonText>{t("Delete")}</ButtonText>
                   </Button>
                 </HStack>
               </AccordionContent>
