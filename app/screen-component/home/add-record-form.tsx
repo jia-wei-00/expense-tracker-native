@@ -44,6 +44,7 @@ const AddRecordForm = ({
     resetField,
   } = allFormMethods;
   const { errors } = formState;
+  const { i18n } = useTranslation();
 
   const translateY = useSharedValue(100);
 
@@ -113,6 +114,10 @@ const AddRecordForm = ({
         name="spend_date"
         inputProps={{ placeholder: t("Date") }}
         label={t("Date")}
+        datePickerProps={{
+          locale: i18n.language,
+          value: new Date(),
+        }}
       />
       <RadioWithController
         control={control}

@@ -1,6 +1,6 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { supabase } from "@/supabase";
-import { setLoading, setSession } from "./auth-slice";
+import { setIsLoading, setSession } from "./auth-slice";
 
 export const supabaseAuthSlice = createApi({
   reducerPath: "supabaseAuth",
@@ -8,7 +8,7 @@ export const supabaseAuthSlice = createApi({
   endpoints: (build) => ({
     signIn: build.mutation({
       queryFn: async ({ email, password }, { dispatch }) => {
-        dispatch(setLoading(true));
+        dispatch(setIsLoading(true));
 
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -17,7 +17,7 @@ export const supabaseAuthSlice = createApi({
 
         if (error) throw error;
         dispatch(setSession(data.session));
-        dispatch(setLoading(false));
+        dispatch(setIsLoading(false));
 
         return { data: "success" };
       },
@@ -28,7 +28,7 @@ export const supabaseAuthSlice = createApi({
 
         if (error) throw error;
         dispatch(setSession(data.session));
-        dispatch(setLoading(false));
+        dispatch(setIsLoading(false));
 
         return { data: "Check your email for verification" };
       },

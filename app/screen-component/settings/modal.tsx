@@ -21,6 +21,7 @@ interface SettingsModalProps extends React.ComponentProps<typeof Modal> {
   title: string;
   value: string;
   onChange: (value: string) => void;
+  onPress?: (value: string) => void;
 }
 
 const SettingsModal = ({
@@ -28,6 +29,7 @@ const SettingsModal = ({
   title,
   value,
   onChange,
+  onPress,
   ...rest
 }: SettingsModalProps) => {
   return (
@@ -45,6 +47,7 @@ const SettingsModal = ({
                 key={key}
                 className="flex p-3 bg-background-dark rounded-md"
                 size="sm"
+                onPress={() => onPress?.(option.value)}
               >
                 <RadioLabel className="flex-1">{option.label}</RadioLabel>
                 <RadioIndicator>

@@ -11,12 +11,13 @@ interface ScreenContainerProps extends React.ComponentProps<typeof ScrollView> {
 const ScreenContainer = ({
   children,
   vStackClassName,
+  className,
   ...rest
 }: ScreenContainerProps) => {
   return (
     <ScrollView
       stickyHeaderIndices={[0]}
-      className="h-full bg-black p-2"
+      className={twMerge("h-full bg-black p-2", className)}
       {...rest}
     >
       <VStack space="md" className={twMerge(vStackClassName)}>

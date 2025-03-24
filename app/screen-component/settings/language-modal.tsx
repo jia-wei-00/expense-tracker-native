@@ -21,7 +21,7 @@ const LanguageModal = ({ ...rest }: LanguageModalProps) => {
     dispatch(setLanguage(value as Language));
   };
 
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   React.useEffect(() => {
     if (language) {
@@ -32,7 +32,7 @@ const LanguageModal = ({ ...rest }: LanguageModalProps) => {
   return (
     <SettingsModal
       options={languageOptions}
-      title="Language"
+      title={t("Language")}
       value={language}
       onChange={handleChangeLanguage}
       {...rest}

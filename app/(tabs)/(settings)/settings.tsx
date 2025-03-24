@@ -17,8 +17,9 @@ import {
 import { useRouter } from "expo-router";
 import { languageOptions } from "@/app/screen-component/settings/language-modal";
 import { fontSizeOptions } from "@/app/screen-component/settings/font-size-modal";
-import { useAuthenticationOptions } from "@/app/screen-component/settings/authentication-modal";
+import { options } from "@/app/screen-component/settings/authentication-modal";
 import { useTranslation } from "react-i18next";
+import { themeOptions } from "@/app/screen-component/settings/theme-modal";
 
 const Settings = () => {
   const dispatch = useAppDispatch();
@@ -53,21 +54,26 @@ const Settings = () => {
         items={[
           {
             label: t("Font Size"),
-            iconLabel: fontSizeOptions.find(
-              (option) => option.value === fontSize
-            )?.label,
+            iconLabel: t(
+              fontSizeOptions.find((option) => option.value === fontSize)
+                ?.label || ""
+            ),
             onPress: () => setShowFontSizeModal(true),
           },
           {
             label: t("Language"),
-            iconLabel: languageOptions.find(
-              (option) => option.value === language
-            )?.label,
+            iconLabel: t(
+              languageOptions.find((option) => option.value === language)
+                ?.label || ""
+            ),
             onPress: () => setShowLanguageModal(true),
           },
           {
             label: t("Theme"),
-            iconLabel: theme,
+            iconLabel: t(
+              themeOptions.find((option) => option.value === theme)
+                ?.smallLabel || ""
+            ),
             onPress: () => setShowThemeModal(true),
           },
         ]}
@@ -76,12 +82,12 @@ const Settings = () => {
         items={[
           {
             label: t("Authentication With"),
-            iconLabel: useAuthenticationOptions().find(
-              (option) => option.value === authentication
-            )?.label,
+            iconLabel: t(
+              options.find((option) => option.value === authentication)
+                ?.label || ""
+            ),
             onPress: () => setShowAuthenticationModal(true),
           },
-          { label: t("Change Application Password") },
           { label: t("Change Login Password") },
         ]}
       />

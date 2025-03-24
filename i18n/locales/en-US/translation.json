@@ -54,5 +54,15 @@
   "Categories": "Categories",
   "Cancel": "Cancel",
   "Deleting...": "Deleting...",
-  "Are you sure you want to delete this record? This action cannot be undone.": "Are you sure you want to delete this record? This action cannot be undone."
+  "Are you sure you want to delete this record? This action cannot be undone.": "Are you sure you want to delete this record? This action cannot be undone.",
+  "Small": "Small",
+  "Medium": "Medium",
+  "Large": "Large",
+  "Authentication": "Authentication",
+  "Light": "Light",
+  "Dark": "Dark",
+  "Follow System": "Follow System",
+  "System": "System",
+  "Tap to unlock": "Tap to unlock",
+  "Authenticate with biometric": "Authenticate with biometric"
 }

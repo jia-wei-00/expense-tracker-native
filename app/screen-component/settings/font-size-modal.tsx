@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { FontSize, setFontSize } from "@/store/features/settings";
 import SettingsModal from "./modal";
 import { ModalProps, PropsWithSize } from "@/components/type";
-
+import { useTranslation } from "react-i18next";
 type FontSizeModalProps = PropsWithSize & ModalProps;
 
 export const fontSizeOptions = [
@@ -15,6 +15,7 @@ export const fontSizeOptions = [
 const FontSizeModal = ({ ...rest }: FontSizeModalProps) => {
   const { fontSize } = useAppSelector((state) => state.settings);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const handleChangeFontSize = (value: string) => {
     dispatch(setFontSize(value as FontSize));
@@ -22,8 +23,11 @@ const FontSizeModal = ({ ...rest }: FontSizeModalProps) => {
 
   return (
     <SettingsModal
-      options={fontSizeOptions}
-      title="Font Size"
+      options={fontSizeOptions.map((option) => ({
+        ...option,
+        label: t(option.label),
+      }))}
+      title={t("Font Size")}
       value={fontSize}
       onChange={handleChangeFontSize}
       {...rest}

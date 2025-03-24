@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Input, InputField } from "@/components/ui/input";
-import { useSignInMutation, useSignUpMutation } from "@/store/features";
+import { signIn, signUp } from "@/store/features";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [signIn, { isLoading: isSignInLoading }] = useSignInMutation();
-  const [signUp, { isLoading: isSignUpLoading }] = useSignUpMutation();
+  const { isLoggingIn, isSigningUp } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
   return (
     <View style={styles.container}>
@@ -33,17 +33,13 @@ export default function Login() {
         </Input>
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button onPress={() => signIn({ email, password })}>
-          <ButtonText>
-            {isSignInLoading ? "Signing in..." : "Sign in"}
-          </ButtonText>
+        <Button onPress={() => dispatch(signIn({ email, password }))}>
+          <ButtonText>{isLoggingIn ? "Signing in..." : "Sign in"}</ButtonText>
         </Button>
       </View>
       <View style={styles.verticallySpaced}>
-        <Button onPress={() => signUp({ email, password })}>
-          <ButtonText>
-            {isSignUpLoading ? "Signing up..." : "Sign up"}
-          </ButtonText>
+        <Button onPress={() => dispatch(signUp({ email, password }))}>
+          <ButtonText>{isSigningUp ? "Signing up..." : "Sign up"}</ButtonText>
         </Button>
       </View>
     </View>

@@ -67,7 +67,7 @@ function Wrapper({ colorScheme }: { colorScheme: string | null | undefined }) {
 }
 
 function App() {
-  useProtectedRoute();
+  useProtectedRoute(); 
 
   return (
     <Stack>
