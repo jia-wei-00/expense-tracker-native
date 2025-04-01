@@ -1,20 +1,11 @@
 import React from "react";
 import { Control, FieldValues, UseFormReturn } from "react-hook-form";
-import {
-  DatePickerWithController,
-  InputWithController,
-  RadioWithController,
-  SelectWithController,
-} from "@/components";
+import { InputWithController, RadioWithController } from "@/components";
 import { VStack } from "@/components/ui/vstack";
 import { Divider } from "@/components/ui/divider";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { EditIcon } from "@/assets/Icons";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+import { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { CategorySchema } from "../home/schemes";
 import { Category } from "@/store/features";

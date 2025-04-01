@@ -20,6 +20,7 @@ import { fontSizeOptions } from "@/app/screen-component/settings/font-size-modal
 import { options } from "@/app/screen-component/settings/authentication-modal";
 import { useTranslation } from "react-i18next";
 import { themeOptions } from "@/app/screen-component/settings/theme-modal";
+import { toast } from "sonner-native";
 
 const Settings = () => {
   const dispatch = useAppDispatch();
@@ -99,7 +100,16 @@ const Settings = () => {
           },
         ]}
       />
-      <Item items={[{ label: t("Clean Cache") }]} />
+      <Item
+        items={[
+          {
+            label: t("Clean Cache"),
+            onPress: () => {
+              toast.success(t("Cache cleaned"));
+            },
+          },
+        ]}
+      />
       <VStack space="md"></VStack>
       <Button onPress={handleLogout} variant="outline" action="negative">
         <ButtonText>

@@ -21,6 +21,7 @@ export const useHandleBiometricAuth = ({
         (nextAppState) => {
           if (nextAppState === "background") {
             setIsLocalAuthenticated(false);
+            console.log("App is in background");
           }
 
           if (nextAppState === "active") {
@@ -33,6 +34,7 @@ export const useHandleBiometricAuth = ({
                 handleBiometricAuth();
               } else {
                 console.log("Biometric not supported");
+                setIsLocalAuthenticated(true);
               }
             })();
           }
@@ -51,7 +53,7 @@ export const useHandleBiometricAuth = ({
     const isBiometricAvailable = await LocalAuthentication.hasHardwareAsync();
 
     if (!isBiometricAvailable) {
-      return console.log("Biometric not supported");
+      return setIsLocalAuthenticated(true);
     }
 
     const biometricAuth = await LocalAuthentication.authenticateAsync({
@@ -66,6 +68,10 @@ export const useHandleBiometricAuth = ({
       }
     }
   }, [t]);
+
+  if (authentication !== "fingerprint") {
+    return { handleBiometricAuth, isLocalAuthenticated: true };
+  }
 
   return { handleBiometricAuth, isLocalAuthenticated };
 };

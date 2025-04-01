@@ -27,7 +27,7 @@ export default function TabLayout() {
 
   return (
     <>
-      {!isLocalAuthenticated && (
+      {authentication === "fingerprint" && !isLocalAuthenticated && (
         <LocalAuthenticate handleLocalAuthenticate={handleBiometricAuth} />
       )}
       <Tabs

@@ -17,3 +17,5 @@ export { default as EditIcon } from "./edit";
 export { default as TrashIcon } from "./trash";
 export { default as LogOutIcon } from "./logout";
 export { default as ChevronRightIcon } from "./chevron-right";
+export { default as SuccessIcon } from "./success";
+export { default as LoaderIcon } from "./loader";

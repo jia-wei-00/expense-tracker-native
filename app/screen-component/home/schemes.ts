@@ -2,6 +2,7 @@ import * as yup from "yup";
 
 export type AddRecordSchema = yup.InferType<typeof addRecordSchema>;
 export type CategorySchema = yup.InferType<typeof categorySchema>;
+export type SignInSchema = yup.InferType<typeof signInSchema>;
 
 export const addRecordSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -29,4 +30,9 @@ export const addRecordSchema = yup.object().shape({
 export const categorySchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   is_expense: yup.string().required("Transaction type is required"),
+});
+
+export const signInSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup.string().required("Password is required"),
 });

@@ -14,7 +14,9 @@ import {
 } from "@react-navigation/native";
 import React from "react";
 import { useAppSelector } from "@/hooks/useRedux";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "@/i18n";
+import { CustomToaster } from "@/components";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,18 +58,24 @@ function RootLayoutNav() {
 function Wrapper({ colorScheme }: { colorScheme: string | null | undefined }) {
   const { theme } = useAppSelector((state) => state.settings);
   const currentTheme = theme === "system" ? colorScheme : theme;
+  const mode = currentTheme === "dark" ? "dark" : "light";
 
   return (
-    <GluestackUIProvider mode={currentTheme === "dark" ? "dark" : "light"}>
-      <ThemeProvider value={currentTheme === "dark" ? DarkTheme : DefaultTheme}>
-        <App />
-      </ThemeProvider>
-    </GluestackUIProvider>
+    <GestureHandlerRootView>
+      <GluestackUIProvider mode={mode}>
+        <ThemeProvider
+          value={currentTheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <App />
+          <CustomToaster mode={mode} />
+        </ThemeProvider>
+      </GluestackUIProvider>
+    </GestureHandlerRootView>
   );
 }
 
 function App() {
-  useProtectedRoute(); 
+  useProtectedRoute();
 
   return (
     <Stack>

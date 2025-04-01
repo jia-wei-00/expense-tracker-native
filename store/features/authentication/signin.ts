@@ -1,6 +1,8 @@
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { SignupPayload } from "./auth-slice";
+import { toast } from "sonner-native";
+import { AuthError } from "@supabase/supabase-js";
 
 export const signIn = createAsyncThunk(
   "auth/signIn",
@@ -10,15 +12,21 @@ export const signIn = createAsyncThunk(
         email: payload.email,
         password: payload.password,
       });
-      if (error) {
-        console.log(error);
-        throw error;
-      }
-      console.log(data);
+
+      if (error) throw error;
+
+      const name =
+        data.session.user.user_metadata.display_name || data.session.user.email;
+
+      toast.success(`Welcome, ${name}!`);
       return data;
     } catch (error) {
-      console.log(error);
-      return [];
+      if (error instanceof AuthError) {
+        toast.error(error.message);
+      } else {
+        toast.error(JSON.stringify(error));
+      }
+      throw error;
     }
   }
 );

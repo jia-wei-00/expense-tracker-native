@@ -2,22 +2,17 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { router, useRootNavigationState, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
-import { useAppSelector } from "@/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  useGetSessionMutation,
-  useOnAuthStateChangeMutation,
-} from "@/store/features";
+import { getAuthStateChange, getSession } from "@/store/features";
 
 export function useProtectedRoute() {
   const segments = useSegments();
   const navigationState = useRootNavigationState();
-  const userSession = useAppSelector((state) => state.auth.session);
+  const dispatch = useAppDispatch();
 
-  const [onAuthStateChange, { isLoading: isOnAuthStateChangeLoading }] =
-    useOnAuthStateChangeMutation();
-  const [getSession, { isLoading: isGetSessionLoading }] =
-    useGetSessionMutation();
+  const { isSessionLoading, session } = useAppSelector((state) => state.auth);
+
   /*
   const token = AsyncStorage.getItem("@fabwert_token").then((token) => {
     return token;
@@ -31,9 +26,9 @@ export function useProtectedRoute() {
 
   const [styleLoaded, setStyleLoaded] = useState(false);
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+
   useEffect(() => {
-    onAuthStateChange("");
-    getSession("");
+    dispatch(getSession());
   }, []);
 
   useEffect(() => {
@@ -41,23 +36,23 @@ export function useProtectedRoute() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded || isGetSessionLoading) {
+    if (loaded && !isSessionLoading) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, isGetSessionLoading]);
+  }, [loaded, isSessionLoading]);
 
   useEffect(() => {
     if (!navigationState?.key) return;
     const inAuthGroup = segments[0] === "(auth)";
     if (
       // If the user is not signed in and the initial segment is not anything in the auth group.
-      !userSession &&
+      !session &&
       !inAuthGroup
     ) {
       router.push("/sign-in");
-    } else if (userSession && inAuthGroup) {
+    } else if (session && inAuthGroup) {
       // Redirect away from the sign-in page.
       router.push("/(tabs)");
     }
-  }, [userSession, segments]);
+  }, [session, segments]);
 }
