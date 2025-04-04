@@ -43,21 +43,23 @@ export default function TabLayout() {
           name="index"
           options={{
             title: t("Home"),
-            tabBarIcon: ({ color }) => <Icon as={HomeIcon} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={HomeIcon} className={color} />,
           }}
         />
         <Tabs.Screen
           name="history"
           options={{
             title: t("History"),
-            tabBarIcon: ({ color }) => <Icon as={HistoryIcon} color={color} />,
+            tabBarIcon: ({ color }) => (
+              <Icon as={HistoryIcon} className={color} />
+            ),
           }}
         />
         <Tabs.Screen
           name="(settings)"
           options={{
             title: t("Settings"),
-            tabBarIcon: ({ color }) => <Icon as={UserIcon} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={UserIcon} className={color} />,
           }}
         />
       </Tabs>
