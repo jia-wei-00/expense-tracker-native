@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import { twMerge } from "tailwind-merge";
 
 interface RecordTypeProps {
   recordType: "expense" | "income";
@@ -62,13 +63,27 @@ const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
         className="flex-1 h-8 justify-center"
         onPress={() => handlePress("expense")}
       >
-        <Text.Bold className="text-center">{t("Expense")}</Text.Bold>
+        <Text.Bold
+          className={twMerge(
+            "text-center",
+            recordType === "expense" && "text-white"
+          )}
+        >
+          {t("Expense")}
+        </Text.Bold>
       </Pressable>
       <Pressable
         className="flex-1 h-8 justify-center"
         onPress={() => handlePress("income")}
       >
-        <Text.Bold className="text-center">{t("Income")}</Text.Bold>
+        <Text.Bold
+          className={twMerge(
+            "text-center",
+            recordType === "income" && "text-white"
+          )}
+        >
+          {t("Income")}
+        </Text.Bold>
       </Pressable>
     </HStack>
   );

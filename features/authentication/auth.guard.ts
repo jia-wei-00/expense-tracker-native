@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import * as SplashScreen from "expo-splash-screen";
-import { getAuthStateChange, getSession } from "@/store/features";
+import { getSession } from "@/store/features";
 
 export function useProtectedRoute() {
   const segments = useSegments();

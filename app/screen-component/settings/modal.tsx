@@ -35,7 +35,7 @@ const SettingsModal = ({
   return (
     <Modal {...rest}>
       <ModalBackdrop />
-      <ModalContent>
+      <ModalContent className="bg-background-0">
         <ModalHeader className="mb-2">
           <Text.Title>{title}</Text.Title>
         </ModalHeader>
@@ -45,11 +45,13 @@ const SettingsModal = ({
               <Radio
                 value={option.value}
                 key={key}
-                className="flex p-3 bg-background-dark rounded-md"
+                className="flex p-3 bg-background-50 rounded-md"
                 size="sm"
                 onPress={() => onPress?.(option.value)}
               >
-                <RadioLabel className="flex-1">{option.label}</RadioLabel>
+                <RadioLabel className="flex-1 text-secondary-0">
+                  {option.label}
+                </RadioLabel>
                 <RadioIndicator>
                   {value === option.value ? (
                     <Icon as={CheckedIcon} />

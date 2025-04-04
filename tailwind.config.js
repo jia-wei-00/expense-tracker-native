@@ -2,7 +2,7 @@
 
 // tailwind.config.js
 module.exports = {
-  darkMode: "class",
+  darkMode: process.env.DARK_MODE ? process.env.DARK_MODE : "media",
   content: [
     "./components/**/*.{html,js,jsx,ts,tsx}",
     "./app/**/*.{html,js,jsx,ts,tsx}",

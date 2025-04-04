@@ -17,7 +17,7 @@ const ScreenContainer = ({
   return (
     <ScrollView
       stickyHeaderIndices={[0]}
-      className={twMerge("h-full bg-black p-2", className)}
+      className={twMerge("h-full bg-background-0 p-2", className)}
       {...rest}
     >
       <VStack space="md" className={twMerge(vStackClassName)}>

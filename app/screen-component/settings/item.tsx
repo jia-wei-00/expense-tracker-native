@@ -49,10 +49,7 @@ const ItemWrapper = ({
 
 const Item = ({ children, items }: ItemProps) => {
   return (
-    <VStack
-      space="md"
-      className="dark:bg-background-0 border rounded-md px-4 py-2"
-    >
+    <VStack space="md" className="bg-background-50 rounded-md px-4 py-2">
       {children && <ItemWrapper>{children}</ItemWrapper>}
       {items?.map((item, key) => (
         <ItemWrapper
