@@ -57,7 +57,7 @@ const SelectWithController = ({
         >
           {label && (
             <FormControlLabel>
-              <FormControlLabelText className="dark:text-zinc-400">
+              <FormControlLabelText className="text-secondary-0">
                 {label}
               </FormControlLabelText>
             </FormControlLabel>

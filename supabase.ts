@@ -11,6 +11,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Supabase URL or Anon Key is not defined");
 }
 
+// Monkey-patch fetch for logging
+if (__DEV__) {
+  const originalFetch = global.fetch;
+  global.fetch = async (...args) => {
+    console.log("[Supabase Fetch]", ...args);
+    return originalFetch(...args);
+  };
+}
+
 class SupabaseStorage {
   async getItem(key: string) {
     if (Platform.OS === "web") {

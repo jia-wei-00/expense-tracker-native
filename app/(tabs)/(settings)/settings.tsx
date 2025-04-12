@@ -3,7 +3,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { logout } from "@/store/features";
+import { logout, resetPassword } from "@/store/features";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -89,7 +89,12 @@ const Settings = () => {
             ),
             onPress: () => setShowAuthenticationModal(true),
           },
-          { label: t("Change Login Password") },
+          {
+            label: t("Change Login Password"),
+            onPress: () =>
+              session?.user.email &&
+              dispatch(resetPassword(session.user.email)),
+          },
         ]}
       />
       <Item
@@ -112,7 +117,7 @@ const Settings = () => {
       />
       <VStack space="md"></VStack>
       <Button onPress={handleLogout} variant="outline" action="negative">
-        <ButtonText>
+        <ButtonText className="text-red-500">
           {isLoggingOut ? t("Logging Out...") : t("Log Out")}
         </ButtonText>
       </Button>

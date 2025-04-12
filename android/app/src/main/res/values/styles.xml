@@ -13,6 +13,11 @@
     <item name="android:textColorHint">#c8c8c8</item>
     <item name="android:textColor">@android:color/black</item>
   </style>
+  <style name="Theme.App.SplashScreen" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">@color/splashscreen_background</item>
+    <item name="windowSplashScreenAnimatedIcon">@drawable/splashscreen_logo</item>
+    <item name="postSplashScreenTheme">@style/AppTheme</item>
+  </style>
   <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
     <item name="colorAccent">@color/datePicker_colorAccent</item>
     <item name="android:textColorPrimary">@color/datePicker_textColorPrimary</item>
@@ -20,10 +25,5 @@
   <style name="TimePickerTheme" parent="android:Widget.Material.Light.TimePicker">
     <item name="android:background">@color/timePicker_background</item>
     <item name="android:numbersBackgroundColor">@color/timePicker_numbersBackgroundColor</item>
-  </style>
-  <style name="Theme.App.SplashScreen" parent="Theme.SplashScreen">
-    <item name="windowSplashScreenBackground">@color/splashscreen_background</item>
-    <item name="windowSplashScreenAnimatedIcon">@drawable/splashscreen_logo</item>
-    <item name="postSplashScreenTheme">@style/AppTheme</item>
   </style>
 </resources>

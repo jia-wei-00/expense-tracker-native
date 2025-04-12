@@ -96,9 +96,11 @@ const Records = ({
                     return (
                       <>
                         <VStack>
-                          <AccordionTitleText>{item.name}</AccordionTitleText>
+                          <AccordionTitleText className="text-secondary-0">
+                            {item.name}
+                          </AccordionTitleText>
                           {"amount" in item && (
-                            <AccordionTitleText>
+                            <AccordionTitleText className="text-secondary-0">
                               RM{item.amount}
                             </AccordionTitleText>
                           )}

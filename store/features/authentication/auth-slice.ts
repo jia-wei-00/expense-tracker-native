@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Session } from "@supabase/supabase-js";
 import { logout } from "./logout";
-import { signIn } from "./signin";
+import { signIn, signInWithGoogle } from "./signin";
 import { signUp } from "./signup";
-import { getSession } from "./session";
+import { createSessionFromUrl, getSession } from "./session";
 
 interface AuthState {
   session: Session | null;
@@ -32,9 +32,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setSession: (state, action) => {
-      state.session = action.payload;
-    },
     setIsLoggingOut: (state, action) => {
       state.isLoggingOut = action.payload;
     },
@@ -84,8 +81,28 @@ const authSlice = createSlice({
       state.session = null;
       state.isSessionLoading = false;
     });
+    builder.addCase(createSessionFromUrl.fulfilled, (state, action) => {
+      state.session = action.payload?.session ?? null;
+      state.isSessionLoading = false;
+    });
+    builder.addCase(createSessionFromUrl.pending, (state) => {
+      state.isSessionLoading = true;
+    });
+    builder.addCase(createSessionFromUrl.rejected, (state) => {
+      state.isSessionLoading = false;
+    });
+    builder.addCase(signInWithGoogle.fulfilled, (state, action) => {
+      createSessionFromUrl(action.payload);
+      state.isLoggingIn = false;
+    });
+    builder.addCase(signInWithGoogle.pending, (state) => {
+      state.isLoggingIn = true;
+    });
+    builder.addCase(signInWithGoogle.rejected, (state) => {
+      state.isLoggingIn = false;
+    });
   },
 });
 
-export const { setSession, setIsLoggingOut, setIsLoading } = authSlice.actions;
+export const { setIsLoggingOut, setIsLoading } = authSlice.actions;
 export const authReducer = authSlice.reducer;

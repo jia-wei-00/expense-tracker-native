@@ -204,7 +204,7 @@ const RecordDetailsModal = ({
       <ModalBackdrop />
       <ModalContent>
         <ModalHeader>
-          <Heading size="lg" className="text-typography-950">
+          <Heading size="lg" className="text-secondary-0">
             {defaultValues
               ? defaultValues.created_at
                 ? t("View")
@@ -243,7 +243,7 @@ const RecordDetailsModal = ({
           {defaultValues?.created_at && (
             <FormControl isRequired={true} size="sm">
               <FormControlLabel>
-                <FormControlLabelText className="dark:text-zinc-400">
+                <FormControlLabelText className="text-secondary-0">
                   {t("Created At")}
                 </FormControlLabelText>
               </FormControlLabel>

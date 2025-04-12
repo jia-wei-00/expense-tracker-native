@@ -2,7 +2,6 @@
 import React from "react";
 import { config } from "./config";
 import { OverlayProvider } from "@gluestack-ui/overlay";
-import { ToastProvider } from "@gluestack-ui/toast";
 import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
 
 export function GluestackUIProvider({
@@ -32,9 +31,7 @@ export function GluestackUIProvider({
   return (
     <>
       <style>{styleToInject}</style>
-      <OverlayProvider>
-        <ToastProvider>{props.children}</ToastProvider>
-      </OverlayProvider>
+      <OverlayProvider>{props.children}</OverlayProvider>
     </>
   );
 }

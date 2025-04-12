@@ -15,6 +15,6 @@ export const logout = createAsyncThunk("auth/logout", async () => {
     } else {
       toast.error(JSON.stringify(error));
     }
-    return [];
+    throw error;
   }
 });

@@ -1,6 +1,10 @@
 import React from "react";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
-import { signIn } from "@/store/features";
+import {
+  createSessionFromUrl,
+  signIn,
+  signInWithGoogle,
+} from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { VStack } from "@/components/ui/vstack";
 import InputWithController from "@/components/input-with-controller";
@@ -14,6 +18,13 @@ import {
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
+import { makeRedirectUri } from "expo-auth-session";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
+
+WebBrowser.maybeCompleteAuthSession(); // required for web only
+const redirectTo = makeRedirectUri();
 
 export default function Login() {
   const { isLoggingIn, isSigningUp } = useAppSelector((state) => state.auth);
@@ -34,6 +45,9 @@ export default function Login() {
   const onSubmit = (data: SignInSchema) => {
     dispatch(signIn({ email: data.email, password: data.password }));
   };
+
+  // const url = Linking.useURL();
+  // if (url) dispatch(createSessionFromUrl(url));
 
   return (
     <VStack space="lg" className="p-4 my-auto">
@@ -67,6 +81,20 @@ export default function Login() {
           {isLoggingIn ? t("Signing in...") : t("Sign in")}
         </ButtonText>
       </Button>
+      <Button
+        className="mt-4"
+        size="sm"
+        onPress={() => dispatch(signInWithGoogle(redirectTo))}
+        disabled={isLoggingIn}
+      >
+        {isLoggingIn && <ButtonSpinner />}
+        <ButtonText>{t("Sign in with Google")}</ButtonText>
+      </Button>
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        onPress={() => dispatch(signInWithGoogle(redirectTo))}
+        disabled={isLoggingIn}
+      />
     </VStack>
   );
 }

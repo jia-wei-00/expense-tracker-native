@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Expense Tracker",
-    "slug": "native-tracker",
+    "slug": "expense-tracker-native",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "native-tracker",
+    "scheme": "com.jia011.expensetrackernative",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -15,14 +15,26 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jia011.exporouterwithnativewind"
+      "bundleIdentifier": "com.jia011.expensetrackernative"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jia011.exporouterwithnativewind"
+      "package": "com.jia011.expensetrackernative",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": {
+            "scheme": "https",
+            "host": "expense-tracker-native.expo.app",
+            "pathPrefix": "/"
+          },
+          "categories": ["DEFAULT", "BROWSABLE"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -58,7 +70,8 @@
         }
       ],
       "expo-font",
-      "expo-localization"
+      "expo-localization",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true
@@ -68,7 +81,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "efa5a0f4-dd41-4457-8dd8-c1d49ad04923"
+        "projectId": "388f9c8f-85c3-4316-b90f-11fdc871a9c0"
       }
     }
   }

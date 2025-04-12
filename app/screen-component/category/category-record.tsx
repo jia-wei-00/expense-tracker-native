@@ -85,7 +85,7 @@ const CategoryRecords = ({
           renderItem={({ item }) => (
             <AccordionItem
               value={`item-${item.id}`}
-              className="rounded-lg"
+              className="rounded-lg bg-background-50"
               key={item.id}
             >
               <AccordionHeader>
