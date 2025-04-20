@@ -22,7 +22,11 @@ import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-
+import {
+  authenticate,
+  signout,
+  addChangeListener,
+} from "@/modules/credential-manager";
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
 
@@ -45,6 +49,15 @@ export default function Login() {
   const onSubmit = (data: SignInSchema) => {
     dispatch(signIn({ email: data.email, password: data.password }));
   };
+
+  React.useEffect(() => {
+    const subscription = addChangeListener((state) => {
+      console.log(state.value);
+      console.log(state.error);
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   // const url = Linking.useURL();
   // if (url) dispatch(createSessionFromUrl(url));
@@ -92,9 +105,11 @@ export default function Login() {
       </Button>
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
-        onPress={() => dispatch(signInWithGoogle(redirectTo))}
+        onPress={authenticate}
         disabled={isLoggingIn}
       />
     </VStack>
   );
 }
+
+// 446882197354-r1pmvn1ov63uu506f0n4n6lrhk8r96e7.apps.googleusercontent.com
