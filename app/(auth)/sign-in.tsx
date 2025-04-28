@@ -22,11 +22,8 @@ import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-import {
-  authenticate,
-  signout,
-  addChangeListener,
-} from "@/modules/credential-manager";
+// import { getTheme } from "@/modules/expo-settings";
+import { getTheme } from "@/modules/credential-manager";
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
 
@@ -49,18 +46,6 @@ export default function Login() {
   const onSubmit = (data: SignInSchema) => {
     dispatch(signIn({ email: data.email, password: data.password }));
   };
-
-  React.useEffect(() => {
-    const subscription = addChangeListener((state) => {
-      console.log(state.value);
-      console.log(state.error);
-    });
-
-    return () => subscription.remove();
-  }, []);
-
-  // const url = Linking.useURL();
-  // if (url) dispatch(createSessionFromUrl(url));
 
   return (
     <VStack space="lg" className="p-4 my-auto">
@@ -103,11 +88,19 @@ export default function Login() {
         {isLoggingIn && <ButtonSpinner />}
         <ButtonText>{t("Sign in with Google")}</ButtonText>
       </Button>
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        onPress={authenticate}
+      <Button
+        className="mt-4"
+        size="sm"
+        onPress={() => console.log(getTheme())}
         disabled={isLoggingIn}
-      />
+      >
+        <ButtonText>test button</ButtonText>
+      </Button>
+      {/* <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        onPress={() => getTheme()}
+        disabled={isLoggingIn}
+      /> */}
     </VStack>
   );
 }

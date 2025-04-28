@@ -1,11 +1,11 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from "react-native";
 
 export type OnLoadEventPayload = {
   url: string;
 };
 
-export type CredentialManagerModuleEvents = {
-  onChange: (params: ChangeEventPayload) => void;
+export type CredentialManagerChangeEvents = {
+  theme: string;
 };
 
 export type ChangeEventPayload = {
