@@ -16,7 +16,7 @@ class CredentialManagerModule : Module() {
     Function("setTheme") { theme: Theme ->
       getPreferences().edit().putString("theme", theme.value).commit()
       this@CredentialManagerModule.sendEvent("onChange", bundleOf("theme" to theme.value))
-    } 
+    }
 
     Function("getTheme") {
       return@Function getPreferences().getString("theme", Theme.SYSTEM.value)

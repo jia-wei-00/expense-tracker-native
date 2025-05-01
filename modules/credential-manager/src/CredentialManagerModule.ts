@@ -1,6 +1,5 @@
 import { NativeModule, requireNativeModule } from "expo";
 import { EventSubscription } from "expo-modules-core";
-
 import {
   CredentialManagerModuleEvents,
   Theme,
