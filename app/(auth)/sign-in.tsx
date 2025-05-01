@@ -20,10 +20,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-// import { getTheme } from "@/modules/expo-settings";
-import { getTheme } from "@/modules/credential-manager";
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
 
@@ -88,12 +84,7 @@ export default function Login() {
         {isLoggingIn && <ButtonSpinner />}
         <ButtonText>{t("Sign in with Google")}</ButtonText>
       </Button>
-      <Button
-        className="mt-4"
-        size="sm"
-        onPress={() => console.log(getTheme())}
-        disabled={isLoggingIn}
-      >
+      <Button className="mt-4" size="sm" disabled={isLoggingIn}>
         <ButtonText>test button</ButtonText>
       </Button>
       {/* <GoogleSigninButton
