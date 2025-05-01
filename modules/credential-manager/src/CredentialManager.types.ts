@@ -4,8 +4,8 @@ export type OnLoadEventPayload = {
   url: string;
 };
 
-export type CredentialManagerChangeEvents = {
-  theme: string;
+export type CredentialManagerModuleEvents = {
+  onChange: (params: ChangeEventPayload) => void;
 };
 
 export type ChangeEventPayload = {
@@ -16,4 +16,10 @@ export type CredentialManagerViewProps = {
   url: string;
   onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;
   style?: StyleProp<ViewStyle>;
+};
+
+export type Theme = "light" | "dark" | "system";
+
+export type ThemeChangeEvent = {
+  theme: Theme;
 };

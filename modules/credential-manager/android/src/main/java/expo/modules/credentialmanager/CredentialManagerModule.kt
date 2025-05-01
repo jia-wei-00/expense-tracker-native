@@ -1,10 +1,11 @@
-package expo.modules.credentialmanager
+package expo.modules.settings
 
 import android.content.Context
-import androidx.core.os.budleOf
 import android.content.SharedPreferences
+import androidx.core.os.bundleOf
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import expo.modules.kotlin.types.Enumerable
 
 class CredentialManagerModule : Module() {
   override fun definition() = ModuleDefinition {
@@ -12,19 +13,26 @@ class CredentialManagerModule : Module() {
 
     Events("onChange")
 
-    Function("setTheme") { theme: String ->
-      getPreferences().edit().putString("theme", theme).apply()
-      this@CredentialManagerModule.sendEvent("onChange", bundlOf("theme" to theme))
-    }
+    Function("setTheme") { theme: Theme ->
+      getPreferences().edit().putString("theme", theme.value).commit()
+      this@CredentialManagerModule.sendEvent("onChange", bundleOf("theme" to theme.value))
+    } 
 
     Function("getTheme") {
-      return@Function getPreferences().getString("theme", "system")
+      return@Function getPreferences().getString("theme", Theme.SYSTEM.value)
     }
   }
 
-  private val context: Context
-    get() = requireNotNull(appContext.reactContext)
+  private val context
+  get() = requireNotNull(appContext.reactContext)
 
-  private fun getPreferences(): SharedPreferences
-    return context.getSharedPreferences(context.packageName + ".credential_manager", Context.MODE_PRIVATE)
+  private fun getPreferences(): SharedPreferences {
+    return context.getSharedPreferences(context.packageName + ".credentialmanager", Context.MODE_PRIVATE)
+  }
+}
+
+enum class Theme(val value: String) : Enumerable {
+  LIGHT("light"),
+  DARK("dark"),
+  SYSTEM("system")
 }
