@@ -1,12 +1,7 @@
 import { EventSubscription } from "expo-modules-core";
 
 import CredentialManagerModule from "./src/CredentialManagerModule";
-
-export type Theme = "light" | "dark" | "system";
-
-export type ThemeChangeEvent = {
-  theme: Theme;
-};
+import { Theme, ThemeChangeEvent } from "./src/CredentialManager.types";
 
 export function addThemeListener(
   listener: (event: ThemeChangeEvent) => void
