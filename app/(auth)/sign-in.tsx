@@ -20,14 +20,31 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
+import * as CredentialManager from "@/modules/credential-manager";
+import { Text } from "@/components/ui/text";
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
 
 export default function Login() {
   const { isLoggingIn, isSigningUp } = useAppSelector((state) => state.auth);
+  const [theme, setTheme] = React.useState<string>(
+    CredentialManager.getTheme()
+  );
   const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    const subscription = CredentialManager.addThemeListener(
+      ({ theme: newTheme }) => {
+        setTheme(newTheme);
+      }
+    );
+
+    return () => subscription.remove();
+  }, [setTheme]);
+
+  const nextTheme = theme === "dark" ? "light" : "dark";
 
   const {
     control: controlWithController,
@@ -84,8 +101,13 @@ export default function Login() {
         {isLoggingIn && <ButtonSpinner />}
         <ButtonText>{t("Sign in with Google")}</ButtonText>
       </Button>
-      <Button className="mt-4" size="sm" disabled={isLoggingIn}>
-        <ButtonText>test button</ButtonText>
+      <Button
+        className="mt-4"
+        size="sm"
+        onPress={() => CredentialManager.setTheme(nextTheme)}
+      >
+        <Text>Theme: {CredentialManager.getTheme()}</Text>
+        <ButtonText>{`Set theme to ${nextTheme}`}</ButtonText>
       </Button>
       {/* <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
