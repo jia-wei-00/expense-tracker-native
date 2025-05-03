@@ -1,4 +1,4 @@
-package expo.modules.settings
+package expo.modules.credentialmanager
 
 import android.content.Context
 import android.content.SharedPreferences
