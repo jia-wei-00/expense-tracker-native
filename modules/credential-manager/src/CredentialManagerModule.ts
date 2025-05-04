@@ -1,12 +1,5 @@
-import { NativeModule, requireNativeModule } from 'expo';
+import { requireNativeModule } from "expo-modules-core";
 
-import { CredentialManagerModuleEvents } from './CredentialManager.types';
-
-declare class CredentialManagerModule extends NativeModule<CredentialManagerModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
-}
-
-// This call loads the native module object from the JSI.
-export default requireNativeModule<CredentialManagerModule>('CredentialManager');
+// It loads the native module object from the JSI or falls back to
+// the bridge module (from NativeModulesProxy) if the remote debugger is on.
+export default requireNativeModule("CredentialManager");

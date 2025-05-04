@@ -20,21 +20,31 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-import {
-  authenticate,
-  signout,
-  addChangeListener,
-} from "@/modules/credential-manager";
+import * as CredentialManager from "@/modules/credential-manager";
+import { Text } from "@/components/ui/text";
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
 
 export default function Login() {
   const { isLoggingIn, isSigningUp } = useAppSelector((state) => state.auth);
+  const [theme, setTheme] = React.useState<string>(
+    CredentialManager.getTheme()
+  );
   const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    const subscription = CredentialManager.addThemeListener(
+      ({ theme: newTheme }) => {
+        setTheme(newTheme);
+      }
+    );
+
+    return () => subscription.remove();
+  }, [setTheme]);
+
+  const nextTheme = theme === "dark" ? "light" : "dark";
 
   const {
     control: controlWithController,
@@ -49,18 +59,6 @@ export default function Login() {
   const onSubmit = (data: SignInSchema) => {
     dispatch(signIn({ email: data.email, password: data.password }));
   };
-
-  React.useEffect(() => {
-    const subscription = addChangeListener((state) => {
-      console.log(state.value);
-      console.log(state.error);
-    });
-
-    return () => subscription.remove();
-  }, []);
-
-  // const url = Linking.useURL();
-  // if (url) dispatch(createSessionFromUrl(url));
 
   return (
     <VStack space="lg" className="p-4 my-auto">
@@ -103,11 +101,19 @@ export default function Login() {
         {isLoggingIn && <ButtonSpinner />}
         <ButtonText>{t("Sign in with Google")}</ButtonText>
       </Button>
-      <GoogleSigninButton
+      <Button
+        className="mt-4"
+        size="sm"
+        onPress={() => CredentialManager.setTheme(nextTheme)}
+      >
+        <Text>Theme: {CredentialManager.getTheme()}</Text>
+        <ButtonText>{`Set theme to ${nextTheme}`}</ButtonText>
+      </Button>
+      {/* <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
-        onPress={authenticate}
+        onPress={() => getTheme()}
         disabled={isLoggingIn}
-      />
+      /> */}
     </VStack>
   );
 }
