@@ -3,12 +3,19 @@ import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import {
   createSessionFromUrl,
   signIn,
-  signInWithGoogle,
+  signInWithOAuth,
 } from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { VStack } from "@/components/ui/vstack";
 import InputWithController from "@/components/input-with-controller";
 import { signInSchema, SignInSchema } from "../screen-component/home/schemes";
+import {
+  signUpWithPasskeys,
+  signUpWithPassword,
+  signUpWithGoogle,
+  signOut,
+  signIn as CMSignIn,
+} from "react-native-credentials-manager";
 import {
   Control,
   FieldValues,
@@ -95,7 +102,14 @@ export default function Login() {
       <Button
         className="mt-4"
         size="sm"
-        onPress={() => dispatch(signInWithGoogle(redirectTo))}
+        onPress={() =>
+          dispatch(
+            signInWithOAuth({
+              provider: "google",
+              redirectTo: redirectTo,
+            })
+          )
+        }
         disabled={isLoggingIn}
       >
         {isLoggingIn && <ButtonSpinner />}

@@ -12,11 +12,12 @@ build/
 # Android builds
 android/build/
 android/app/build/
-modules/**/build/
+modules/**/android/build/
 
 # iOS builds
 ios/build/
 ios/Pods/
+modules/**/ios/build/
 
 
 # Native

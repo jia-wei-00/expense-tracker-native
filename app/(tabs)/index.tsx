@@ -41,13 +41,14 @@ const Home = () => {
 
   const fetchExpenseData = React.useCallback(() => {
     session && dispatch(fetchExpense(session?.user.id));
-  }, [session]);
+  }, []);
 
   React.useEffect(() => {
     !expense.length && fetchExpenseData();
-  }, [session]);
+  }, []);
 
   React.useEffect(() => {
+    console.log("rerending");
     if (session) {
       const subscription = subscribeToExpenseChanges({
         userId: session.user.id,
@@ -58,7 +59,7 @@ const Home = () => {
         subscription.unsubscribe();
       };
     }
-  }, [session]);
+  }, []);
 
   const balance = React.useMemo(() => {
     return expense.reduce((acc, { amount, is_expense }) => {

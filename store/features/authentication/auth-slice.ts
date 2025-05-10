@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Session } from "@supabase/supabase-js";
 import { logout } from "./logout";
-import { signIn, signInWithGoogle } from "./signin";
+import {
+  signIn,
+  signInWithGoogleCredentialsManager,
+  signInWithOAuth,
+} from "./signin";
 import { signUp } from "./signup";
 import { createSessionFromUrl, getSession } from "./session";
 
@@ -83,22 +87,27 @@ const authSlice = createSlice({
     });
     builder.addCase(createSessionFromUrl.fulfilled, (state, action) => {
       state.session = action.payload?.session ?? null;
-      state.isSessionLoading = false;
     });
-    builder.addCase(createSessionFromUrl.pending, (state) => {
-      state.isSessionLoading = true;
-    });
-    builder.addCase(createSessionFromUrl.rejected, (state) => {
-      state.isSessionLoading = false;
-    });
-    builder.addCase(signInWithGoogle.fulfilled, (state, action) => {
-      createSessionFromUrl(action.payload);
+    builder.addCase(signInWithOAuth.fulfilled, (state) => {
       state.isLoggingIn = false;
     });
-    builder.addCase(signInWithGoogle.pending, (state) => {
+    builder.addCase(signInWithOAuth.pending, (state) => {
       state.isLoggingIn = true;
     });
-    builder.addCase(signInWithGoogle.rejected, (state) => {
+    builder.addCase(signInWithOAuth.rejected, (state) => {
+      state.isLoggingIn = false;
+    });
+    builder.addCase(
+      signInWithGoogleCredentialsManager.fulfilled,
+      (state, action) => {
+        // createSessionFromUrl(action.payload);
+        state.isLoggingIn = false;
+      }
+    );
+    builder.addCase(signInWithGoogleCredentialsManager.pending, (state) => {
+      state.isLoggingIn = true;
+    });
+    builder.addCase(signInWithGoogleCredentialsManager.rejected, (state) => {
       state.isLoggingIn = false;
     });
   },

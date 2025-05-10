@@ -1,11 +1,14 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.jia011.expense-tracker-native",
+      "package_name": "com.jia011.expensetrackernative",
       "sha256_cert_fingerprints": [
-        "81:3C:53:D8:BE:AF:2D:80:EE:67:8D:67:E4:74:7A:58:29:0A:1F:52:00:19:C5:1A:8B:8A:E1:D3:9F:C4:02:B6"
+        "53:EF:5C:AD:48:40:4B:CE:9F:30:F0:41:3D:91:04:BF:EE:C8:9B:41:97:5F:65:69:F5:50:20:54:0B:FA:EF:5D"
       ]
     }
   }
