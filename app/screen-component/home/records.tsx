@@ -23,6 +23,7 @@ import { AddRecordSchema } from "./schemes";
 import { DefaultValues } from "react-hook-form";
 import ConfirmDeleteModal from "./confirm-delete-modal";
 import { useAppDispatch } from "@/hooks/useRedux";
+import { Box } from "@/components/ui/box";
 
 export interface ModalDefaultValues extends DefaultValues<AddRecordSchema> {
   id: string;
@@ -52,9 +53,10 @@ const Records = ({
   onClose,
   type = "expense",
 }: RecordsProps) => {
-  const { t } = useTranslation(); // Using the hook for translation
-  const expenseData = useAppSelector((state) => state.expense);
-  const { isFetching, isDeleting } = expenseData;
+  const { t } = useTranslation();
+  const { isFetching, isDeleting, totalCount } = useAppSelector(
+    (state) => state.expense
+  );
   const dispatch = useAppDispatch();
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] =
     React.useState(false);
@@ -78,7 +80,11 @@ const Records = ({
         isDisabled={false}
         className="bg-transparent"
       >
-        <SkeletonText isLoaded={!isFetching} className="h-10" _lines={5} />
+        <SkeletonText
+          isLoaded={!isFetching || data.length > 0}
+          className="h-10"
+          _lines={5}
+        />
         <FlatList
           data={data}
           nestedScrollEnabled={false}

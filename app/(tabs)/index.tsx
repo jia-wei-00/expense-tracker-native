@@ -1,5 +1,5 @@
 import React from "react";
-import { ScreenContainer, Text } from "@/components";
+import { Pagination, ScreenContainer, Text } from "@/components";
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import {
@@ -26,10 +26,12 @@ const Home = () => {
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
+  const [currentPage, setCurrentPage] = React.useState(1);
   const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
-  const expenseData = useAppSelector((state) => state.expense);
-  const { expense, isFetching } = expenseData;
+  const { expense, isFetching, totalCount } = useAppSelector(
+    (state) => state.expense
+  );
   const { t } = useTranslation();
 
   const [defaultValues, setDefaultValues] =
@@ -40,15 +42,21 @@ const Home = () => {
   });
 
   const fetchExpenseData = React.useCallback(() => {
-    session && dispatch(fetchExpense(session?.user.id));
-  }, []);
+    session &&
+      dispatch(
+        fetchExpense({
+          userId: session?.user.id,
+          page: currentPage,
+          pageSize: 20,
+        })
+      );
+  }, [session, currentPage]);
 
   React.useEffect(() => {
-    !expense.length && fetchExpenseData();
-  }, []);
+    fetchExpenseData();
+  }, [session, currentPage]);
 
   React.useEffect(() => {
-    console.log("rerending");
     if (session) {
       const subscription = subscribeToExpenseChanges({
         userId: session.user.id,
@@ -59,7 +67,7 @@ const Home = () => {
         subscription.unsubscribe();
       };
     }
-  }, []);
+  }, [session, currentPage]);
 
   const balance = React.useMemo(() => {
     return expense.reduce((acc, { amount, is_expense }) => {
@@ -83,7 +91,7 @@ const Home = () => {
         record.name?.toLowerCase().includes(search.toLowerCase()) ||
         record.amount?.toString().toLowerCase().includes(search.toLowerCase())
     );
-  }, [filteredRecordsByCategory, search]);
+  }, [filteredRecordsByCategory, search, currentPage]);
 
   const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
     setDefaultValues({
@@ -113,31 +121,35 @@ const Home = () => {
             onRefresh={fetchExpenseData}
           />
         }
-      >
-        <Text.Title className="uppercase">{t(`month.${date}`)}</Text.Title>
-        <Text.Subtitle>
-          {t("Balance")}:{" "}
-          {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
-        </Text.Subtitle>
-        <OverallBlock />
-        <HStack className="justify-between items-end">
-          <Text.Subtitle>{t("Records")}</Text.Subtitle>
-          <Input variant="underlined" size="sm" className="w-2/4 gap-2">
-            <InputSlot className="pl-3">
-              <InputIcon as={SearchIcon} />
-            </InputSlot>
-            <InputField
-              placeholder={t("Search...")}
-              value={search}
-              onChangeText={setSearch}
+        stickyContent={
+          <>
+            <Text.Title className="uppercase">{t(`month.${date}`)}</Text.Title>
+            <Text.Subtitle>
+              {t("Balance")}:{" "}
+              {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
+            </Text.Subtitle>
+            <OverallBlock />
+            <HStack className="justify-between items-end">
+              <Text.Subtitle>{t("Records")}</Text.Subtitle>
+              <Input variant="underlined" size="sm" className="w-2/4 gap-2">
+                <InputSlot className="pl-3">
+                  <InputIcon as={SearchIcon} />
+                </InputSlot>
+                <InputField
+                  placeholder={t("Search...")}
+                  value={search}
+                  onChangeText={setSearch}
+                />
+              </Input>
+            </HStack>
+            <Divider />
+            <RecordTypeBlock
+              recordType={recordType}
+              setRecordType={setRecordType}
             />
-          </Input>
-        </HStack>
-        <Divider />
-        <RecordTypeBlock
-          recordType={recordType}
-          setRecordType={setRecordType}
-        />
+          </>
+        }
+      >
         <Records
           search={search}
           recordType={recordType}
@@ -151,6 +163,13 @@ const Home = () => {
           onClose={handleCloseModal}
         />
       </ScreenContainer>
+      {totalCount > 0 && (
+        <Pagination
+          totalCount={Math.floor(totalCount / 10)}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      )}
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
     </>
   );

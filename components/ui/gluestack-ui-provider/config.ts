@@ -113,6 +113,11 @@ export const config = {
     "--color-typography-900": "#262627",
     "--color-typography-950": "#171717",
 
+    /* Typography Special */
+    "--color-typography-white": "#181717",
+    "--color-typography-slate": "#e2e8f0",
+    "--color-typography-same": "#e2e8f0",
+
     /* Outline */
     "--color-outline-0": "#FDFEFE",
     "--color-outline-50": "#F3F3F3",
@@ -263,6 +268,11 @@ export const config = {
     "--color-typography-800": "#E5E5E5",
     "--color-typography-900": "#F5F5F5",
     "--color-typography-950": "#FEFEFF",
+
+    /* Typography Special */
+    "--color-typography-white": "#181717",
+    "--color-typography-same": "#181717",
+    "--color-typography-slate": "#e2e8f0",
 
     /* Outline */
     "--color-outline-0": "#1A1717",

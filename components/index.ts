@@ -8,3 +8,4 @@ export { default as DatePickerWithController } from "./date-picker-with-controll
 export { default as ModalForm } from "./modal-form";
 export { default as ScreenContainer } from "./screen-container";
 export { default as CustomToaster } from "./Toaster";
+export { default as Pagination } from "./Pagination";

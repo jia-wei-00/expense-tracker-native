@@ -1,21 +1,10 @@
 import React from "react";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
-import {
-  createSessionFromUrl,
-  signIn,
-  signInWithOAuth,
-} from "@/store/features";
+import { signIn, signInWithOAuth } from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { VStack } from "@/components/ui/vstack";
 import InputWithController from "@/components/input-with-controller";
 import { signInSchema, SignInSchema } from "../screen-component/home/schemes";
-import {
-  signUpWithPasskeys,
-  signUpWithPassword,
-  signUpWithGoogle,
-  signOut,
-  signIn as CMSignIn,
-} from "react-native-credentials-manager";
 import {
   Control,
   FieldValues,
@@ -28,7 +17,6 @@ import { useTranslation } from "react-i18next";
 import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import * as CredentialManager from "@/modules/credential-manager";
-import { Text } from "@/components/ui/text";
 WebBrowser.maybeCompleteAuthSession(); // required for web only
 const redirectTo = makeRedirectUri();
 
@@ -115,21 +103,6 @@ export default function Login() {
         {isLoggingIn && <ButtonSpinner />}
         <ButtonText>{t("Sign in with Google")}</ButtonText>
       </Button>
-      <Button
-        className="mt-4"
-        size="sm"
-        onPress={() => CredentialManager.setTheme(nextTheme)}
-      >
-        <Text>Theme: {CredentialManager.getTheme()}</Text>
-        <ButtonText>{`Set theme to ${nextTheme}`}</ButtonText>
-      </Button>
-      {/* <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        onPress={() => getTheme()}
-        disabled={isLoggingIn}
-      /> */}
     </VStack>
   );
 }
-
-// 446882197354-r1pmvn1ov63uu506f0n4n6lrhk8r96e7.apps.googleusercontent.com

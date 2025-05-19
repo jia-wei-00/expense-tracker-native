@@ -10,6 +10,7 @@ export type Expense = Database["public"]["Tables"]["expense"]["Row"];
 
 interface ExpenseState {
   expense: Expense[];
+  totalCount: number;
   isFetching: boolean;
   isSubmitting: boolean;
   isDeleting: boolean;
@@ -19,6 +20,7 @@ interface ExpenseState {
 
 const initialState: ExpenseState = {
   expense: [],
+  totalCount: 0,
   isFetching: false,
   isSubmitting: false,
   isDeleting: false,
@@ -54,8 +56,13 @@ const expenseSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchExpense.fulfilled, (state, action) => {
-      state.expense = action.payload;
+    builder.addCase(fetchExpense.fulfilled, (state, { payload }) => {
+      const { data, count } = payload as {
+        data: Expense[];
+        count: number;
+      };
+      state.expense = data;
+      state.totalCount = count;
       state.isFetching = false;
     });
     builder.addCase(fetchExpense.pending, (state) => {

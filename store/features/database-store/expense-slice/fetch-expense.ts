@@ -1,9 +1,15 @@
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+interface FetchExpenseProps {
+  userId: string;
+  page: number;
+  pageSize: number;
+}
+
 export const fetchExpense = createAsyncThunk(
   "expense/fetchExpense",
-  async (userId: string) => {
+  async ({ userId, page, pageSize }: FetchExpenseProps) => {
     try {
       const currentDate = new Date();
       const startOfMonth = new Date(
@@ -17,22 +23,27 @@ export const fetchExpense = createAsyncThunk(
         1
       );
 
-      const { data, error } = await supabase
+      const offset = (page - 1) * pageSize;
+
+      const { data, count, error } = await supabase
         .from("expense")
-        .select("*")
+        .select("*", { count: "exact" })
         .eq("user_id", userId)
-        .gte("spend_date", startOfMonth.toISOString())
-        .lt("spend_date", endOfMonth.toISOString());
+        // .gte("spend_date", startOfMonth.toISOString())
+        // .lt("spend_date", endOfMonth.toISOString())
+        .range(offset, offset + pageSize - 1);
+
+      console.log("fetched expense", data);
 
       if (error) {
         console.log(error);
         throw error;
       }
 
-      return data;
+      return { data, count };
     } catch (error) {
       console.log(error);
-      return [];
+      return { data: [], count: 0 };
     }
   }
 );
