@@ -21,12 +21,12 @@ import {
 import { ModalDefaultValues } from "../screen-component/home/records";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import usePagination from "@/hooks/usePagination";
 
 const Home = () => {
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
-  const [currentPage, setCurrentPage] = React.useState(1);
   const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
   const { expense, isFetching, totalCount } = useAppSelector(
@@ -36,6 +36,10 @@ const Home = () => {
 
   const [defaultValues, setDefaultValues] =
     React.useState<ModalDefaultValues>();
+
+  const { items, page: currentPage } = usePagination({
+    count: totalCount,
+  });
 
   const date = new Date().toLocaleDateString("en-MY", {
     month: "long",
@@ -164,11 +168,7 @@ const Home = () => {
         />
       </ScreenContainer>
       {totalCount > 0 && (
-        <Pagination
-          totalCount={Math.floor(totalCount / 10)}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
+        <Pagination totalCount={Math.floor(totalCount / 10)} />
       )}
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
     </>
