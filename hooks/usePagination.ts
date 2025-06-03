@@ -1,5 +1,14 @@
 import { useState } from "react";
 
+export interface PaginationItem {
+  onClick: () => void;
+  type: string;
+  page: number | null;
+  selected: boolean;
+  disabled: boolean;
+  "aria-current"?: string | undefined;
+}
+
 export interface PaginationProps {
   boundaryCount?: number;
   componentName?: string;
@@ -20,7 +29,6 @@ const usePagination = (props: PaginationProps) => {
 
   const {
     boundaryCount = 1,
-    componentName = "usePagination",
     count = 1,
     defaultPage = 1,
     onChange: handleChange,
@@ -126,7 +134,7 @@ const usePagination = (props: PaginationProps) => {
   const items = itemList.map((item) => {
     return typeof item === "number"
       ? {
-          onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+          onClick: () => {
             handleClick(item);
           },
           type: "page",
@@ -136,7 +144,7 @@ const usePagination = (props: PaginationProps) => {
           "aria-current": item === page ? "page" : undefined,
         }
       : {
-          onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+          onClick: () => {
             handleClick(buttonPage(item) ?? 0);
           },
           type: item,

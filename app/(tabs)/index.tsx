@@ -22,6 +22,7 @@ import { ModalDefaultValues } from "../screen-component/home/records";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import usePagination from "@/hooks/usePagination";
+import { PAGE_SIZE } from "@/constants";
 
 const Home = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -38,7 +39,7 @@ const Home = () => {
     React.useState<ModalDefaultValues>();
 
   const { items, page: currentPage } = usePagination({
-    count: totalCount,
+    count: totalCount / PAGE_SIZE,
   });
 
   const date = new Date().toLocaleDateString("en-MY", {
@@ -51,7 +52,7 @@ const Home = () => {
         fetchExpense({
           userId: session?.user.id,
           page: currentPage,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
         })
       );
   }, [session, currentPage]);
@@ -167,9 +168,7 @@ const Home = () => {
           onClose={handleCloseModal}
         />
       </ScreenContainer>
-      {totalCount > 0 && (
-        <Pagination totalCount={Math.floor(totalCount / 10)} />
-      )}
+      {totalCount > PAGE_SIZE && <Pagination items={items} />}
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
     </>
   );

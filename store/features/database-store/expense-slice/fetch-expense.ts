@@ -29,11 +29,9 @@ export const fetchExpense = createAsyncThunk(
         .from("expense")
         .select("*", { count: "exact" })
         .eq("user_id", userId)
-        // .gte("spend_date", startOfMonth.toISOString())
-        // .lt("spend_date", endOfMonth.toISOString())
+        .gte("spend_date", startOfMonth.toISOString())
+        .lt("spend_date", endOfMonth.toISOString())
         .range(offset, offset + pageSize - 1);
-
-      console.log("fetched expense", data);
 
       if (error) {
         console.log(error);
