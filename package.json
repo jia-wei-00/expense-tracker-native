@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "DARK_MODE=media expo run:android",
+    "android": "expo run:android",
     "ios": "DARK_MODE=media expo run:ios",
     "web": "DARK_MODE=class expo start --web",
     "test": "jest --watchAll",
