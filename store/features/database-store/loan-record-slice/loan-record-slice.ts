@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Database } from "@/database.types";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   loanRecords: [],
@@ -9,14 +10,6 @@ const loanRecordSlice = createSlice({
   initialState,
   reducers: {},
 });
-
-export const fetchLoanRecords = createAsyncThunk(
-  "loanRecord/fetchLoanRecords",
-  async () => {
-    const response = await fetchLoanRecords();
-    return response.data;
-  }
-);
 
 export const { setLoanRecords } = loanRecordSlice.actions;
 
