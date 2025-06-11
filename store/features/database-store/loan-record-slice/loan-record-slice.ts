@@ -1,5 +1,7 @@
 import { Database } from "@/database.types";
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchLoanRecords } from "./feth-loan-record";
+import { addLoanRecord } from "./add-loan-record";
 
 export type LoanRecord = Database["public"]["Tables"]["loan_record"]["Row"];
 
@@ -28,6 +30,27 @@ const loanRecordSlice = createSlice({
     setLoanRecords: (state, action) => {
       state.loanRecords = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchLoanRecords.pending, (state) => {
+      state.isFetching = true;
+    });
+    builder.addCase(fetchLoanRecords.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.loanRecords = action.payload;
+    });
+    builder.addCase(fetchLoanRecords.rejected, (state) => {
+      state.isFetching = false;
+    });
+    builder.addCase(addLoanRecord.pending, (state) => {
+      state.isSubmitting = true;
+    });
+    builder.addCase(addLoanRecord.fulfilled, (state, action) => {
+      state.isSubmitting = false;
+    });
+    builder.addCase(addLoanRecord.rejected, (state) => {
+      state.isSubmitting = false;
+    });
   },
 });
 

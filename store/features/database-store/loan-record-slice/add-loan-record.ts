@@ -15,7 +15,7 @@ export const addLoanRecord = createAsyncThunk(
       }
       return data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return [];
     }
   }
