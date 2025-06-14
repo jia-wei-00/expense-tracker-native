@@ -30,6 +30,22 @@ const loanRecordSlice = createSlice({
     setLoanRecords: (state, action) => {
       state.loanRecords = action.payload;
     },
+    addLoanRecordSubscription: (state, action) => {
+      state.loanRecords.push(action.payload);
+    },
+    updateLoanRecordSubscription: (state, action) => {
+      const index = state.loanRecords.findIndex(
+        (loanRecord) => loanRecord.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.loanRecords[index] = action.payload;
+      }
+    },
+    deleteLoanRecordSubscription: (state, action) => {
+      state.loanRecords = state.loanRecords.filter(
+        (loanRecord) => loanRecord.id !== action.payload.id
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchLoanRecords.pending, (state) => {
