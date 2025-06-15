@@ -81,54 +81,32 @@ const Chart = () => {
   };
 
   return (
-    <View
-      style={{
-        paddingVertical: 100,
-        backgroundColor: "#34448B",
-        flex: 1,
-      }}
-    >
-      <View
-        style={{
-          margin: 20,
-          padding: 16,
-          borderRadius: 20,
-          backgroundColor: "#232B5D",
-        }}
-      >
-        <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-          Performance
-        </Text>
-        <View style={{ padding: 20, alignItems: "center" }}>
-          <PieChart
-            data={pieData}
-            donut
-            showGradient
-            sectionAutoFocus
-            radius={90}
-            innerRadius={60}
-            innerCircleColor={"#232B5D"}
-            centerLabelComponent={() => {
-              return (
-                <View
-                  style={{ justifyContent: "center", alignItems: "center" }}
+    <>
+      <View style={{ padding: 20, alignItems: "center" }}>
+        <PieChart
+          data={pieData}
+          donut
+          showGradient
+          sectionAutoFocus
+          radius={90}
+          innerRadius={60}
+          innerCircleColor={"#232B5D"}
+          centerLabelComponent={() => {
+            return (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text
+                  style={{ fontSize: 22, color: "white", fontWeight: "bold" }}
                 >
-                  <Text
-                    style={{ fontSize: 22, color: "white", fontWeight: "bold" }}
-                  >
-                    47%
-                  </Text>
-                  <Text style={{ fontSize: 14, color: "white" }}>
-                    Excellent
-                  </Text>
-                </View>
-              );
-            }}
-          />
-        </View>
-        {renderLegendComponent()}
+                  47%
+                </Text>
+                <Text style={{ fontSize: 14, color: "white" }}>Excellent</Text>
+              </View>
+            );
+          }}
+        />
       </View>
-    </View>
+      {renderLegendComponent()}
+    </>
   );
 };
 

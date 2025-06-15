@@ -121,8 +121,8 @@ const History = () => {
           {t("Balance")}:{" "}
           {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
         </Text.Subtitle>
-        <Chart />
         <OverallBlock />
+        <Chart />
         <HStack className="justify-between items-end">
           <Text.Subtitle>{t("Records")}</Text.Subtitle>
           <Input variant="underlined" size="sm" className="w-2/4 gap-2">
