@@ -1,7 +1,9 @@
 import { Database } from "@/database.types";
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchLoanRecords } from "./feth-loan-record";
+import { fetchLoanRecords } from "./fetch-loan-record";
 import { addLoanRecord } from "./add-loan-record";
+import { updateLoanRecord } from "./update-loan-record";
+import { deleteLoanRecord } from "./delete-loan-record";
 
 export type LoanRecord = Database["public"]["Tables"]["loan_record"]["Row"];
 
@@ -67,8 +69,31 @@ const loanRecordSlice = createSlice({
     builder.addCase(addLoanRecord.rejected, (state) => {
       state.isSubmitting = false;
     });
+    builder.addCase(updateLoanRecord.pending, (state) => {
+      state.isUpdating = true;
+    });
+    builder.addCase(updateLoanRecord.fulfilled, (state) => {
+      state.isUpdating = false;
+    });
+    builder.addCase(updateLoanRecord.rejected, (state) => {
+      state.isUpdating = false;
+    });
+    builder.addCase(deleteLoanRecord.pending, (state) => {
+      state.isDeleting = true;
+    });
+    builder.addCase(deleteLoanRecord.fulfilled, (state) => {
+      state.isDeleting = false;
+    });
+    builder.addCase(deleteLoanRecord.rejected, (state) => {
+      state.isDeleting = false;
+    });
   },
 });
 
-export const { setLoanRecords } = loanRecordSlice.actions;
+export const {
+  setLoanRecords,
+  addLoanRecordSubscription,
+  updateLoanRecordSubscription,
+  deleteLoanRecordSubscription,
+} = loanRecordSlice.actions;
 export const loanRecordReducer = loanRecordSlice.reducer;

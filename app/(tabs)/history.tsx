@@ -20,10 +20,11 @@ import {
 } from "@/store/features";
 import { ModalDefaultValues } from "../screen-component/home/records";
 import dayjs from "dayjs";
-import { useTranslation } from "react-i18next"; // Added for i18n translation
+import { useTranslation } from "react-i18next";
+import { Chart } from "../screen-component";
 
 const History = () => {
-  const { t } = useTranslation(); // Using the translation hook
+  const { t } = useTranslation();
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
@@ -40,7 +41,7 @@ const History = () => {
   });
 
   const fetchExpenseData = React.useCallback(() => {
-    session && dispatch(fetchExpense(session?.user.id));
+    session && dispatch(fetchExpense({ userId: session?.user.id }));
   }, [session]);
 
   React.useEffect(() => {
@@ -120,6 +121,7 @@ const History = () => {
           {t("Balance")}:{" "}
           {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
         </Text.Subtitle>
+        <Chart />
         <OverallBlock />
         <HStack className="justify-between items-end">
           <Text.Subtitle>{t("Records")}</Text.Subtitle>

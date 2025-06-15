@@ -3,13 +3,13 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 interface FetchExpenseProps {
   userId: string;
-  page: number;
-  pageSize: number;
+  page?: number;
+  pageSize?: number;
 }
 
 export const fetchExpense = createAsyncThunk(
   "expense/fetchExpense",
-  async ({ userId, page, pageSize }: FetchExpenseProps) => {
+  async ({ userId, page = 1, pageSize = 10 }: FetchExpenseProps) => {
     try {
       const currentDate = new Date();
       const startOfMonth = new Date(
