@@ -57,6 +57,7 @@ const Records = ({
   const { isFetching, isDeleting, totalCount } = useAppSelector(
     (state) => state.expense
   );
+
   const dispatch = useAppDispatch();
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] =
     React.useState(false);

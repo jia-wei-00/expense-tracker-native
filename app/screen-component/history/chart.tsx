@@ -1,19 +1,83 @@
+import { Category, Expense } from "@/store/features";
 import React from "react";
 import { View, Text } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 
-const Chart = () => {
-  const pieData = [
-    {
-      value: 47,
-      color: "#009FFF",
-      gradientCenterColor: "#006DFF",
-      focused: true,
-    },
-    { value: 40, color: "#93FCF8", gradientCenterColor: "#3BE9DE" },
-    { value: 16, color: "#BDB2FA", gradientCenterColor: "#8F80F3" },
-    { value: 3, color: "#FFA5BA", gradientCenterColor: "#FF7F97" },
+interface ChartProps {
+  data: Array<Expense>;
+  categories: Array<Category>;
+}
+
+const Chart = ({ data, categories }: ChartProps) => {
+  // Generate colors dynamically
+  const colors = [
+    "#009FFF",
+    "#93FCF8",
+    "#BDB2FA",
+    "#FFA5BA",
+    "#FFD93D",
+    "#6BCF7F",
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+    "#96CEB4",
+    "#DDA0DD",
+    "#F4A460",
   ];
+
+  // Process data to group by category and calculate totals
+  const processedData = React.useMemo(() => {
+    // Group expenses by category
+    const categoryTotals = data.reduce((acc, expense) => {
+      if (expense.category && expense.amount) {
+        const categoryId = expense.category;
+        if (!acc[categoryId]) {
+          acc[categoryId] = 0;
+        }
+        acc[categoryId] += expense.amount;
+      }
+      return acc;
+    }, {} as Record<number, number>);
+
+    // Calculate total amount for percentage calculation
+    const totalAmount = Object.values(categoryTotals).reduce(
+      (sum, amount) => sum + amount,
+      0
+    );
+
+    // Create pie chart data
+    const pieChartData = Object.entries(categoryTotals).map(
+      ([categoryId, amount], index) => {
+        const category = categories.find(
+          (cat) => cat.id === parseInt(categoryId)
+        );
+        const percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
+
+        return {
+          value: percentage,
+          color: colors[index % colors.length],
+          gradientCenterColor: colors[index % colors.length],
+          focused: index === 0, // Focus first item
+          categoryName: category?.name || `Category ${categoryId}`,
+          amount: amount,
+          categoryId: parseInt(categoryId),
+        };
+      }
+    );
+
+    return {
+      pieData: pieChartData,
+      totalAmount,
+      highestCategory:
+        pieChartData.length > 0
+          ? pieChartData.reduce((prev, current) =>
+              prev.value > current.value ? prev : current
+            )
+          : null,
+    };
+  }, [data, categories]);
+
+  const { pieData, highestCategory } = processedData;
 
   const renderDot = (color: string) => {
     return (
@@ -30,55 +94,67 @@ const Chart = () => {
   };
 
   const renderLegendComponent = () => {
+    if (pieData.length === 0) {
+      return (
+        <View style={{ alignItems: "center", marginTop: 20 }}>
+          <Text style={{ color: "white", fontSize: 16 }}>
+            No data available
+          </Text>
+        </View>
+      );
+    }
+
+    // Group legend items in pairs for better layout
+    const legendPairs = [];
+    for (let i = 0; i < pieData.length; i += 2) {
+      legendPairs.push(pieData.slice(i, i + 2));
+    }
+
     return (
       <>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: 10,
-          }}
-        >
+        {legendPairs.map((pair, pairIndex) => (
           <View
+            key={pairIndex}
             style={{
               flexDirection: "row",
-              alignItems: "center",
-              width: 120,
-              marginRight: 20,
+              justifyContent: "center",
+              marginBottom: 10,
             }}
           >
-            {renderDot("#006DFF")}
-            <Text style={{ color: "white" }}>Excellent: 47%</Text>
+            {pair.map((item, itemIndex) => (
+              <View
+                key={item.categoryId}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: 150,
+                  marginRight: itemIndex === 0 && pair.length > 1 ? 20 : 0,
+                }}
+              >
+                {renderDot(item.color)}
+                <Text
+                  style={{ color: "white", fontSize: 12, flex: 1 }}
+                  numberOfLines={1}
+                >
+                  {item.categoryName}: {item.value.toFixed(1)}%
+                </Text>
+              </View>
+            ))}
           </View>
-          <View
-            style={{ flexDirection: "row", alignItems: "center", width: 120 }}
-          >
-            {renderDot("#8F80F3")}
-            <Text style={{ color: "white" }}>Okay: 16%</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              width: 120,
-              marginRight: 20,
-            }}
-          >
-            {renderDot("#3BE9DE")}
-            <Text style={{ color: "white" }}>Good: 40%</Text>
-          </View>
-          <View
-            style={{ flexDirection: "row", alignItems: "center", width: 120 }}
-          >
-            {renderDot("#FF7F97")}
-            <Text style={{ color: "white" }}>Poor: 3%</Text>
-          </View>
-        </View>
+        ))}
       </>
     );
   };
+
+  if (pieData.length === 0) {
+    return (
+      <View style={{ padding: 20, alignItems: "center" }}>
+        <Text style={{ color: "white", fontSize: 18 }}>
+          No expense data to display
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -97,9 +173,16 @@ const Chart = () => {
                 <Text
                   style={{ fontSize: 22, color: "white", fontWeight: "bold" }}
                 >
-                  47%
+                  {highestCategory
+                    ? `${highestCategory.value.toFixed(1)}%`
+                    : "0%"}
                 </Text>
-                <Text style={{ fontSize: 14, color: "white" }}>Excellent</Text>
+                <Text
+                  style={{ fontSize: 14, color: "white", textAlign: "center" }}
+                  numberOfLines={2}
+                >
+                  {highestCategory ? highestCategory.categoryName : "No data"}
+                </Text>
               </View>
             );
           }}

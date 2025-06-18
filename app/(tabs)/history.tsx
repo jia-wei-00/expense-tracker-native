@@ -15,6 +15,7 @@ import { RefreshControl } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   Expense,
+  fetchCategory,
   fetchExpense,
   subscribeToExpenseChanges,
 } from "@/store/features";
@@ -31,6 +32,7 @@ const History = () => {
   const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
   const expenseData = useAppSelector((state) => state.expense);
+  const { category } = useAppSelector((state) => state.category);
   const { expense, isFetching } = expenseData;
 
   const [defaultValues, setDefaultValues] =
@@ -42,6 +44,7 @@ const History = () => {
 
   const fetchExpenseData = React.useCallback(() => {
     session && dispatch(fetchExpense({ userId: session?.user.id }));
+    session && dispatch(fetchCategory(session?.user.id));
   }, [session]);
 
   React.useEffect(() => {
@@ -122,7 +125,7 @@ const History = () => {
           {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
         </Text.Subtitle>
         <OverallBlock />
-        <Chart />
+        <Chart data={expense} categories={category} />
         <HStack className="justify-between items-end">
           <Text.Subtitle>{t("Records")}</Text.Subtitle>
           <Input variant="underlined" size="sm" className="w-2/4 gap-2">
