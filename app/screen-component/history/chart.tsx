@@ -25,7 +25,6 @@ const Chart = ({ data, categories }: ChartProps) => {
     "#F4A460",
   ];
 
-  // Process data to group by category and calculate totals
   const processedData = React.useMemo(() => {
     // Group expenses by category
     const categoryTotals = data.reduce((acc, expense) => {
@@ -57,13 +56,16 @@ const Chart = ({ data, categories }: ChartProps) => {
           value: percentage,
           color: colors[index % colors.length],
           gradientCenterColor: colors[index % colors.length],
-          focused: index === 0, // Focus first item
+          // focused: index === 0,
+          focused: category?.name === "Salary",
           categoryName: category?.name || `Category ${categoryId}`,
           amount: amount,
           categoryId: parseInt(categoryId),
         };
       }
     );
+
+    console.log(pieChartData, "data");
 
     return {
       pieData: pieChartData,
