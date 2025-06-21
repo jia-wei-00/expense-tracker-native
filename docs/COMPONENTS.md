@@ -79,7 +79,7 @@ export const Text = {
 
 ### UI Foundation (`components/ui/`)
 
-The application uses **Gluestack UI** as the foundation with custom styling via **NativeWind**:
+The application uses **Tailwind CSS** via **NativeWind** for utility-first styling, combined with **Gluestack UI** components:
 
 #### Core UI Components
 
@@ -790,9 +790,9 @@ const useFormWithValidation = <T extends object>(
 
 ## 🎨 Styling System
 
-### NativeWind Integration
+### Tailwind CSS via NativeWind
 
-The application uses NativeWind for consistent styling:
+The application uses **Tailwind CSS** through **NativeWind** for utility-first styling in React Native:
 
 ```typescript
 // Utility classes for common patterns

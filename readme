@@ -10,7 +10,7 @@ A modern, feature-rich personal finance management application built with React 
 - 🌍 **Multilingual Support** - English, Chinese Simplified, Chinese Traditional
 - ☁️ **Real-time Sync** - Live data updates across all devices
 - 📱 **Cross-platform** - iOS, Android, and Web support
-- 🎨 **Modern UI** - Beautiful design with dark/light theme support
+- 🎨 **Modern UI** - Beautiful design with Tailwind CSS styling and dark/light theme support
 
 ## 🚀 Quick Start
 
@@ -33,7 +33,7 @@ npm start
 - **Frontend**: React Native + Expo
 - **Backend**: Supabase (PostgreSQL + Auth + Real-time)
 - **State Management**: Redux Toolkit
-- **UI Components**: Gluestack UI + NativeWind
+- **Styling**: Tailwind CSS via NativeWind + Gluestack UI
 - **Forms**: React Hook Form + Yup validation
 - **Charts**: React Native Gifted Charts
 - **Storage**: MMKV for high-performance local storage

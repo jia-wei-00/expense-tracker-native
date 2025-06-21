@@ -55,7 +55,7 @@ This document provides an overview of all documentation available for the Expens
 Frontend: React Native + Expo
 Backend: Supabase (PostgreSQL + Auth + Real-time)
 State: Redux Toolkit
-UI: Gluestack UI + NativeWind
+Styling: Tailwind CSS via NativeWind + Gluestack UI
 Forms: React Hook Form + Yup
 Charts: React Native Gifted Charts
 Storage: MMKV

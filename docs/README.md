@@ -23,18 +23,18 @@ A comprehensive personal finance management application built with React Native,
 
 ### Technology Stack
 
-| Category                 | Technology                 | Purpose                                     |
-| ------------------------ | -------------------------- | ------------------------------------------- |
-| **Frontend**             | React Native + Expo        | Cross-platform mobile development           |
-| **Navigation**           | Expo Router                | File-based routing system                   |
-| **Backend**              | Supabase                   | Database, Authentication, Real-time updates |
-| **State Management**     | Redux Toolkit              | Centralized state management                |
-| **UI Framework**         | Gluestack UI + NativeWind  | Component library + Utility-first CSS       |
-| **Forms**                | React Hook Form + Yup      | Form handling and validation                |
-| **Charts**               | React Native Gifted Charts | Data visualization                          |
-| **Storage**              | MMKV                       | High-performance local storage              |
-| **Authentication**       | Supabase Auth + Biometrics | Secure user authentication                  |
-| **Internationalization** | react-i18next              | Multi-language support                      |
+| Category                 | Technology                                 | Purpose                                     |
+| ------------------------ | ------------------------------------------ | ------------------------------------------- |
+| **Frontend**             | React Native + Expo                        | Cross-platform mobile development           |
+| **Navigation**           | Expo Router                                | File-based routing system                   |
+| **Backend**              | Supabase                                   | Database, Authentication, Real-time updates |
+| **State Management**     | Redux Toolkit                              | Centralized state management                |
+| **Styling**              | Tailwind CSS via NativeWind + Gluestack UI | Utility-first CSS + Component library       |
+| **Forms**                | React Hook Form + Yup                      | Form handling and validation                |
+| **Charts**               | React Native Gifted Charts                 | Data visualization                          |
+| **Storage**              | MMKV                                       | High-performance local storage              |
+| **Authentication**       | Supabase Auth + Biometrics                 | Secure user authentication                  |
+| **Internationalization** | react-i18next                              | Multi-language support                      |
 
 ### Project Structure
 
