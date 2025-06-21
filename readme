@@ -1,19 +1,196 @@
-# Project File Structure
+# Expense Tracker Native 📱💰
 
-This project follows a standard file structure. Here's a brief overview:
+A modern, feature-rich personal finance management application built with React Native, Expo, and Supabase. Track your expenses and income with advanced security, real-time synchronization, and multilingual support.
 
-- `app/`:
-  - `app/`: This directory contains all the source code for the project.
-    - `(auth)/`: This directory contains all the authentication related code for the project.
-      - `sign-in/`: This directory contains all the sign in screen components for the project.
-    - `(tabs)/`: This directory contains all the tab related components for the project.
-      - `_layout/`: This directory contains all the layout related components for the tabs.
-      - `home/`: This directory contains all the home tab components for the project.
-      - `(settings)/`: This directory contains all the settings tab components for the project.
-        - `_layout/`: This directory contains StackNavigator for the settings tab.
-        - `category/`: This directory contains category screen for the project.
-    - `screen-components/`: This directory contains all the screen components for the project.
-      - `home/`: This directory contains all the home screen components for the project.
-      - `category/`: This directory contains all the category screen components for the project.
-      - `settings/`: This directory contains all the settings screen components for the project.
-    - `layout/`: This directory contains all the layout related components for the project.
+## ✨ Key Features
+
+- 📊 **Smart Expense Tracking** - Track income and expenses with custom categories
+- 📈 **Data Visualization** - Interactive charts and financial analytics
+- 🔐 **Advanced Security** - Biometric authentication (Face ID/Fingerprint)
+- 🌍 **Multilingual Support** - English, Chinese Simplified, Chinese Traditional
+- ☁️ **Real-time Sync** - Live data updates across all devices
+- 📱 **Cross-platform** - iOS, Android, and Web support
+- 🎨 **Modern UI** - Beautiful design with dark/light theme support
+
+## 🚀 Quick Start
+
+```bash
+# Clone and install
+git clone <repository-url>
+cd expense-tracker-native
+npm install
+
+# Setup environment
+cp .env.example .env
+# Edit .env with your credentials
+
+# Start development
+npm start
+```
+
+## 🏗️ Tech Stack
+
+- **Frontend**: React Native + Expo
+- **Backend**: Supabase (PostgreSQL + Auth + Real-time)
+- **State Management**: Redux Toolkit
+- **UI Components**: Gluestack UI + NativeWind
+- **Forms**: React Hook Form + Yup validation
+- **Charts**: React Native Gifted Charts
+- **Storage**: MMKV for high-performance local storage
+- **Internationalization**: react-i18next
+
+## 📚 Documentation
+
+### 📖 Complete Documentation
+
+- **[📋 Main Documentation](docs/README.md)** - Comprehensive project overview, features, and architecture
+- **[📊 API Documentation](docs/API.md)** - Backend API, data models, and Supabase integration
+- **[🎨 Components Guide](docs/COMPONENTS.md)** - UI components, design system, and usage patterns
+- **[⚙️ Development Guide](docs/DEVELOPMENT.md)** - Setup, workflow, testing, and deployment
+- **[📝 Documentation Summary](docs/SUMMARY.md)** - Quick reference and navigation guide
+
+### 🎯 Quick Links
+
+| Need                 | Documentation                            |
+| -------------------- | ---------------------------------------- |
+| **Getting Started**  | [Development Guide](docs/DEVELOPMENT.md) |
+| **API Integration**  | [API Documentation](docs/API.md)         |
+| **UI Development**   | [Components Guide](docs/COMPONENTS.md)   |
+| **Project Overview** | [Main Documentation](docs/README.md)     |
+| **Quick Reference**  | [Documentation Summary](docs/SUMMARY.md) |
+
+## 🏗️ Project Structure
+
+```
+expense-tracker-native/
+├── app/                          # Main application (Expo Router)
+│   ├── (auth)/                   # Authentication screens
+│   │   ├── sign-in.tsx          # Login screen
+│   │   └── local-authenticate.tsx # Biometric authentication
+│   ├── (tabs)/                   # Tab navigation
+│   │   ├── index.tsx            # Home screen (expense tracking)
+│   │   ├── history.tsx          # Analytics and charts
+│   │   └── (settings)/          # Settings section
+│   │       ├── settings.tsx     # Main settings
+│   │       └── category.tsx     # Category management
+│   ├── screen-component/         # Reusable screen components
+│   │   ├── home/                # Home screen components
+│   │   ├── history/             # Analytics components
+│   │   ├── category/            # Category management
+│   │   └── settings/            # Settings components
+│   └── _layout.tsx              # Root layout
+├── components/                   # Reusable UI components
+├── store/                        # Redux store and state management
+├── i18n/                        # Internationalization
+├── utils/                       # Utility functions
+├── assets/                      # Images, icons, fonts
+├── modules/                     # Custom native modules
+└── docs/                        # 📚 Comprehensive documentation
+```
+
+_For detailed project structure explanation, see [Main Documentation](docs/README.md)_
+
+## 🔧 Development Commands
+
+```bash
+npm start              # Start development server
+npm run android        # Run on Android
+npm run ios           # Run on iOS
+npm run web           # Run on web browser
+npm test              # Run tests
+npm run lint          # Lint code
+npm run build         # Build for production
+```
+
+## 🌟 Features Overview
+
+### Financial Management
+
+- Income and expense tracking with categories
+- Real-time balance calculations
+- Transaction search and filtering
+- Data export capabilities
+
+### Security & Authentication
+
+- Biometric authentication (Face ID/Fingerprint)
+- Google OAuth integration
+- Secure local storage
+- Row-level security policies
+
+### User Experience
+
+- Intuitive expense entry forms
+- Interactive data visualizations
+- Responsive design for all screen sizes
+- Offline support (planned)
+
+### Internationalization
+
+- Full translation support
+- Dynamic language switching
+- Localized number and date formatting
+- Region-specific features
+
+## 🚀 Getting Started for Developers
+
+1. **New to the Project?**
+
+   - Start with [Main Documentation](docs/README.md) for project overview
+   - Follow [Development Guide](docs/DEVELOPMENT.md) for environment setup
+
+2. **Frontend Development?**
+
+   - Check [Components Guide](docs/COMPONENTS.md) for UI patterns
+   - Reference design system and component library
+
+3. **Backend Integration?**
+
+   - Read [API Documentation](docs/API.md) for data models
+   - Learn Supabase integration patterns
+
+4. **Need Quick Reference?**
+   - Use [Documentation Summary](docs/SUMMARY.md) for fast lookup
+   - Find specific topics quickly
+
+## 🔮 Roadmap
+
+### Coming Soon
+
+- [ ] Budgeting and financial goals
+- [ ] Recurring transactions
+- [ ] Receipt scanning with OCR
+- [ ] Multi-currency support
+- [ ] Bank account integration
+
+### Future Plans
+
+- [ ] Family/shared accounts
+- [ ] Investment tracking
+- [ ] Advanced analytics
+- [ ] Widgets and notifications
+
+_For complete roadmap, see [Main Documentation](docs/README.md)_
+
+## 🤝 Contributing
+
+We welcome contributions! Please:
+
+1. Read our [Development Guide](docs/DEVELOPMENT.md) for workflow
+2. Check [Components Guide](docs/COMPONENTS.md) for UI standards
+3. Review [API Documentation](docs/API.md) for backend patterns
+4. Follow the established code style and testing practices
+
+## 📄 License
+
+MIT License - see [Main Documentation](docs/README.md) for details.
+
+## 📞 Support
+
+- **Documentation**: Check the [docs/](docs/) directory
+- **Issues**: Create GitHub issues for bugs or feature requests
+- **Development**: Follow the [Development Guide](docs/DEVELOPMENT.md)
+
+---
+
+**📚 For comprehensive information, explore our detailed [documentation](docs/) covering all aspects of the application.**
