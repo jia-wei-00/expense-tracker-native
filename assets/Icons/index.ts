@@ -20,3 +20,4 @@ export { default as ChevronRightIcon } from "./chevron-right";
 export { default as ChevronLeftIcon } from "./chevron-left";
 export { default as SuccessIcon } from "./success";
 export { default as LoaderIcon } from "./loader";
+export { default as DollarIcon } from "./dollar";

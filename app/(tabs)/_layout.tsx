@@ -3,7 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Menu } from "@/components";
-import { HistoryIcon, HomeIcon, UserIcon } from "@/assets/Icons";
+import { DollarIcon, HistoryIcon, HomeIcon, UserIcon } from "@/assets/Icons";
 import TabBar from "@/components/tab-bar";
 import { Icon } from "@/components/ui/icon";
 import { useTranslation } from "react-i18next";
@@ -66,7 +66,9 @@ export default function TabLayout() {
           name="(settings)"
           options={{
             title: t("Settings"),
-            tabBarIcon: ({ color }) => <Icon as={UserIcon} className={color} />,
+            tabBarIcon: ({ color }) => (
+              <Icon as={DollarIcon} className={color} />
+            ),
           }}
         />
       </Tabs>
