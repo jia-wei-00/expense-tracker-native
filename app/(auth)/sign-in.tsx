@@ -4,7 +4,10 @@ import { signIn, signInWithOAuth } from "@/store/features";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { VStack } from "@/components/ui/vstack";
 import InputWithController from "@/components/input-with-controller";
-import { signInSchema, SignInSchema } from "../screen-component/home/schemes";
+import {
+  createSignInSchema,
+  SignInSchema,
+} from "../screen-component/home/schemes";
 import {
   Control,
   FieldValues,
@@ -26,7 +29,6 @@ export default function Login() {
     CredentialManager.getTheme()
   );
   const dispatch = useAppDispatch();
-
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -46,7 +48,7 @@ export default function Login() {
     formState,
     handleSubmit,
   } = useForm<SignInSchema>({
-    resolver: yupResolver(signInSchema) as Resolver<SignInSchema>,
+    resolver: yupResolver(createSignInSchema(t)) as Resolver<SignInSchema>,
   }) as UseFormReturn<SignInSchema>;
 
   const { errors } = formState;
@@ -62,9 +64,9 @@ export default function Login() {
         errors={errors.email?.message}
         required={true}
         isReadOnly={false}
-        placeholder={"Email"}
+        placeholder={t("Email")}
         name="email"
-        label={"Email"}
+        label={t("Email")}
       />
       <InputWithController
         control={control}
@@ -72,9 +74,9 @@ export default function Login() {
         required={true}
         isReadOnly={false}
         secureTextEntry={true}
-        placeholder={"Password"}
+        placeholder={t("Password")}
         name="password"
-        label={"Password"}
+        label={t("Password")}
       />
       <Button
         className="mt-4"

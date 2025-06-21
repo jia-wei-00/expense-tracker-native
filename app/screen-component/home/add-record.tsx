@@ -15,9 +15,9 @@ import { CalendarIcon, CloseIcon } from "@/assets/Icons";
 import { Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  addRecordSchema,
+  createAddRecordSchema,
   AddRecordSchema,
-  categorySchema,
+  createCategorySchema,
   CategorySchema,
 } from "./schemes";
 import AddRecordForm from "./add-record-form";
@@ -61,7 +61,9 @@ const RecordDetailsModal = ({
   }, [session]);
 
   const recordFormMethods = useForm<AddRecordSchema>({
-    resolver: yupResolver(addRecordSchema) as Resolver<AddRecordSchema>,
+    resolver: yupResolver(
+      createAddRecordSchema(t)
+    ) as Resolver<AddRecordSchema>,
     defaultValues: {
       spend_date: dayjs().valueOf(),
     },
@@ -69,7 +71,7 @@ const RecordDetailsModal = ({
   const { reset, handleSubmit, setValue } = recordFormMethods;
 
   const categoryFormMethods = useForm<CategorySchema>({
-    resolver: yupResolver(categorySchema) as Resolver<CategorySchema>,
+    resolver: yupResolver(createCategorySchema(t)) as Resolver<CategorySchema>,
   });
   const {
     reset: resetCategory,

@@ -14,7 +14,7 @@ import { Icon } from "@/components/ui/icon";
 import { CalendarIcon, CloseIcon } from "@/assets/Icons";
 import { Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { categorySchema, CategorySchema } from "../home/schemes";
+import { createCategorySchema, CategorySchema } from "../home/schemes";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { addCategory, fetchCategory, updateCategory } from "@/store/features";
 import dayjs from "dayjs";
@@ -56,7 +56,7 @@ const AddCategoryModal = ({
   }, [session]);
 
   const categoryFormMethods = useForm<CategorySchema>({
-    resolver: yupResolver(categorySchema) as Resolver<CategorySchema>,
+    resolver: yupResolver(createCategorySchema(t)) as Resolver<CategorySchema>,
   });
   const {
     reset: resetCategory,

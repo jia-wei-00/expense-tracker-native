@@ -1,8 +1,8 @@
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthError } from "@supabase/supabase-js";
-import { toast } from "sonner-native";
 import * as QueryParams from "expo-auth-session/build/QueryParams";
+import { showErrorToast, showServerErrorToast } from "@/utils/toast-helpers";
 
 interface SetSessionProps {
   access_token: string;
@@ -14,7 +14,7 @@ export const getSession = createAsyncThunk("auth/getSession", async () => {
     const { data, error } = await supabase.auth.getSession();
     if (error) {
       if (error.message.includes("expired")) {
-        toast.error("Your session has expired. Please sign in again.");
+        showErrorToast("Toast.Session expired");
         // You might want to redirect to login or trigger a sign-out action here
       }
       throw error;
@@ -22,9 +22,9 @@ export const getSession = createAsyncThunk("auth/getSession", async () => {
     return data;
   } catch (error) {
     if (error instanceof AuthError) {
-      toast.error(error.message);
+      showServerErrorToast(error.message);
     } else {
-      toast.error(JSON.stringify(error));
+      showServerErrorToast(JSON.stringify(error));
     }
     return null;
   }
@@ -50,9 +50,9 @@ export const createSessionFromUrl = createAsyncThunk(
       return data;
     } catch (error) {
       if (error instanceof AuthError) {
-        toast.error(error.message);
+        showServerErrorToast(error.message);
       } else {
-        toast.error(JSON.stringify(error));
+        showServerErrorToast(JSON.stringify(error));
       }
     }
   }

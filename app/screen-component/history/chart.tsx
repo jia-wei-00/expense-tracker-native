@@ -73,10 +73,11 @@ const Chart = ({ data, categories }: ChartProps) => {
   }, [data, categories]);
 
   const { pieData, highestCategory } = processedData;
-  return (
-    <>
-      <View className="p-4 items-center">
-        {pieData.length > 0 ? (
+
+  if (pieData.length > 0) {
+    return (
+      <>
+        <View className="p-4 items-center">
           <PieChart
             data={pieData}
             donut
@@ -100,13 +101,11 @@ const Chart = ({ data, categories }: ChartProps) => {
               );
             }}
           />
-        ) : (
-          <Text.Caption>No expense data to display</Text.Caption>
-        )}
-      </View>
-      <Legend pieData={pieData} />
-    </>
-  );
+        </View>
+        <Legend pieData={pieData} />
+      </>
+    );
+  }
 };
 
 export default Chart;

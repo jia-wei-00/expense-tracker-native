@@ -62,6 +62,38 @@
   "Light": "亮",
   "Dark": "暗",
   "Follow System": "跟隨系統",
+  "System": "系統",
   "Tap to unlock": "點擊以解鎖",
-  "Authenticate with biometric": "使用指紋識別認證"
+  "Authenticate with biometric": "使用指紋識別認證",
+  "No data available": "沒有數據",
+  "Cache cleaned": "緩存已清除",
+  "Logged out successfully": "登出成功",
+  "Logging out...": "正在登出...",
+  "Logout": "登出",
+  "Email": "郵箱",
+  "Sign in with Google": "使用 Google 登入",
+  "Signing in...": "正在登入...",
+  "Sign in": "登入",
+  "Schema": {
+    "Name is required": "名稱是必填的",
+    "Transaction type is required": "交易類型是必填的",
+    "Amount is required": "金額是必填的",
+    "Amount must be a number": "金額必須是數字",
+    "Amount must be a positive number": "金額必須是正數",
+    "Only two decimals allowed": "只能輸入兩位小數",
+    "Category is required": "類別是必填的",
+    "Date is required": "日期是必填的",
+    "Date must be a timestamp": "日期必須是時間戳",
+    "Invalid date": "無效的日期",
+    "Invalid email": "無效的郵箱",
+    "Email is required": "郵箱是必填的",
+    "Password is required": "密碼是必填的"
+  },
+  "Toast": {
+    "Welcome": "歡迎，{{name}}！",
+    "Sign in unsuccessful": "登入失敗",
+    "Password reset email sent": "密碼重置郵件已發送",
+    "Session expired": "您的會話已過期。請重新登入。",
+    "Unknown auth state change": "未知的認證狀態更改事件"
+  }
 }

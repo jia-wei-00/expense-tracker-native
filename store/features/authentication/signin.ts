@@ -1,8 +1,8 @@
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { SignupPayload } from "./auth-slice";
-import { toast } from "sonner-native";
 import { AuthError, Provider } from "@supabase/supabase-js";
+import { showSuccessToast, showServerErrorToast } from "@/utils/toast-helpers";
 import {
   signUpWithGoogle,
   signIn as CMSignIn,
@@ -32,13 +32,13 @@ export const signIn = createAsyncThunk(
       const name =
         data.session.user.user_metadata.display_name || data.session.user.email;
 
-      toast.success(`Welcome, ${name}!`);
+      showSuccessToast("Toast.Welcome", { name });
       return data;
     } catch (error) {
       if (error instanceof AuthError) {
-        toast.error(error.message);
+        showServerErrorToast(error.message);
       } else {
-        toast.error(JSON.stringify(error));
+        showServerErrorToast(JSON.stringify(error));
       }
       throw error;
     }
@@ -69,11 +69,11 @@ export const signInWithOAuth = createAsyncThunk(
       }
     } catch (error) {
       if (error instanceof AuthError) {
-        toast.error(error.message);
+        showServerErrorToast(error.message);
       } else if (error instanceof Error) {
-        toast.error(error.message);
+        showServerErrorToast(error.message);
       } else {
-        toast.error(JSON.stringify(error));
+        showServerErrorToast(JSON.stringify(error));
       }
       throw error;
     }
@@ -94,8 +94,7 @@ export const signInWithGoogleCredentialsManager = createAsyncThunk(
             rpId: "com.jia011.expensetrackernative",
           },
           googleSignIn: {
-            serverClientId:
-              "446882197354-r1pmvn1ov63uu506f0n4n6lrhk8r96e7.apps.googleusercontent.com",
+            serverClientId: googleWebClientId,
             autoSelectEnabled: true,
           },
         }

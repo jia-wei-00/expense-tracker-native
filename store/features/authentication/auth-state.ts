@@ -1,7 +1,7 @@
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthError } from "@supabase/supabase-js";
-import { toast } from "sonner-native";
+import { showErrorToast, showServerErrorToast } from "@/utils/toast-helpers";
 
 export const getAuthStateChange = createAsyncThunk(
   "auth/getAuthStateChange",
@@ -26,16 +26,16 @@ export const getAuthStateChange = createAsyncThunk(
           case "MFA_CHALLENGE_VERIFIED":
             console.log("MFA_CHALLENGE_VERIFIED");
           default:
-            toast.error("Unknown auth state changeevent");
+            showErrorToast("Toast.Unknown auth state change");
             break;
         }
       });
       return data;
     } catch (error) {
       if (error instanceof AuthError) {
-        toast.error(error.message);
+        showServerErrorToast(error.message);
       } else {
-        toast.error(JSON.stringify(error));
+        showServerErrorToast(JSON.stringify(error));
       }
       throw error;
     }

@@ -64,5 +64,36 @@
   "Follow System": "跟随系统",
   "System": "系统",
   "Tap to unlock": "点击以解锁",
-  "Authenticate with biometric": "使用指纹识别认证"
+  "Authenticate with biometric": "使用指纹识别认证",
+  "No data available": "没有数据",
+  "Cache cleaned": "缓存已清除",
+  "Logged out successfully": "注销成功",
+  "Logging out...": "正在注销...",
+  "Logout": "注销",
+  "Email": "邮箱",
+  "Sign in with Google": "使用 Google 登录",
+  "Signing in...": "正在登录...",
+  "Sign in": "登录",
+  "Schema": {
+    "Name is required": "名称是必填的",
+    "Transaction type is required": "交易类型是必填的",
+    "Amount is required": "金额是必填的",
+    "Amount must be a number": "金额必须是数字",
+    "Amount must be a positive number": "金额必须是正数",
+    "Only two decimals allowed": "只能输入两位小数",
+    "Category is required": "类别是必填的",
+    "Date is required": "日期是必填的",
+    "Date must be a timestamp": "日期必须是时间戳",
+    "Invalid date": "无效的日期",
+    "Invalid email": "无效的邮箱",
+    "Email is required": "邮箱是必填的",
+    "Password is required": "密码是必填的"
+  },
+  "Toast": {
+    "Welcome": "欢迎，{{name}}！",
+    "Sign in unsuccessful": "登录失败",
+    "Password reset email sent": "密码重置邮件已发送",
+    "Session expired": "您的会话已过期。请重新登录。",
+    "Unknown auth state change": "未知的认证状态更改事件"
+  }
 }

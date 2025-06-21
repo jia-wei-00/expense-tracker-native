@@ -64,5 +64,36 @@
   "Follow System": "Follow System",
   "System": "System",
   "Tap to unlock": "Tap to unlock",
-  "Authenticate with biometric": "Authenticate with biometric"
+  "Authenticate with biometric": "Authenticate with biometric",
+  "No data available": "No data available",
+  "Cache cleaned": "Cache cleaned",
+  "Logged out successfully": "Logged out successfully",
+  "Logging out...": "Logging out...",
+  "Logout": "Logout",
+  "Email": "Email",
+  "Sign in with Google": "Sign in with Google",
+  "Signing in...": "Signing in...",
+  "Sign in": "Sign in",
+  "Schema": {
+    "Name is required": "Name is required",
+    "Transaction type is required": "Transaction type is required",
+    "Amount is required": "Amount is required",
+    "Amount must be a number": "Amount must be a number",
+    "Amount must be a positive number": "Amount must be a positive number",
+    "Only two decimals allowed": "Only two decimals allowed",
+    "Category is required": "Category is required",
+    "Date is required": "Date is required",
+    "Date must be a timestamp": "Date must be a timestamp",
+    "Invalid date": "Invalid date",
+    "Invalid email": "Invalid email",
+    "Email is required": "Email is required",
+    "Password is required": "Password is required"
+  },
+  "Toast": {
+    "Welcome": "Welcome, {{name}}!",
+    "Sign in unsuccessful": "Sign in unsuccessful",
+    "Password reset email sent": "Password reset email sent",
+    "Session expired": "Your session has expired. Please sign in again.",
+    "Unknown auth state change": "Unknown auth state change event"
+  }
 }

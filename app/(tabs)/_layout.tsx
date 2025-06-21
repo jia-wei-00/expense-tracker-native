@@ -56,6 +56,13 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          name="loan"
+          options={{
+            title: t("Loan"),
+            tabBarIcon: ({ color }) => <Icon as={UserIcon} className={color} />,
+          }}
+        />
+        <Tabs.Screen
           name="(settings)"
           options={{
             title: t("Settings"),

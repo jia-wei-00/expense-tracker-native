@@ -1,7 +1,7 @@
 import { supabase } from "@/supabase";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthError } from "@supabase/supabase-js";
-import { toast } from "sonner-native";
+import { showSuccessToast, showServerErrorToast } from "@/utils/toast-helpers";
 
 export const resetPassword = createAsyncThunk(
   "auth/reset-password",
@@ -9,13 +9,13 @@ export const resetPassword = createAsyncThunk(
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email);
       if (error) throw error;
-      toast.success("Password reset email sent");
+      showSuccessToast("Toast.Password reset email sent");
       return { data: "success" };
     } catch (error) {
       if (error instanceof AuthError) {
-        toast.error(error.message);
+        showServerErrorToast(error.message);
       } else {
-        toast.error(JSON.stringify(error));
+        showServerErrorToast(JSON.stringify(error));
       }
       throw error;
     }

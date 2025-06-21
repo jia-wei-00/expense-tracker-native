@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/actionsheet";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { useSignOutMutation } from "@/store/features";
+import { useTranslation } from "react-i18next";
 
 const Menu = () => {
+  const { t } = useTranslation();
   const [showActionsheet, setShowActionsheet] = useState(false);
   const [signOut, { isLoading: isSignOutLoading }] = useSignOutMutation();
 
@@ -42,7 +44,7 @@ const Menu = () => {
           </ActionsheetDragIndicatorWrapper>
           <ActionsheetItem onPress={handleSignOut}>
             <ActionsheetItemText>
-              {isSignOutLoading ? "Logging out..." : "Logout"}
+              {isSignOutLoading ? t("Logging out...") : t("Logout")}
             </ActionsheetItemText>
           </ActionsheetItem>
         </ActionsheetContent>

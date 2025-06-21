@@ -29,11 +29,11 @@ const History = () => {
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
-  const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
   const expenseData = useAppSelector((state) => state.expense);
   const { category } = useAppSelector((state) => state.category);
   const { expense, isFetching } = expenseData;
+  const dispatch = useAppDispatch();
 
   const [defaultValues, setDefaultValues] =
     React.useState<ModalDefaultValues>();
@@ -43,8 +43,10 @@ const History = () => {
   });
 
   const fetchExpenseData = React.useCallback(() => {
-    session && dispatch(fetchExpense({ userId: session?.user.id }));
-    session && dispatch(fetchCategory(session?.user.id));
+    if (session) {
+      dispatch(fetchExpense({ userId: session?.user.id }));
+      dispatch(fetchCategory(session?.user.id));
+    }
   }, [session]);
 
   React.useEffect(() => {
@@ -144,7 +146,6 @@ const History = () => {
           recordType={recordType}
           setRecordType={setRecordType}
         />
-
         <Records
           search={search}
           recordType={recordType}

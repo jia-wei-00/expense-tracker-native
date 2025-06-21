@@ -32,6 +32,7 @@ export const fetchExpense = createAsyncThunk(
         .gte("spend_date", startOfMonth.toISOString())
         .lt("spend_date", endOfMonth.toISOString())
         .range(offset, offset + pageSize - 1);
+      // .range(0, -1);
 
       if (error) {
         console.log(error);

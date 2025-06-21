@@ -23,7 +23,7 @@ import { AddRecordSchema } from "./schemes";
 import { DefaultValues } from "react-hook-form";
 import ConfirmDeleteModal from "./confirm-delete-modal";
 import { useAppDispatch } from "@/hooks/useRedux";
-import { Box } from "@/components/ui/box";
+import { Text } from "@/components";
 
 export interface ModalDefaultValues extends DefaultValues<AddRecordSchema> {
   id: string;
@@ -81,80 +81,83 @@ const Records = ({
         isDisabled={false}
         className="bg-transparent"
       >
-        <SkeletonText
-          isLoaded={!isFetching || data.length > 0}
-          className="h-10"
-          _lines={5}
-        />
-        <FlatList
-          data={data}
-          nestedScrollEnabled={false}
-          scrollEnabled={false}
-          ItemSeparatorComponent={() => <View className="pt-2" />}
-          renderItem={({ item }) => (
-            <AccordionItem
-              value={`item-${item.id}`}
-              className="rounded-lg bg-background-50"
-              key={item.id}
-            >
-              <AccordionHeader>
-                <AccordionTrigger>
-                  {({ isExpanded }) => {
-                    return (
-                      <>
-                        <VStack>
-                          <AccordionTitleText className="text-secondary-0">
-                            {item.name}
-                          </AccordionTitleText>
-                          {"amount" in item && (
+        {isFetching ? (
+          <SkeletonText className="h-10" _lines={5} />
+        ) : data.length > 0 ? (
+          <FlatList
+            data={data}
+            nestedScrollEnabled={false}
+            scrollEnabled={false}
+            ItemSeparatorComponent={() => <View className="pt-2" />}
+            renderItem={({ item }) => (
+              <AccordionItem
+                value={`item-${item.id}`}
+                className="rounded-lg bg-background-50"
+                key={item.id}
+              >
+                <AccordionHeader>
+                  <AccordionTrigger>
+                    {({ isExpanded }) => {
+                      return (
+                        <>
+                          <VStack>
                             <AccordionTitleText className="text-secondary-0">
-                              RM{item.amount}
+                              {item.name}
                             </AccordionTitleText>
-                          )}
-                        </VStack>
-                        <AccordionIcon
-                          as={ChevronDownIcon}
-                          className={isExpanded ? "rotate-180" : "rotate-0"}
-                        />
-                      </>
-                    );
-                  }}
-                </AccordionTrigger>
-              </AccordionHeader>
-              <AccordionContent>
-                <HStack space="sm">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onPress={() => handleEdit(item, true)}
-                  >
-                    <ButtonText>{t("View")}</ButtonText>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onPress={() => handleEdit(item)}
-                  >
-                    <ButtonText>{t("Edit")}</ButtonText>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onPress={() => {
-                      if (item.id !== undefined) {
-                        handleDelete({ id: item.id, name: item.name! });
-                      }
+                            {"amount" in item && (
+                              <AccordionTitleText className="text-secondary-0">
+                                RM{item.amount}
+                              </AccordionTitleText>
+                            )}
+                          </VStack>
+                          <AccordionIcon
+                            as={ChevronDownIcon}
+                            className={isExpanded ? "rotate-180" : "rotate-0"}
+                          />
+                        </>
+                      );
                     }}
-                    disabled={disabled}
-                  >
-                    <ButtonText>{t("Delete")}</ButtonText>
-                  </Button>
-                </HStack>
-              </AccordionContent>
-            </AccordionItem>
-          )}
-          keyExtractor={(item) => item.id!.toString()}
-        />
+                  </AccordionTrigger>
+                </AccordionHeader>
+                <AccordionContent>
+                  <HStack space="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onPress={() => handleEdit(item, true)}
+                    >
+                      <ButtonText>{t("View")}</ButtonText>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onPress={() => handleEdit(item)}
+                    >
+                      <ButtonText>{t("Edit")}</ButtonText>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onPress={() => {
+                        if (item.id !== undefined) {
+                          handleDelete({ id: item.id, name: item.name! });
+                        }
+                      }}
+                      disabled={disabled}
+                    >
+                      <ButtonText>{t("Delete")}</ButtonText>
+                    </Button>
+                  </HStack>
+                </AccordionContent>
+              </AccordionItem>
+            )}
+            keyExtractor={(item) => item.id!.toString()}
+          />
+        ) : (
+          <View className="items-center mt-4">
+            <Text.Caption>{t("No data available")}</Text.Caption>
+          </View>
+        )}
       </Accordion>
       <RecordDetailsModal
         showModal={showModal}
