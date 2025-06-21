@@ -161,7 +161,6 @@ npm run build         # Build for production
 - [ ] Recurring transactions
 - [ ] Receipt scanning with OCR
 - [ ] Multi-currency support
-- [ ] Bank account integration
 
 ### Future Plans
 
