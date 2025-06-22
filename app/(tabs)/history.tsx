@@ -17,6 +17,7 @@ import {
   Expense,
   fetchCategory,
   fetchExpense,
+  fetchExpenseStats,
   subscribeToExpenseChanges,
 } from "@/store/features";
 import { ModalDefaultValues } from "../screen-component/home/records";
@@ -49,9 +50,25 @@ const History = () => {
     }
   }, [session]);
 
-  React.useEffect(() => {
-    !expense.length && fetchExpenseData();
+  const fetchExpenseStatsData = React.useCallback(() => {
+    session &&
+      dispatch(
+        fetchExpenseStats({
+          userId: session?.user.id,
+          year: dayjs().year(),
+          month: dayjs().month() + 1,
+        })
+      );
   }, [session]);
+
+  React.useEffect(() => {
+    !expense.length && fetchData();
+  }, [session]);
+
+  const fetchData = React.useCallback(() => {
+    fetchExpenseData();
+    fetchExpenseStatsData();
+  }, [fetchExpenseData, fetchExpenseStatsData]);
 
   React.useEffect(() => {
     if (session) {
@@ -113,10 +130,7 @@ const History = () => {
     <>
       <ScreenContainer
         refreshControl={
-          <RefreshControl
-            refreshing={isFetching}
-            onRefresh={fetchExpenseData}
-          />
+          <RefreshControl refreshing={isFetching} onRefresh={fetchData} />
         }
         stickyContent={
           <>
