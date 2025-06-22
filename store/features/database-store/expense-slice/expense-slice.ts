@@ -85,7 +85,7 @@ const expenseSlice = createSlice({
       if (index !== -1) {
         const expense = state.expense[index];
         state.expense.splice(index, 1);
-        state.stats.balance -= expense.is_expense
+        state.stats.balance += expense.is_expense
           ? expense.amount ?? 0
           : -(expense.amount ?? 0);
         state.stats.totalExpenses -= expense.is_expense

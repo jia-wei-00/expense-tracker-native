@@ -43,37 +43,34 @@ const Home = () => {
     count: totalCount / PAGE_SIZE,
   });
 
-  const fetchExpenseData = React.useCallback(() => {
-    session &&
+  console.log("rerendered");
+
+  // Fetch both expense data and stats
+  React.useEffect(() => {
+    if (session) {
+      // Fetch paginated data
       dispatch(
         fetchExpense({
-          userId: session?.user.id,
+          userId: session.user.id,
           page: currentPage,
           pageSize: PAGE_SIZE,
         })
       );
-  }, [session, currentPage]);
 
-  const fetchExpenseStatsData = React.useCallback(() => {
-    session &&
-      dispatch(
-        fetchExpenseStats({
-          userId: session?.user.id,
-          year: dayjs().year(),
-          month: dayjs().month() + 1,
-        })
-      );
-  }, [session]);
+      // Fetch stats (only when session changes, not on every page change)
+      if (currentPage === 1) {
+        dispatch(
+          fetchExpenseStats({
+            userId: session.user.id,
+            year: dayjs().year(),
+            month: dayjs().month() + 1,
+          })
+        );
+      }
+    }
+  }, [session, currentPage, dispatch]);
 
-  const fetchData = React.useCallback(() => {
-    fetchExpenseData();
-    fetchExpenseStatsData();
-  }, [fetchExpenseData, fetchExpenseStatsData]);
-
-  React.useEffect(() => {
-    fetchData();
-  }, [session, currentPage]);
-
+  // Subscription only depends on session, not currentPage
   React.useEffect(() => {
     if (session) {
       const subscription = subscribeToExpenseChanges({
@@ -85,7 +82,7 @@ const Home = () => {
         subscription.unsubscribe();
       };
     }
-  }, [session, currentPage]);
+  }, [session, dispatch]);
 
   const handleEdit = (data: Expense, hasCreatedDate = false) => {
     handleSetDefaultValue(data, hasCreatedDate);
@@ -103,7 +100,7 @@ const Home = () => {
         record.name?.toLowerCase().includes(search.toLowerCase()) ||
         record.amount?.toString().toLowerCase().includes(search.toLowerCase())
     );
-  }, [filteredRecordsByCategory, search, currentPage]);
+  }, [filteredRecordsByCategory, search]);
 
   const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
     setDefaultValues({
@@ -128,7 +125,27 @@ const Home = () => {
     <>
       <ScreenContainer
         refreshControl={
-          <RefreshControl refreshing={isFetching} onRefresh={fetchData} />
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={() => {
+              if (session) {
+                dispatch(
+                  fetchExpense({
+                    userId: session.user.id,
+                    page: currentPage,
+                    pageSize: PAGE_SIZE,
+                  })
+                );
+                dispatch(
+                  fetchExpenseStats({
+                    userId: session.user.id,
+                    year: dayjs().year(),
+                    month: dayjs().month() + 1,
+                  })
+                );
+              }
+            }}
+          />
         }
         stickyContent={
           <>
