@@ -89,6 +89,10 @@ export const loanSlice = createSlice({
   },
 });
 
-export const { setLoans } = loanSlice.actions;
-
-export default loanSlice.reducer;
+export const {
+  setLoans,
+  addLoanSubscription,
+  updateLoanSubscription,
+  deleteLoanSubscription,
+} = loanSlice.actions;
+export const loanReducer = loanSlice.reducer;

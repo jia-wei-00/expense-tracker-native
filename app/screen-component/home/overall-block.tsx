@@ -5,23 +5,13 @@ import { useAppSelector } from "@/hooks/useRedux";
 import { useTranslation } from "react-i18next";
 
 const OverallBlock = () => {
-  const expenseData = useAppSelector((state) => state.expense);
-  const { expense } = expenseData;
+  const { stats } = useAppSelector((state) => state.expense);
+  const { totalExpenses, totalIncome } = stats;
   const { t } = useTranslation();
-
-  const totalExpense = expense.reduce(
-    (prev, curr) => (curr.is_expense ? prev + Number(curr.amount) : prev),
-    0
-  );
-
-  const totalIncome = expense.reduce(
-    (prev, curr) => (curr.is_expense ? prev : prev + Number(curr.amount)),
-    0
-  );
 
   return (
     <HStack space="sm">
-      <BigBox title={t("Expense")} value={`RM${totalExpense}`} />
+      <BigBox title={t("Expense")} value={`RM${totalExpenses}`} />
       <BigBox title={t("Income")} value={`RM${totalIncome}`} />
     </HStack>
   );

@@ -1,10 +1,11 @@
 // DUCKS PATTERN
 import { Database } from "@/database.types";
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchExpense } from "./fetch-expense";
+import { fetchExpense, fetchExpenseStats, ExpenseStats } from "./fetch-expense";
 import { addExpense } from "./add-expense";
 import { deleteExpense } from "./delete-expense";
 import { updateExpense } from "./update-expense";
+import dayjs from "dayjs";
 
 export type Expense = Database["public"]["Tables"]["expense"]["Row"];
 
@@ -16,6 +17,8 @@ interface ExpenseState {
   isDeleting: boolean;
   isUpdating: boolean;
   balance: number;
+  stats: ExpenseStats;
+  isFetchingStats: boolean;
 }
 
 const initialState: ExpenseState = {
@@ -26,6 +29,12 @@ const initialState: ExpenseState = {
   isDeleting: false,
   isUpdating: false,
   balance: 0,
+  stats: {
+    balance: 0,
+    totalIncome: 0,
+    totalExpenses: 0,
+  },
+  isFetchingStats: false,
 };
 
 const expenseSlice = createSlice({
@@ -39,7 +48,18 @@ const expenseSlice = createSlice({
       state.balance = action.payload;
     },
     addExpenseSubscription: (state, action) => {
-      state.expense.push(action.payload);
+      if (action.payload.spend_date.startsWith(dayjs().format("YYYY-MM"))) {
+        state.expense.push(action.payload);
+        state.stats.balance += action.payload.is_expense
+          ? -(action.payload.amount ?? 0)
+          : action.payload.amount ?? 0;
+        state.stats.totalExpenses += action.payload.is_expense
+          ? action.payload.amount ?? 0
+          : 0;
+        state.stats.totalIncome += action.payload.is_expense
+          ? 0
+          : action.payload.amount ?? 0;
+      }
     },
     updateExpenseSubscription: (state, action) => {
       const index = state.expense.findIndex(
@@ -47,12 +67,32 @@ const expenseSlice = createSlice({
       );
       if (index !== -1) {
         state.expense[index] = action.payload;
+        state.stats.balance += action.payload.is_expense
+          ? -(action.payload.amount ?? 0)
+          : action.payload.amount ?? 0;
+        state.stats.totalExpenses += action.payload.is_expense
+          ? action.payload.amount ?? 0
+          : 0;
+        state.stats.totalIncome += action.payload.is_expense
+          ? 0
+          : action.payload.amount ?? 0;
       }
     },
     deleteExpenseSubscription: (state, action) => {
-      state.expense = state.expense.filter(
-        (expense) => expense.id !== action.payload.id
+      const index = state.expense.findIndex(
+        (expense) => expense.id === action.payload.id
       );
+      if (index !== -1) {
+        const expense = state.expense[index];
+        state.expense.splice(index, 1);
+        state.stats.balance -= expense.is_expense
+          ? expense.amount ?? 0
+          : -(expense.amount ?? 0);
+        state.stats.totalExpenses -= expense.is_expense
+          ? expense.amount ?? 0
+          : 0;
+        state.stats.totalIncome -= expense.is_expense ? 0 : expense.amount ?? 0;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -97,6 +137,16 @@ const expenseSlice = createSlice({
     });
     builder.addCase(updateExpense.rejected, (state) => {
       state.isUpdating = false;
+    });
+    builder.addCase(fetchExpenseStats.fulfilled, (state, { payload }) => {
+      state.stats = payload;
+      state.isFetchingStats = false;
+    });
+    builder.addCase(fetchExpenseStats.pending, (state) => {
+      state.isFetchingStats = true;
+    });
+    builder.addCase(fetchExpenseStats.rejected, (state) => {
+      state.isFetchingStats = false;
     });
   },
 });

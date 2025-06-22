@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   Expense,
   fetchExpense,
+  fetchExpenseStats,
   subscribeToExpenseChanges,
 } from "@/store/features";
 import { ModalDefaultValues } from "../screen-component/home/records";
@@ -30,7 +31,7 @@ const Home = () => {
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
   const dispatch = useAppDispatch();
   const { session } = useAppSelector((state) => state.auth);
-  const { expense, isFetching, totalCount } = useAppSelector(
+  const { expense, isFetching, totalCount, stats } = useAppSelector(
     (state) => state.expense
   );
   const { t } = useTranslation();
@@ -40,10 +41,6 @@ const Home = () => {
 
   const { items, page: currentPage } = usePagination({
     count: totalCount / PAGE_SIZE,
-  });
-
-  const date = new Date().toLocaleDateString("en-MY", {
-    month: "long",
   });
 
   const fetchExpenseData = React.useCallback(() => {
@@ -57,8 +54,24 @@ const Home = () => {
       );
   }, [session, currentPage]);
 
-  React.useEffect(() => {
+  const fetchExpenseStatsData = React.useCallback(() => {
+    session &&
+      dispatch(
+        fetchExpenseStats({
+          userId: session?.user.id,
+          year: dayjs().year(),
+          month: dayjs().month() + 1,
+        })
+      );
+  }, [session]);
+
+  const fetchData = React.useCallback(() => {
     fetchExpenseData();
+    fetchExpenseStatsData();
+  }, [fetchExpenseData, fetchExpenseStatsData]);
+
+  React.useEffect(() => {
+    fetchData();
   }, [session, currentPage]);
 
   React.useEffect(() => {
@@ -73,12 +86,6 @@ const Home = () => {
       };
     }
   }, [session, currentPage]);
-
-  const balance = React.useMemo(() => {
-    return expense.reduce((acc, { amount, is_expense }) => {
-      return acc + (is_expense ? -(amount ?? 0) : amount ?? 0);
-    }, 0);
-  }, [expense]);
 
   const handleEdit = (data: Expense, hasCreatedDate = false) => {
     handleSetDefaultValue(data, hasCreatedDate);
@@ -121,17 +128,18 @@ const Home = () => {
     <>
       <ScreenContainer
         refreshControl={
-          <RefreshControl
-            refreshing={isFetching}
-            onRefresh={fetchExpenseData}
-          />
+          <RefreshControl refreshing={isFetching} onRefresh={fetchData} />
         }
         stickyContent={
           <>
-            <Text.Title className="uppercase">{t(`month.${date}`)}</Text.Title>
+            <Text.Title className="uppercase">
+              {t(`month.${dayjs().format("MMMM")}`)}
+            </Text.Title>
             <Text.Subtitle>
               {t("Balance")}:{" "}
-              {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
+              {stats.balance < 0
+                ? `-RM${Math.abs(stats.balance)}`
+                : `RM${stats.balance}`}
             </Text.Subtitle>
             <OverallBlock />
             <HStack className="justify-between items-end">

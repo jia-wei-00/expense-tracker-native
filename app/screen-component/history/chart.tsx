@@ -5,6 +5,7 @@ import { PieChart } from "react-native-gifted-charts";
 import { Text } from "@/components";
 import Legend from "./legend";
 import { chartColors as colors } from "@/constants";
+import { useAppSelector } from "@/hooks";
 
 export interface ChartProps {
   data: Array<Expense>;
@@ -22,6 +23,8 @@ export interface ChartData {
 }
 
 const Chart = ({ data, categories }: ChartProps) => {
+  const { theme } = useAppSelector((state) => state.settings);
+
   const processedData = React.useMemo(() => {
     const categoryTotals = data.reduce((acc, expense) => {
       if (expense.category && expense.amount) {
@@ -85,7 +88,7 @@ const Chart = ({ data, categories }: ChartProps) => {
             sectionAutoFocus
             radius={90}
             innerRadius={60}
-            innerCircleColor={"#232B5D"}
+            innerCircleColor={theme === "dark" ? "#232B5D" : "#F5F5F5"}
             centerLabelComponent={() => {
               return (
                 <View className="justify-center items-center">

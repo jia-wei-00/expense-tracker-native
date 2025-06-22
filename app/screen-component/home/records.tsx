@@ -54,9 +54,7 @@ const Records = ({
   type = "expense",
 }: RecordsProps) => {
   const { t } = useTranslation();
-  const { isFetching, isDeleting, totalCount } = useAppSelector(
-    (state) => state.expense
-  );
+  const { isFetching, isDeleting } = useAppSelector((state) => state.expense);
 
   const dispatch = useAppDispatch();
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] =

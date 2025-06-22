@@ -118,34 +118,38 @@ const History = () => {
             onRefresh={fetchExpenseData}
           />
         }
-      >
-        <Text.Title className="uppercase">
-          {t("History")} - ({t(`month.${date}`)})
-        </Text.Title>
-        <Text.Subtitle>
-          {t("Balance")}:{" "}
-          {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
-        </Text.Subtitle>
-        <OverallBlock />
-        <Chart data={expense} categories={category} />
-        <HStack className="justify-between items-end">
-          <Text.Subtitle>{t("Records")}</Text.Subtitle>
-          <Input variant="underlined" size="sm" className="w-2/4 gap-2">
-            <InputSlot className="pl-3">
-              <InputIcon as={SearchIcon} />
-            </InputSlot>
-            <InputField
-              placeholder={t("Search...")}
-              value={search}
-              onChangeText={setSearch}
+        stickyContent={
+          <>
+            <Text.Title className="uppercase">
+              {t("History")} - ({t(`month.${date}`)})
+            </Text.Title>
+            <Text.Subtitle>
+              {t("Balance")}:{" "}
+              {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
+            </Text.Subtitle>
+            <OverallBlock />
+            <Chart data={expense} categories={category} />
+            <HStack className="justify-between items-end">
+              <Text.Subtitle>{t("Records")}</Text.Subtitle>
+              <Input variant="underlined" size="sm" className="w-2/4 gap-2">
+                <InputSlot className="pl-3">
+                  <InputIcon as={SearchIcon} />
+                </InputSlot>
+                <InputField
+                  placeholder={t("Search...")}
+                  value={search}
+                  onChangeText={setSearch}
+                />
+              </Input>
+            </HStack>
+            <Divider />
+            <RecordTypeBlock
+              recordType={recordType}
+              setRecordType={setRecordType}
             />
-          </Input>
-        </HStack>
-        <Divider />
-        <RecordTypeBlock
-          recordType={recordType}
-          setRecordType={setRecordType}
-        />
+          </>
+        }
+      >
         <Records
           search={search}
           recordType={recordType}

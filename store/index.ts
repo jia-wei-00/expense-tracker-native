@@ -2,7 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { settingsReducer } from "./features/settings";
 import { authReducer } from "./features/authentication/auth-slice";
 import { scrollReducer } from "./features/scroll/scroll-slice";
-import { expenseReducer, categoryReducer } from "./features/database-store";
+import {
+  expenseReducer,
+  categoryReducer,
+  loanReducer,
+  loanRecordReducer,
+} from "./features/database-store";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +15,8 @@ export const store = configureStore({
     auth: authReducer,
     expense: expenseReducer,
     category: categoryReducer,
+    loan: loanReducer,
+    loanRecord: loanRecordReducer,
     scroll: scrollReducer,
   },
 });
