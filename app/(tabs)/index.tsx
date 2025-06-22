@@ -43,12 +43,8 @@ const Home = () => {
     count: totalCount / PAGE_SIZE,
   });
 
-  console.log("rerendered");
-
-  // Fetch both expense data and stats
   React.useEffect(() => {
     if (session) {
-      // Fetch paginated data
       dispatch(
         fetchExpense({
           userId: session.user.id,
@@ -57,7 +53,6 @@ const Home = () => {
         })
       );
 
-      // Fetch stats (only when session changes, not on every page change)
       if (currentPage === 1) {
         dispatch(
           fetchExpenseStats({
@@ -70,7 +65,8 @@ const Home = () => {
     }
   }, [session, currentPage, dispatch]);
 
-  // Subscription only depends on session, not currentPage
+  console.log("rerendered");
+
   React.useEffect(() => {
     if (session) {
       const subscription = subscribeToExpenseChanges({
