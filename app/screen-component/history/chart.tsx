@@ -88,7 +88,7 @@ const Chart = ({ data, categories }: ChartProps) => {
             sectionAutoFocus
             radius={90}
             innerRadius={60}
-            innerCircleColor={theme === "dark" ? "#232B5D" : "#F5F5F5"}
+            innerCircleColor={theme === "light" ? "#F5F5F5" : "#232B5D"}
             centerLabelComponent={() => {
               return (
                 <View className="justify-center items-center">

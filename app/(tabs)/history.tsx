@@ -1,19 +1,15 @@
 import React from "react";
 import { ScreenContainer, Text } from "@/components";
-import { Divider } from "@/components/ui/divider";
-import { HStack } from "@/components/ui/hstack";
 import {
   AddRecordButton,
-  OverallBlock,
   Records,
   RecordTypeBlock,
 } from "../screen-component/home";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { SearchIcon } from "@/assets/Icons";
 import { RecordType } from "../screen-component/home/types";
 import { RefreshControl } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
+  Category,
   Expense,
   fetchCategory,
   fetchExpense,
@@ -22,36 +18,31 @@ import {
 } from "@/store/features";
 import { ModalDefaultValues } from "../screen-component/home/records";
 import dayjs from "dayjs";
-import { useTranslation } from "react-i18next";
-import { Chart } from "../screen-component";
+import { StickyHeader } from "../screen-component";
+import { useDebounce } from "@/hooks";
 
 const History = () => {
-  const { t } = useTranslation();
   const [search, setSearch] = React.useState<string>("");
   const [showModal, setShowModal] = React.useState(false);
   const [recordType, setRecordType] = React.useState<RecordType>("expense");
   const { session } = useAppSelector((state) => state.auth);
-  const expenseData = useAppSelector((state) => state.expense);
-  const { category } = useAppSelector((state) => state.category);
-  const { expense, isFetching } = expenseData;
+  const { expense, isFetching } = useAppSelector((state) => state.expense);
   const dispatch = useAppDispatch();
 
   const [defaultValues, setDefaultValues] =
     React.useState<ModalDefaultValues>();
 
-  const date = new Date().toLocaleDateString("en-MY", {
-    month: "long",
-  });
+  const debouncedSearch = useDebounce(search, 300);
 
   const fetchExpenseData = React.useCallback(() => {
     if (session) {
       dispatch(fetchExpense({ userId: session?.user.id }));
       dispatch(fetchCategory(session?.user.id));
     }
-  }, [session]);
+  }, [session, dispatch]);
 
   const fetchExpenseStatsData = React.useCallback(() => {
-    session &&
+    if (session) {
       dispatch(
         fetchExpenseStats({
           userId: session?.user.id,
@@ -59,16 +50,17 @@ const History = () => {
           month: dayjs().month() + 1,
         })
       );
-  }, [session]);
-
-  React.useEffect(() => {
-    !expense.length && fetchData();
-  }, [session]);
+    }
+  }, [session, dispatch]);
 
   const fetchData = React.useCallback(() => {
     fetchExpenseData();
     fetchExpenseStatsData();
-  }, [fetchExpenseData, fetchExpenseStatsData]);
+  }, [session, dispatch]);
+
+  React.useEffect(() => {
+    !expense.length && fetchData();
+  }, [session, expense.length, fetchData]);
 
   React.useEffect(() => {
     if (session) {
@@ -81,18 +73,7 @@ const History = () => {
         subscription.unsubscribe();
       };
     }
-  }, [session]);
-
-  const balance = React.useMemo(() => {
-    return expense.reduce((acc, { amount, is_expense }) => {
-      return acc + (is_expense ? -(amount ?? 0) : amount ?? 0);
-    }, 0);
-  }, [expense]);
-
-  const handleEdit = (data: Expense, hasCreatedDate = false) => {
-    handleSetDefaultValue(data, hasCreatedDate);
-    setShowModal(true);
-  };
+  }, [session, dispatch]);
 
   const filteredRecordsByCategory = React.useMemo(() => {
     const isExpense = recordType === "expense";
@@ -100,31 +81,47 @@ const History = () => {
   }, [expense, recordType]);
 
   const filteredRecordsBySearch = React.useMemo(() => {
+    if (!debouncedSearch.trim()) return filteredRecordsByCategory;
+
+    const searchLower = debouncedSearch.toLowerCase();
     return filteredRecordsByCategory?.filter(
       (record) =>
-        record.name?.toLowerCase().includes(search.toLowerCase()) ||
-        record.amount?.toString().toLowerCase().includes(search.toLowerCase())
+        record.name?.toLowerCase().includes(searchLower) ||
+        record.amount?.toString().toLowerCase().includes(searchLower)
     );
-  }, [filteredRecordsByCategory, search]);
+  }, [filteredRecordsByCategory, debouncedSearch]);
 
-  const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
-    setDefaultValues({
-      id: data.id!.toString(),
-      name: data.name ?? "",
-      amount: data.amount ?? 0,
-      is_expense: data.is_expense ? "true" : "false",
-      category: data.category?.toString() ?? "",
-      spend_date: data.spend_date
-        ? dayjs(data.spend_date).valueOf()
-        : dayjs().valueOf(),
-      ...(hasCreatedDate ? { created_at: data.created_at } : {}),
-    });
-  };
+  const handleEdit = React.useCallback(
+    (data: Expense | Category, hasCreatedDate = false) => {
+      const expenseData = data as Expense;
+      setDefaultValues({
+        id: expenseData.id!.toString(),
+        name: expenseData.name ?? "",
+        amount: expenseData.amount ?? 0,
+        is_expense: expenseData.is_expense ? "true" : "false",
+        category: expenseData.category?.toString() ?? "",
+        spend_date: expenseData.spend_date
+          ? dayjs(expenseData.spend_date).valueOf()
+          : dayjs().valueOf(),
+        ...(hasCreatedDate ? { created_at: expenseData.created_at } : {}),
+      });
+      setShowModal(true);
+    },
+    []
+  );
 
-  const handleCloseModal = () => {
-    defaultValues && setDefaultValues(undefined);
+  const handleCloseModal = React.useCallback(() => {
+    setDefaultValues(undefined);
     setShowModal(false);
-  };
+  }, []);
+
+  const handleSearchChange = React.useCallback((value: string) => {
+    setSearch(value);
+  }, []);
+
+  const handleRecordTypeChange = React.useCallback((type: RecordType) => {
+    setRecordType(type);
+  }, []);
 
   return (
     <>
@@ -134,45 +131,21 @@ const History = () => {
         }
         stickyContent={
           <>
-            <Text.Title className="uppercase">
-              {t("History")} - ({t(`month.${date}`)})
-            </Text.Title>
-            <Text.Subtitle>
-              {t("Balance")}:{" "}
-              {balance < 0 ? `-RM${Math.abs(balance)}` : `RM${balance}`}
-            </Text.Subtitle>
-            <OverallBlock />
-            <Chart data={expense} categories={category} />
-            <HStack className="justify-between items-end">
-              <Text.Subtitle>{t("Records")}</Text.Subtitle>
-              <Input variant="underlined" size="sm" className="w-2/4 gap-2">
-                <InputSlot className="pl-3">
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField
-                  placeholder={t("Search...")}
-                  value={search}
-                  onChangeText={setSearch}
-                />
-              </Input>
-            </HStack>
-            <Divider />
+            <StickyHeader search={search} onSearchChange={handleSearchChange} />
             <RecordTypeBlock
               recordType={recordType}
-              setRecordType={setRecordType}
+              setRecordType={handleRecordTypeChange}
             />
           </>
         }
       >
         <Records
-          search={search}
+          search={debouncedSearch}
           recordType={recordType}
           showModal={showModal}
           setShowModal={setShowModal}
           data={filteredRecordsBySearch}
-          handleEdit={(data, hasCreatedDate) =>
-            handleEdit(data as Expense, hasCreatedDate)
-          }
+          handleEdit={handleEdit}
           defaultValues={defaultValues}
           onClose={handleCloseModal}
         />

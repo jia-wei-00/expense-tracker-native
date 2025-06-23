@@ -14,6 +14,7 @@ import { RecordType } from "../screen-component/home/types";
 import { RefreshControl } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
+  Category,
   Expense,
   fetchExpense,
   fetchExpenseStats,
@@ -65,8 +66,6 @@ const Home = () => {
     }
   }, [session, currentPage, dispatch]);
 
-  console.log("rerendered");
-
   React.useEffect(() => {
     if (session) {
       const subscription = subscribeToExpenseChanges({
@@ -80,10 +79,24 @@ const Home = () => {
     }
   }, [session, dispatch]);
 
-  const handleEdit = (data: Expense, hasCreatedDate = false) => {
-    handleSetDefaultValue(data, hasCreatedDate);
-    setShowModal(true);
-  };
+  const handleEdit = React.useCallback(
+    (data: Expense | Category, hasCreatedDate = false) => {
+      const expenseData = data as Expense;
+      setDefaultValues({
+        id: expenseData.id!.toString(),
+        name: expenseData.name ?? "",
+        amount: expenseData.amount ?? 0,
+        is_expense: expenseData.is_expense ? "true" : "false",
+        category: expenseData.category?.toString() ?? "",
+        spend_date: expenseData.spend_date
+          ? dayjs(expenseData.spend_date).valueOf()
+          : dayjs().valueOf(),
+        ...(hasCreatedDate ? { created_at: expenseData.created_at } : {}),
+      });
+      setShowModal(true);
+    },
+    []
+  );
 
   const filteredRecordsByCategory = React.useMemo(() => {
     const isExpense = recordType === "expense";
@@ -98,24 +111,10 @@ const Home = () => {
     );
   }, [filteredRecordsByCategory, search]);
 
-  const handleSetDefaultValue = (data: Expense, hasCreatedDate = false) => {
-    setDefaultValues({
-      id: data.id!.toString(),
-      name: data.name ?? "",
-      amount: data.amount ?? 0,
-      is_expense: data.is_expense ? "true" : "false",
-      category: data.category?.toString() ?? "",
-      spend_date: data.spend_date
-        ? dayjs(data.spend_date).valueOf()
-        : dayjs().valueOf(),
-      ...(hasCreatedDate ? { created_at: data.created_at } : {}),
-    });
-  };
-
-  const handleCloseModal = () => {
-    defaultValues && setDefaultValues(undefined);
+  const handleCloseModal = React.useCallback(() => {
+    setDefaultValues(undefined);
     setShowModal(false);
-  };
+  }, []);
 
   return (
     <>
