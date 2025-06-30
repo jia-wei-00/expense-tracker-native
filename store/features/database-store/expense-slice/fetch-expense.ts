@@ -35,8 +35,8 @@ export const fetchExpense = createAsyncThunk(
         .from("expense")
         .select("*", { count: "exact" })
         .eq("user_id", userId)
-        .gte("spend_date", startOfMonth.toISOString())
-        .lt("spend_date", endOfMonth.toISOString())
+        // .gte("spend_date", startOfMonth.toISOString())
+        // .lt("spend_date", endOfMonth.toISOString())
         .order("spend_date", { ascending: false })
         .range(offset, offset + pageSize - 1);
       // .range(0, -1);
