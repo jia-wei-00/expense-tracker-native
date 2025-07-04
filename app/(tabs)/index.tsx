@@ -11,7 +11,7 @@ import {
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
 import { RecordType } from "../screen-component/home/types";
-import { RefreshControl } from "react-native";
+import { RefreshControl, useWindowDimensions, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   Category,
@@ -25,6 +25,7 @@ import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import usePagination from "@/hooks/usePagination";
 import { PAGE_SIZE } from "@/constants";
+import { TabView, SceneMap } from "react-native-tab-view";
 
 const Home = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -36,6 +37,8 @@ const Home = () => {
     (state) => state.expense
   );
   const { t } = useTranslation();
+  const layout = useWindowDimensions();
+  const [index, setIndex] = React.useState(0);
 
   const [defaultValues, setDefaultValues] =
     React.useState<ModalDefaultValues>();
@@ -116,9 +119,74 @@ const Home = () => {
     setShowModal(false);
   }, []);
 
+  const renderScene = SceneMap({
+    first: () => (
+      <Records
+        search={search}
+        recordType={recordType}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        data={filteredRecordsBySearch}
+        handleEdit={(data, hasCreatedDate) =>
+          handleEdit(data as Expense, hasCreatedDate)
+        }
+        defaultValues={defaultValues}
+        onClose={handleCloseModal}
+      />
+    ),
+    second: () => (
+      <View>
+        <Text.Bold>Second</Text.Bold>
+      </View>
+    ),
+  });
+
+  const routes = [
+    { key: "first", title: "First" },
+    { key: "second", title: "Second" },
+  ];
+
   return (
     <>
+      {/* <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        // initialLayout={{ width: layout.width }}
+      /> */}
+
       <ScreenContainer
+        index={index}
+        sceneMapping={[
+          {
+            key: "first",
+            render: (
+              <Records
+                search={search}
+                recordType={recordType}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                data={filteredRecordsBySearch}
+                handleEdit={(data, hasCreatedDate) =>
+                  handleEdit(data as Expense, hasCreatedDate)
+                }
+                defaultValues={defaultValues}
+                onClose={handleCloseModal}
+              />
+            ),
+            title: "First",
+          },
+          {
+            key: "second",
+            render: (
+              <View>
+                <Text.Bold>Second</Text.Bold>
+              </View>
+            ),
+            title: "Second",
+          },
+        ]}
+        setIndex={setIndex}
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
@@ -168,13 +236,13 @@ const Home = () => {
               </Input>
             </HStack>
             <Divider />
-            <RecordTypeBlock
-              recordType={recordType}
-              setRecordType={setRecordType}
-            />
           </>
         }
       >
+        <RecordTypeBlock
+          recordType={recordType}
+          setRecordType={setRecordType}
+        />
         <Records
           search={search}
           recordType={recordType}

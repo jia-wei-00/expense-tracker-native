@@ -1,9 +1,10 @@
 import React from "react";
 import { VStack } from "@/components/ui/vstack";
-import { ScrollView } from "react-native";
+import { ScrollView, useWindowDimensions } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { View, StyleSheet, ListRenderItem } from "react-native";
 import { Tabs } from "react-native-collapsible-tab-view";
+import { TabView, SceneMap } from "react-native-tab-view";
 
 const HEADER_HEIGHT = 250;
 
@@ -14,11 +15,20 @@ const Header = () => {
   return <View style={styles.header} />;
 };
 
+type SceneMapping = {
+  key: string;
+  render: React.ReactNode;
+  title: string;
+};
+
 interface ScreenContainerProps extends React.ComponentProps<typeof ScrollView> {
   children: React.ReactNode;
   vStackClassName?: string;
   stickyContentClassName?: string;
   stickyContent?: React.ReactNode;
+  index?: number;
+  sceneMapping: SceneMapping[];
+  setIndex: (index: number) => void;
 }
 
 const ScreenContainer = ({
@@ -27,13 +37,41 @@ const ScreenContainer = ({
   className,
   stickyContent,
   stickyContentClassName,
+  index = 0,
+  sceneMapping,
+  setIndex,
   ...rest
 }: ScreenContainerProps) => {
+  const layout = useWindowDimensions();
+
   const renderItem: ListRenderItem<number> = React.useCallback(({ index }) => {
     return (
       <View style={[styles.box, index % 2 === 0 ? styles.boxB : styles.boxA]} />
     );
   }, []);
+
+  const renderScene = SceneMap(
+    Object.fromEntries(
+      sceneMapping.map((item) => [
+        item.key,
+        () => (
+          <ScrollView>
+            <VStack
+              space="md"
+              className={twMerge(vStackClassName, "bg-background-0 pb-4")}
+            >
+              {item.render}
+            </VStack>
+          </ScrollView>
+        ),
+      ])
+    )
+  );
+
+  const routes = sceneMapping.map((item) => ({
+    key: item.key,
+    title: item.title,
+  }));
 
   const renderHeader = () => {
     return (
@@ -51,11 +89,11 @@ const ScreenContainer = ({
 
   return (
     <>
-      {/* <ScrollView
+      <VStack
         className={twMerge("bg-background-0 flex-1", className)}
-        stickyHeaderIndices={[0]}
-        scrollEventThrottle={16}
-        showsVerticalScrollIndicator={false}
+        // stickyHeaderIndices={[0]}
+        // scrollEventThrottle={16}
+        // showsVerticalScrollIndicator={false}
         {...rest}
       >
         <VStack
@@ -67,16 +105,21 @@ const ScreenContainer = ({
         >
           {stickyContent}
         </VStack>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+        />
 
-        <VStack
+        {/* <VStack
           space="md"
           className={twMerge(vStackClassName, "bg-background-0 pb-4")}
         >
           {children}
-        </VStack>
-      </ScrollView> */}
-      {/* <ScrollView className={twMerge("d-d", className)} {...rest}> */}
-      <Tabs.Container
+        </VStack> */}
+      </VStack>
+      {/* <Tabs.Container
         renderHeader={renderHeader}
         revealHeaderOnScroll
         headerContainerStyle={{
@@ -89,8 +132,7 @@ const ScreenContainer = ({
         <Tabs.Tab name="B">
           <Tabs.ScrollView>{children}</Tabs.ScrollView>
         </Tabs.Tab>
-      </Tabs.Container>
-      {/* </ScrollView> */}
+      </Tabs.Container> */}
     </>
   );
 };
