@@ -7,6 +7,8 @@ import {
   TabBarProps,
   Tabs,
 } from "react-native-collapsible-tab-view";
+import { TabView, SceneMap } from "react-native-tab-view";
+// import { ScrollView } from "react-native-gesture-handler";
 
 type TabScreen = {
   key: string;
@@ -73,17 +75,9 @@ const ScreenContainer = ({
           >
             {tabScreens.map((item) => (
               <Tabs.Tab name={item.key}>
-                <Tabs.FlashList
-                  data={tabScreens}
-                  renderItem={({ item }) => item.render as React.ReactElement}
-                  keyExtractor={(item) => item.key}
-                  refreshControl={refreshControl}
-                  estimatedItemSize={100}
-                />
-
-                {/* <Tabs.ScrollView refreshControl={refreshControl}>
+                <Tabs.ScrollView refreshControl={refreshControl}>
                   {item.render}
-                </Tabs.ScrollView> */}
+                </Tabs.ScrollView>
               </Tabs.Tab>
             ))}
           </Tabs.Container>
