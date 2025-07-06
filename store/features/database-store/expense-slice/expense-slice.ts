@@ -101,6 +101,7 @@ const expenseSlice = createSlice({
         data: Expense[];
         count: number;
       };
+
       state.expense = data;
       state.totalCount = count;
       state.isFetching = false;

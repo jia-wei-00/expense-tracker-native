@@ -16,7 +16,6 @@ import { VStack } from "@/components/ui/vstack";
 import { Category, deleteExpense, Expense } from "@/store/features";
 import { useAppSelector } from "@/hooks/useRedux";
 import { useTranslation } from "react-i18next"; // Added for i18n translation
-import { RecordType } from "./types";
 import { SkeletonText } from "@/components/ui/skeleton";
 import RecordDetailsModal from "./add-record";
 import { AddRecordSchema } from "./schemes";
@@ -32,7 +31,6 @@ export interface ModalDefaultValues extends DefaultValues<AddRecordSchema> {
 
 interface RecordsProps {
   search: string;
-  recordType: RecordType;
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
   data: Array<Expense | Category>;

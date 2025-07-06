@@ -32,12 +32,16 @@ const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
     color.value = type === "expense" ? "red" : "green";
   };
 
+  React.useEffect(() => {
+    handlePress(recordType);
+  }, [recordType]);
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
           translateX: withSpring(translateX.value, {
-            duration: 1000,
+            duration: 700,
             dampingRatio: 0.7,
             stiffness: 50,
             overshootClamping: false,
@@ -48,7 +52,7 @@ const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
       ],
       backgroundColor: withTiming(color.value),
     };
-  });
+  }, [recordType]);
 
   return (
     <HStack className="relative">

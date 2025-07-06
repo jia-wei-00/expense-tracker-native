@@ -11,7 +11,7 @@ import {
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "@/assets/Icons";
 import { RecordType } from "../screen-component/home/types";
-import { RefreshControl, useWindowDimensions, View } from "react-native";
+import { RefreshControl } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   Category,
@@ -25,7 +25,6 @@ import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import usePagination from "@/hooks/usePagination";
 import { PAGE_SIZE } from "@/constants";
-import { TabView, SceneMap } from "react-native-tab-view";
 
 const Home = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -37,14 +36,12 @@ const Home = () => {
     (state) => state.expense
   );
   const { t } = useTranslation();
-  const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
 
   const [defaultValues, setDefaultValues] =
     React.useState<ModalDefaultValues>();
 
   const { items, page: currentPage } = usePagination({
-    count: totalCount / PAGE_SIZE,
+    count: totalCount,
   });
 
   React.useEffect(() => {
@@ -101,72 +98,45 @@ const Home = () => {
     []
   );
 
-  const filteredRecordsByCategory = React.useMemo(() => {
-    const isExpense = recordType === "expense";
-    return expense.filter((record) => record.is_expense === isExpense);
-  }, [expense, recordType]);
+  const filteredRecords = React.useCallback(
+    (dataType: "expense" | "income") => {
+      const isExpenseType = dataType === "expense";
 
-  const filteredRecordsBySearch = React.useMemo(() => {
-    return filteredRecordsByCategory?.filter(
-      (record) =>
-        record.name?.toLowerCase().includes(search.toLowerCase()) ||
-        record.amount?.toString().toLowerCase().includes(search.toLowerCase())
-    );
-  }, [filteredRecordsByCategory, search]);
+      if (!search.trim()) {
+        return expense.filter((record) => record.is_expense === isExpenseType);
+      }
+
+      const searchLower = search.toLowerCase();
+
+      return expense.filter((record) => {
+        const matchesType = record.is_expense === isExpenseType;
+        const matchesSearch =
+          record.name?.toLowerCase().includes(searchLower) ||
+          record.amount?.toString().includes(searchLower);
+
+        return matchesType && matchesSearch;
+      });
+    },
+    [expense, search]
+  );
 
   const handleCloseModal = React.useCallback(() => {
     setDefaultValues(undefined);
     setShowModal(false);
   }, []);
 
-  const renderScene = SceneMap({
-    first: () => (
-      <Records
-        search={search}
-        recordType={recordType}
-        showModal={showModal}
-        setShowModal={setShowModal}
-        data={filteredRecordsBySearch}
-        handleEdit={(data, hasCreatedDate) =>
-          handleEdit(data as Expense, hasCreatedDate)
-        }
-        defaultValues={defaultValues}
-        onClose={handleCloseModal}
-      />
-    ),
-    second: () => (
-      <View>
-        <Text.Bold>Second</Text.Bold>
-      </View>
-    ),
-  });
-
-  const routes = [
-    { key: "first", title: "First" },
-    { key: "second", title: "Second" },
-  ];
-
   return (
     <>
-      {/* <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        // initialLayout={{ width: layout.width }}
-      /> */}
-
       <ScreenContainer
-        index={index}
-        sceneMapping={[
+        tabScreens={[
           {
-            key: "first",
+            key: "expense",
             render: (
               <Records
                 search={search}
-                recordType={recordType}
                 showModal={showModal}
                 setShowModal={setShowModal}
-                data={filteredRecordsBySearch}
+                data={filteredRecords("expense")}
                 handleEdit={(data, hasCreatedDate) =>
                   handleEdit(data as Expense, hasCreatedDate)
                 }
@@ -174,19 +144,29 @@ const Home = () => {
                 onClose={handleCloseModal}
               />
             ),
-            title: "First",
+            title: "Expense",
           },
           {
-            key: "second",
+            key: "income",
             render: (
-              <View>
-                <Text.Bold>Second</Text.Bold>
-              </View>
+              <Records
+                search={search}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                data={filteredRecords("income")}
+                handleEdit={(data, hasCreatedDate) =>
+                  handleEdit(data as Expense, hasCreatedDate)
+                }
+                defaultValues={defaultValues}
+                onClose={handleCloseModal}
+              />
             ),
-            title: "Second",
+            title: "Income",
           },
         ]}
-        setIndex={setIndex}
+        onTabChange={({ tabName }) => {
+          setRecordType(tabName === "expense" ? "expense" : "income");
+        }}
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
@@ -238,24 +218,13 @@ const Home = () => {
             <Divider />
           </>
         }
-      >
-        <RecordTypeBlock
-          recordType={recordType}
-          setRecordType={setRecordType}
-        />
-        <Records
-          search={search}
-          recordType={recordType}
-          showModal={showModal}
-          setShowModal={setShowModal}
-          data={filteredRecordsBySearch}
-          handleEdit={(data, hasCreatedDate) =>
-            handleEdit(data as Expense, hasCreatedDate)
-          }
-          defaultValues={defaultValues}
-          onClose={handleCloseModal}
-        />
-      </ScreenContainer>
+        tabBar={
+          <RecordTypeBlock
+            recordType={recordType}
+            setRecordType={setRecordType}
+          />
+        }
+      />
       {totalCount > PAGE_SIZE && <Pagination items={items} />}
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
     </>
