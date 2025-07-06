@@ -2,7 +2,11 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { ScrollView } from "react-native";
 import { twMerge } from "tailwind-merge";
-import { OnTabChangeCallback, Tabs } from "react-native-collapsible-tab-view";
+import {
+  OnTabChangeCallback,
+  TabBarProps,
+  Tabs,
+} from "react-native-collapsible-tab-view";
 
 type TabScreen = {
   key: string;
@@ -17,7 +21,7 @@ interface ScreenContainerProps extends React.ComponentProps<typeof ScrollView> {
   stickyContent?: React.ReactNode;
   index?: number;
   tabScreens?: TabScreen[];
-  tabBar?: React.ReactElement | undefined;
+  tabBar?: (props: TabBarProps<string>) => React.ReactElement;
   onTabChange?: OnTabChangeCallback<string>;
 }
 
@@ -34,6 +38,8 @@ const ScreenContainer = ({
   onTabChange,
   ...rest
 }: ScreenContainerProps) => {
+  const ref = React.useRef(null);
+
   const renderHeader = () => {
     return (
       <VStack
@@ -61,14 +67,23 @@ const ScreenContainer = ({
             headerContainerStyle={{
               backgroundColor: "transparent",
             }}
-            renderTabBar={() => tabBar || null}
+            renderTabBar={tabBar}
             onTabChange={onTabChange}
+            ref={ref}
           >
             {tabScreens.map((item) => (
               <Tabs.Tab name={item.key}>
-                <Tabs.ScrollView refreshControl={refreshControl}>
+                <Tabs.FlashList
+                  data={tabScreens}
+                  renderItem={({ item }) => item.render as React.ReactElement}
+                  keyExtractor={(item) => item.key}
+                  refreshControl={refreshControl}
+                  estimatedItemSize={100}
+                />
+
+                {/* <Tabs.ScrollView refreshControl={refreshControl}>
                   {item.render}
-                </Tabs.ScrollView>
+                </Tabs.ScrollView> */}
               </Tabs.Tab>
             ))}
           </Tabs.Container>

@@ -10,13 +10,19 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
+import { TabBarProps } from "react-native-collapsible-tab-view";
 
 interface RecordTypeProps {
   recordType: "expense" | "income";
   setRecordType: (type: "expense" | "income") => void;
+  onTabPress: (type: "expense" | "income") => void;
 }
 
-const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
+const RecordTypeBlock = ({
+  recordType,
+  setRecordType,
+  onTabPress,
+}: RecordTypeProps) => {
   const { t } = useTranslation();
   const containerWidth = useSharedValue<number>(0);
   const color = useSharedValue<string>(
@@ -30,6 +36,7 @@ const RecordTypeBlock = ({ recordType, setRecordType }: RecordTypeProps) => {
     setRecordType(type);
     translateX.value = type === "expense" ? 0 : containerWidth.value;
     color.value = type === "expense" ? "red" : "green";
+    // onTabPress(type);
   };
 
   React.useEffect(() => {

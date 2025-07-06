@@ -35,13 +35,14 @@ const Home = () => {
   const { expense, isFetching, totalCount, stats } = useAppSelector(
     (state) => state.expense
   );
+  const [index, setIndex] = React.useState(0);
   const { t } = useTranslation();
 
   const [defaultValues, setDefaultValues] =
     React.useState<ModalDefaultValues>();
 
   const { items, page: currentPage } = usePagination({
-    count: totalCount,
+    count: Math.ceil(totalCount / PAGE_SIZE),
   });
 
   React.useEffect(() => {
@@ -218,12 +219,13 @@ const Home = () => {
             <Divider />
           </>
         }
-        tabBar={
+        tabBar={({ onTabPress }) => (
           <RecordTypeBlock
             recordType={recordType}
             setRecordType={setRecordType}
+            onTabPress={onTabPress}
           />
-        }
+        )}
       />
       {totalCount > PAGE_SIZE && <Pagination items={items} />}
       <AddRecordButton showModal={showModal} setShowModal={setShowModal} />
